@@ -9,8 +9,44 @@ Author: محمد قربانی
 if (!defined('ABSPATH')) exit;
 
 /**
+ * Paid orders (processing or completed) of the last 7 days, per product: array(product_id => orders).
+ * Read from the orders themselves (works with or without WooCommerce Analytics, HPOS or not),
+ * in one pass for all products, cached for an hour.
+ */
+function dk2_recent_orders_by_product() {
+    $map = get_transient('dk2_recent_orders_by_product');
+    if (is_array($map)) {
+        return $map;
+    }
+    $map  = array();
+    $page = 1;
+    do {
+        $orders = wc_get_orders(array(
+            'status'       => array('wc-processing', 'wc-completed'),
+            'type'         => 'shop_order',
+            'date_created' => '>=' . (time() - 7 * DAY_IN_SECONDS),
+            'limit'        => 100,
+            'paged'        => $page,
+        ));
+        foreach ($orders as $order) {
+            $in_order = array();
+            foreach ($order->get_items() as $item) {
+                $in_order[(int) $item->get_product_id()] = true;
+            }
+            foreach (array_keys($in_order) as $pid) {
+                $map[$pid] = isset($map[$pid]) ? $map[$pid] + 1 : 1;
+            }
+        }
+        $page++;
+    } while (count($orders) === 100);
+
+    set_transient('dk2_recent_orders_by_product', $map, HOUR_IN_SECONDS);
+    return $map;
+}
+
+/**
  * Real numbers for the product badges, cached for an hour:
- * wishlist saves (dk-wishlist.php table) and paid orders in the last 7 days (WooCommerce Analytics tables).
+ * wishlist saves (dk-wishlist.php table) and paid orders in the last 7 days.
  * A badge is only returned when its number is above zero.
  */
 function dk2_social_proof_badges($product_id) {
@@ -31,20 +67,11 @@ function dk2_social_proof_badges($product_id) {
             ));
         }
 
-        // Orders (not refunds: parent_id = 0) that are paid, i.e. processing or completed.
-        $counts['orders'] = (int) $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(DISTINCT l.order_id)
-             FROM {$wpdb->prefix}wc_order_product_lookup l
-             INNER JOIN {$wpdb->prefix}wc_order_stats s ON s.order_id = l.order_id
-             WHERE l.product_id = %d
-               AND s.parent_id = 0
-               AND s.status IN ('wc-processing', 'wc-completed')
-               AND s.date_created_gmt >= %s",
-            $product_id,
-            gmdate('Y-m-d H:i:s', time() - 7 * DAY_IN_SECONDS)
-        ));
-
         $wpdb->suppress_errors($suppress);
+
+        $recent           = dk2_recent_orders_by_product();
+        $counts['orders'] = isset($recent[$product_id]) ? (int) $recent[$product_id] : 0;
+
         set_transient($key, $counts, HOUR_IN_SECONDS);
     }
 
