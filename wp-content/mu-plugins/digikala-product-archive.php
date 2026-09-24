@@ -376,8 +376,8 @@ function digikala_archive_accordion_shortcode($atts) {
 
 <style>
 <?php
-// Declare only the font files that exist in the theme. A missing file means failed requests on every
-// archive view, and because this rule comes later it would also override a working Vazirmatn defined elsewhere.
+// Declare only the font files that exist in the theme: each missing file is a failed (404) request on
+// every archive view.
 $dk_font_dir = get_stylesheet_directory() . '/fonts/';
 $dk_font_uri = get_stylesheet_directory_uri() . '/fonts/';
 foreach (array(400 => 'Regular', 500 => 'Medium', 700 => 'Bold') as $dk_weight => $dk_style) {
