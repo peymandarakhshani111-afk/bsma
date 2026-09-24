@@ -115,7 +115,7 @@ if (!function_exists('dk_render_category_accordion')) {
 
 if (!function_exists('dk_sidebar_promo')) {
     function dk_sidebar_promo($root_id) {
-        $enabled = array(279); // category ids that show the card
+        $enabled = array(279, 97); // category ids that show the card
         if (!in_array((int) $root_id, $enabled, true)) return array();
         $ids = get_posts(array(
             'post_type' => 'product',

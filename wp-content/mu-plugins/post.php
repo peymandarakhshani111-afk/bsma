@@ -449,8 +449,9 @@ add_action('comment_form_logged_in_after', 'fc_render_captcha');
 function fc_render_captcha() {
     if (!is_singular('post')) return;
     ?>
-    <div class="fc-captcha-wrap" style="margin: 20px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); max-width: 360px; text-align: center;">
-        <label style="display: block; margin-bottom: 12px; color: rgba(255,255,255,0.85); font-size: 14px; font-family: Vazirmatn, system-ui, Tahoma; font-weight: 700;">
+    <?php // Solid dark box so the white label is readable on light and dark post backgrounds alike. ?>
+    <div class="fc-captcha-wrap" style="margin: 20px auto; padding: 20px; background: #0b2a4a; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); max-width: 360px; text-align: center;">
+        <label style="display: block; margin-bottom: 12px; color: #fff !important; font-size: 14px; font-family: Vazirmatn, system-ui, Tahoma; font-weight: 700;">
             کد امنیتی تصویر را وارد کنید:
         </label>
 
@@ -466,7 +467,7 @@ function fc_render_captcha() {
         <div class="fc-input-wrap">
             <input type="text" name="fc_captcha" id="fc-captcha-input" required 
                    style="padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); 
-                          background: #0b2a4a; color: #fff; text-align: center; font-size: 16px; 
+                          background: #0b2a4a; color: #fff !important; text-align: center; font-size: 16px; 
                           font-family: Vazirmatn, system-ui, Tahoma; letter-spacing: 5px; text-transform: uppercase; 
                           box-sizing: border-box; font-weight: 700;" 
                    placeholder="کد را اینجا بنویسید" maxlength="4" autocomplete="off">

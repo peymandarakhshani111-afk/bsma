@@ -61,7 +61,7 @@ function fire_account_widget_handle_forms() {
         $user    = get_userdata($user_id);
 
         if (!$user || !wp_check_password($current, $user->user_pass, $user_id)) {
-            fire_account_set_msg($user_id, 'رمز فعلی درست نیست.');
+            fire_account_set_msg($user_id, 'رمز فعلی درست نیست. اگر رمز ندارید (مثلاً با پیامک وارد شده‌اید)، از لینک «رمز را فراموش کرده‌ام» استفاده کنید.');
         } elseif ($pass1 === '' || $pass1 !== $pass2) {
             fire_account_set_msg($user_id, 'رمزها مطابقت ندارند.');
         } else {
@@ -215,6 +215,8 @@ function fire_account_widget_render() {
             <input type="password" name="password_2" placeholder="تکرار رمز" autocomplete="new-password">
             <button name="fire_change_password">تغییر رمز</button>
         </form>
+        <?php // For users without a known password (e.g. SMS sign-in): set one through the standard reset flow. ?>
+        <a href="<?php echo esc_url(wp_lostpassword_url()); ?>" style="color:#9cb8ff;font-size:13px;">رمز را فراموش کرده‌ام / رمز ندارم</a>
     </div>
 
     <!-- ORDERS -->
