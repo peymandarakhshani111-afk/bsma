@@ -420,8 +420,9 @@ git diff 67d68eb claude/keen-albattani-it7rx4 -- wp-content/
 ## ۶. نصب روی هاست
 
 1. از فایل‌های فعلی `wp-content/mu-plugins` نسخه‌ی پشتیبان بگیرید.
-2. ۷ فایل را جایگزین یا اضافه کنید:
+2. ۸ فایل را جایگزین یا اضافه کنید:
    - `bsma-performance.php` (جدید)
+   - `bsma-lscwp-no-remote-sizes.php` (جدید، بخش ۷.۱)
    - `cart-quantity-fix.php`
    - `digikala-product-archive.php`
    - `dk-single-product.php`
