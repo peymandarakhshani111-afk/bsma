@@ -80,7 +80,7 @@ function dk_toggle_wishlist() {
     $table      = $wpdb->prefix . 'dk_wishlist';
     $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
 
-    if (!$product_id || get_post_type($product_id) !== 'product') {
+    if (!$product_id || !in_array(get_post_type($product_id), array('product', 'product_variation'), true)) {
         wp_send_json_error(['message' => 'invalid_product_id'], 400);
     }
 

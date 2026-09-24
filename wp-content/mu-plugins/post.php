@@ -45,9 +45,6 @@ add_shortcode('current_post_article', function($atts) {
     $excerpt_html = '<div class="cpa-excerpt">' . wp_kses_post($excerpt) . '</div>';
     $content = apply_filters('the_content', get_post_field('post_content', $post_id));
 
-    // فعال‌سازی پرچم برای نمایش کپچا
-    $GLOBALS['fc_captcha_active'] = true;
-
     ob_start(); ?>
     <div class="current-post-article cpa">
         <h2 class="cpa-title"><?php echo esc_html($title); ?></h2>
@@ -439,8 +436,10 @@ add_shortcode('current_post_article', function($atts) {
 add_action('comment_form_after_fields', 'fc_render_captcha');
 add_action('comment_form_logged_in_after', 'fc_render_captcha');
 
+// Shown on every single blog post (not only inside the shortcode), because fc_verify_captcha()
+// requires it for all comments on posts.
 function fc_render_captcha() {
-    if (empty($GLOBALS['fc_captcha_active'])) return;
+    if (!is_singular('post')) return;
     ?>
     <div class="fc-captcha-wrap" style="margin: 20px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); max-width: 360px; text-align: center;">
         <label style="display: block; margin-bottom: 12px; color: rgba(255,255,255,0.85); font-size: 14px; font-family: Vazirmatn, system-ui, Tahoma; font-weight: 700;">
@@ -545,7 +544,7 @@ function fc_captcha_error_html($message) {
 // ─── JavaScript Canvas + AJAX ───
 add_action('wp_footer', 'fc_captcha_js', 99);
 function fc_captcha_js() {
-    if (empty($GLOBALS['fc_captcha_active'])) return;
+    if (!is_singular('post')) return;
     ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {

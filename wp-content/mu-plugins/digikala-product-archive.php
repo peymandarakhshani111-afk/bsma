@@ -972,7 +972,8 @@ function digikala_archive_accordion_shortcode($atts) {
 add_action('wp_ajax_dk_load_accordion_products', 'dk_load_accordion_products_callback');
 add_action('wp_ajax_nopriv_dk_load_accordion_products', 'dk_load_accordion_products_callback');
 function dk_load_accordion_products_callback() {
-    check_ajax_referer('dk_archive_nonce', 'nonce');
+    // No nonce check: this read-only endpoint returns public product listings only, and a nonce
+    // baked into a cached page expires after 12-24h, which broke filters and "load more".
 
     $root_cat = intval($_POST['root_cat'] ?? 0);
     $cats = json_decode(stripslashes($_POST['cats'] ?? ''), true);

@@ -56,16 +56,20 @@ function fix_all_cart_quantities() {
         setTimeout(processQuantities, 600);
         setTimeout(processQuantities, 1000);
 
-        // نظارت روی تغییرات DOM، فقط داخل فرم سبد خرید (نه کل صفحه) و با debounce
-        // تا با هر تغییر جزئی در بقیه‌ی صفحه (چت آنلاین، تایمر و ...) دوباره اجرا نشود.
-        var cartContainer = document.querySelector('.woocommerce-cart-form') || document.body;
-        var debounceTimer = null;
+        // نظارت روی تغییرات DOM، حداکثر یک بار در هر ۱۵۰ میلی‌ثانیه (نه با هر تغییر جزئی).
+        // body دیده می‌شود چون ووکامرس بعد از به‌روزرسانی سبد، کل فرم را با فرم جدید جایگزین می‌کند.
+        // از debounce استفاده نشده چون المانی که مدام تغییر می‌کند (تایمر و ...) اجرای آن را برای همیشه عقب می‌اندازد.
+        var scheduled = false;
         var observer = new MutationObserver(function() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(processQuantities, 150);
+            if (scheduled) return;
+            scheduled = true;
+            setTimeout(function() {
+                scheduled = false;
+                processQuantities();
+            }, 150);
         });
 
-        observer.observe(cartContainer, { childList: true, subtree: true });
+        observer.observe(document.body, { childList: true, subtree: true });
 
     })();
     </script>

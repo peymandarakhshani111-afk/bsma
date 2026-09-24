@@ -158,6 +158,7 @@ function dk2_product_shortcode() {
             <?php if (!empty($gallery_ids)) : ?>
                 <?php foreach ($gallery_ids as $gid) : ?>
                     <?php $img_url = wp_get_attachment_image_url($gid, 'large'); ?>
+                    <?php if (!$img_url) continue; // A deleted image would open the current page URL in the lightbox. ?>
                     <a href="<?php echo esc_url($img_url); ?>"
                        class="dk2-lightbox-hidden"
                        data-gallery="<?php echo esc_attr($product_id); ?>"></a>
@@ -471,6 +472,8 @@ function dk2OpenLightbox(images) {
 
     show(0);
     document.body.appendChild(overlay);
+    // The overlay's CSS lives outside this file; the nav buttons need it to be a positioned box.
+    if (getComputedStyle(overlay).position === "static") overlay.style.position = "relative";
     document.addEventListener("keydown", onKey);
     closeBtn.onclick = close;
     overlay.onclick = e => { if (e.target === overlay) close(); };
