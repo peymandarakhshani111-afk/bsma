@@ -29,7 +29,7 @@ function dk2_product_shortcode() {
     $main_image_id  = $product->get_image_id();
     $main_image_url = wp_get_attachment_image_url($main_image_id, 'large');
     $gallery_ids    = $product->get_gallery_image_ids();
-    $brands = wp_get_post_terms($product->get_id(), 'product_brand');
+    $brands = get_the_terms($product->get_id(), 'product_brand'); // cached, unlike wp_get_post_terms()
     $average   = $product->get_average_rating();
     $reviews   = $product->get_review_count();
     $product_url = get_permalink($product->get_id());
@@ -142,9 +142,11 @@ function dk2_product_shortcode() {
             <a href="<?php echo esc_url($main_image_url); ?>"
                class="dk2-lightbox-trigger"
                data-gallery="<?php echo esc_attr($product_id); ?>">
+                <?php // The main image is usually the page's largest element (LCP): load it first and never lazily. ?>
                 <img src="<?php echo esc_url($main_image_url); ?>"
-                     class="dk2-product-img"
-                     alt="<?php echo esc_attr($product->get_title()); ?>">
+                     class="dk2-product-img skip-lazy"
+                     alt="<?php echo esc_attr($product->get_title()); ?>"
+                     fetchpriority="high" loading="eager" data-no-lazy="1">
             </a>
 
             <?php if (!empty($brands) && !is_wp_error($brands)) : ?>
@@ -315,7 +317,7 @@ function dk2_product_shortcode() {
 
 <div class="dk2-tags">
     <?php
-    $tags = wp_get_post_terms($product->get_id(), 'product_tag');
+    $tags = get_the_terms($product->get_id(), 'product_tag');
     if ( ! empty( $tags ) && ! is_wp_error( $tags ) ) {
         foreach ( $tags as $tag ) {
             $tag_link = get_term_link( $tag );

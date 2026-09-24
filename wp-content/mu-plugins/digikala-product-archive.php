@@ -126,6 +126,12 @@ if (!function_exists('dk_sidebar_promo')) {
             'tax_query' => array(array('taxonomy' => 'product_cat', 'field' => 'term_id', 'terms' => (int) $root_id)),
             'meta_query' => array(array('key' => '_stock_status', 'value' => 'outofstock', 'compare' => '!=')),
         ));
+        // Load the products, their terms and their images in a few batched queries instead of several per product.
+        _prime_post_caches($ids, true, true);
+        $thumb_ids = array_filter(array_map('get_post_thumbnail_id', $ids));
+        if ($thumb_ids) {
+            _prime_post_caches($thumb_ids, false, true);
+        }
         $items = array();
         foreach ($ids as $id) {
             $product = wc_get_product($id);
@@ -328,6 +334,8 @@ function digikala_archive_accordion_shortcode($atts) {
     /* ─── SERVER-SIDE INITIAL QUERY ─── */
     $initial_args = dk_build_query_args($root_id, array(), 'expanded', null, null, $default_sort, 1, $per_page);
     $initial_query = new WP_Query($initial_args);
+    // Load every card image (post + meta) in one batch instead of two queries per product.
+    update_post_thumbnail_cache($initial_query);
     $initial_products_html = '';
     $initial_total = $initial_query->found_posts;
     $initial_total_pages = $initial_query->max_num_pages;
@@ -367,27 +375,24 @@ function digikala_archive_accordion_shortcode($atts) {
     ?>
 
 <style>
-@font-face {
-    font-family: 'Vazirmatn';
-    src: local('Vazirmatn Regular'), local('Vazirmatn-Regular'),
-         url('<?php echo get_stylesheet_directory_uri(); ?>/fonts/Vazirmatn-Regular.woff2') format('woff2'),
-         url('<?php echo get_stylesheet_directory_uri(); ?>/fonts/Vazirmatn-Regular.woff') format('woff');
-    font-weight: 400; font-style: normal; font-display: swap;
+<?php
+// Declare only the font files that exist in the theme. A missing file means failed requests on every
+// archive view, and because this rule comes later it would also override a working Vazirmatn defined elsewhere.
+$dk_font_dir = get_stylesheet_directory() . '/fonts/';
+$dk_font_uri = get_stylesheet_directory_uri() . '/fonts/';
+foreach (array(400 => 'Regular', 500 => 'Medium', 700 => 'Bold') as $dk_weight => $dk_style) {
+    $dk_srcs = array();
+    foreach (array('woff2', 'woff') as $dk_ext) {
+        $dk_file = 'Vazirmatn-' . $dk_style . '.' . $dk_ext;
+        if (file_exists($dk_font_dir . $dk_file)) {
+            $dk_srcs[] = "url('" . esc_url_raw($dk_font_uri . $dk_file) . "') format('" . $dk_ext . "')";
+        }
+    }
+    if (!$dk_srcs) continue;
+    echo "@font-face {\n    font-family: 'Vazirmatn';\n    src: local('Vazirmatn " . $dk_style . "'), local('Vazirmatn-" . $dk_style . "'),\n         "
+        . implode(",\n         ", $dk_srcs) . ";\n    font-weight: " . $dk_weight . "; font-style: normal; font-display: swap;\n}\n";
 }
-@font-face {
-    font-family: 'Vazirmatn';
-    src: local('Vazirmatn Medium'), local('Vazirmatn-Medium'),
-         url('<?php echo get_stylesheet_directory_uri(); ?>/fonts/Vazirmatn-Medium.woff2') format('woff2'),
-         url('<?php echo get_stylesheet_directory_uri(); ?>/fonts/Vazirmatn-Medium.woff') format('woff');
-    font-weight: 500; font-style: normal; font-display: swap;
-}
-@font-face {
-    font-family: 'Vazirmatn';
-    src: local('Vazirmatn Bold'), local('Vazirmatn-Bold'),
-         url('<?php echo get_stylesheet_directory_uri(); ?>/fonts/Vazirmatn-Bold.woff2') format('woff2'),
-         url('<?php echo get_stylesheet_directory_uri(); ?>/fonts/Vazirmatn-Bold.woff') format('woff');
-    font-weight: 700; font-style: normal; font-display: swap;
-}
+?>
 
 .<?php echo $uid; ?> {
     --dk-primary: #ef394e; --dk-primary-hover: #d32f2f; --dk-dark: #232933;
@@ -838,8 +843,20 @@ function digikala_archive_accordion_shortcode($atts) {
         return Array.from(cats);
     }
 
+    // A filter/sort change made while a request is running; it is applied as soon as that request ends.
+    let pendingReload = null;
+    function runPendingReload() {
+        if (pendingReload === null) return;
+        const useExpanded = pendingReload;
+        pendingReload = null;
+        loadProducts(false, useExpanded);
+    }
+
     function loadProducts(append = false, useExpanded = false) {
-        if (state.loading) return;
+        if (state.loading) {
+            if (!append) pendingReload = useExpanded;
+            return;
+        }
         state.loading = true;
 
         const prevPage = state.page;
@@ -954,7 +971,8 @@ function digikala_archive_accordion_shortcode($atts) {
             }
             restoreAfterFailure();
             console.error('Error:', err);
-        });
+        })
+        .then(runPendingReload);
     }
 
     document.addEventListener('keydown', e => {
@@ -996,6 +1014,7 @@ function dk_load_accordion_products_callback() {
 
     $args = dk_build_query_args($root_cat, $cats, $mode, $min, $max, $sort, $page, $per_page);
     $query = new WP_Query($args);
+    update_post_thumbnail_cache($query);
     $products = array();
 
     while ($query->have_posts()) {

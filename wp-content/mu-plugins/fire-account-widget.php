@@ -34,9 +34,11 @@ function fire_account_widget_handle_forms() {
         return;
     }
 
+    // $_POST stays slashed here on purpose: wp_update_user() and update_user_meta() unslash their input
+    // themselves, and WordPress (wp_signon) and WooCommerce compare passwords in their slashed form.
     if (isset($_POST['fire_update_account'])) {
-        $email   = sanitize_email(wp_unslash($_POST['email'] ?? ''));
-        $display = sanitize_text_field(wp_unslash($_POST['display_name'] ?? ''));
+        $email   = sanitize_email($_POST['email'] ?? '');
+        $display = sanitize_text_field($_POST['display_name'] ?? '');
 
         if (!is_email($email)) {
             fire_account_set_msg($user_id, 'ایمیل وارد شده معتبر نیست.');
@@ -53,10 +55,9 @@ function fire_account_widget_handle_forms() {
     }
 
     if (isset($_POST['fire_change_password'])) {
-        // Passwords are not sanitized, only unslashed, so special characters are kept exactly.
-        $current = wp_unslash($_POST['password_current'] ?? '');
-        $pass1   = wp_unslash($_POST['password_1'] ?? '');
-        $pass2   = wp_unslash($_POST['password_2'] ?? '');
+        $current = $_POST['password_current'] ?? '';
+        $pass1   = $_POST['password_1'] ?? '';
+        $pass2   = $_POST['password_2'] ?? '';
         $user    = get_userdata($user_id);
 
         if (!$user || !wp_check_password($current, $user->user_pass, $user_id)) {
@@ -73,8 +74,8 @@ function fire_account_widget_handle_forms() {
     }
 
     if (isset($_POST['fire_save_addresses'])) {
-        update_user_meta($user_id, 'billing_address_1', sanitize_textarea_field(wp_unslash($_POST['billing'] ?? '')));
-        update_user_meta($user_id, 'shipping_address_1', sanitize_textarea_field(wp_unslash($_POST['shipping'] ?? '')));
+        update_user_meta($user_id, 'billing_address_1', sanitize_textarea_field($_POST['billing'] ?? ''));
+        update_user_meta($user_id, 'shipping_address_1', sanitize_textarea_field($_POST['shipping'] ?? ''));
         fire_account_set_msg($user_id, 'آدرس‌ها ذخیره شدند.');
     }
 

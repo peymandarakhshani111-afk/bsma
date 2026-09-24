@@ -30,9 +30,17 @@ add_shortcode('current_post_article', function($atts) {
     $image_html = '';
     if ($image_src) {
         $image_url = $image_src[0];
+        // Let the browser pick a file that fits the square box (max 360px, 250px on desktop) instead of
+        // always downloading the original. With object-fit: cover a landscape image fills the box by its
+        // height, so it needs a proportionally wider file.
+        $ratio  = ($image_src[1] > 0 && $image_src[2] > 0) ? max(1, $image_src[1] / $image_src[2]) : 1;
+        $srcset = wp_get_attachment_image_srcset($thumbnail_id, 'full');
+        $sizes  = '(min-width: 992px) ' . (int) ceil(250 * $ratio) . 'px, ' . (int) ceil(360 * $ratio) . 'px';
         $image_html = '
             <div class="cpa-thumb">
-                <img src="' . esc_url($image_url) . '" alt="' . esc_attr($title) . '" class="cpa-thumb-img" />
+                <img src="' . esc_url($image_url) . '"'
+                . ($srcset ? ' srcset="' . esc_attr($srcset) . '" sizes="' . esc_attr($sizes) . '"' : '')
+                . ' alt="' . esc_attr($title) . '" class="cpa-thumb-img" fetchpriority="high" decoding="async" />
             </div>';
     }
 
@@ -484,7 +492,8 @@ add_action('wp_ajax_nopriv_fc_generate_captcha', 'fc_ajax_generate_captcha');
 function fc_ajax_generate_captcha() {
     $code = fc_generate_code();
     $id   = wp_rand(100000, 999999);
-    set_transient('fc_captcha_' . $id, $code, 5 * MINUTE_IN_SECONDS);
+    // 20 minutes, so a visitor writing a long comment doesn't lose it to an expired code (each code is single-use).
+    set_transient('fc_captcha_' . $id, $code, 20 * MINUTE_IN_SECONDS);
 
     wp_send_json_success([
         'code' => $code,
@@ -635,8 +644,32 @@ function fc_captcha_js() {
             if (input) { input.value = ''; input.focus(); }
         };
 
-        if (document.getElementById('fc-captcha-canvas')) {
-            fcLoadCaptcha();
+        // Fetch the code only when the visitor reaches the comment form (or starts typing in it), so
+        // ordinary page views don't make an uncacheable admin-ajax request and a database write.
+        var fcCanvas = document.getElementById('fc-captcha-canvas');
+        if (fcCanvas) {
+            var fcLoaded = false;
+            var fcLoadOnce = function() {
+                if (fcLoaded) return;
+                fcLoaded = true;
+                fcLoadCaptcha();
+            };
+            var fcForm = fcCanvas.closest('form');
+            if (fcForm) fcForm.addEventListener('focusin', fcLoadOnce);
+            if ('IntersectionObserver' in window) {
+                var fcObserver = new IntersectionObserver(function(entries) {
+                    for (var i = 0; i < entries.length; i++) {
+                        if (entries[i].isIntersecting) {
+                            fcObserver.disconnect();
+                            fcLoadOnce();
+                            return;
+                        }
+                    }
+                }, { rootMargin: '300px' });
+                fcObserver.observe(fcCanvas);
+            } else {
+                fcLoadOnce();
+            }
         }
     });
     </script>
