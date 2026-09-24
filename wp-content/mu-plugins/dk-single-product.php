@@ -8,6 +8,63 @@ Author: محمد قربانی
 
 if (!defined('ABSPATH')) exit;
 
+/**
+ * Real numbers for the product badges, cached for an hour:
+ * wishlist saves (dk-wishlist.php table) and paid orders in the last 7 days (WooCommerce Analytics tables).
+ * A badge is only returned when its number is above zero.
+ */
+function dk2_social_proof_badges($product_id) {
+    $product_id = (int) $product_id;
+    $key        = 'dk2_badges_' . $product_id;
+    $counts     = get_transient($key);
+
+    if (!is_array($counts)) {
+        global $wpdb;
+        $counts   = array('wishlist' => 0, 'orders' => 0);
+        $suppress = $wpdb->suppress_errors(true);
+
+        // The option is set only after dk-wishlist.php has created its table.
+        if (get_option('dk_wishlist_db_version')) {
+            $counts['wishlist'] = (int) $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}dk_wishlist WHERE product_id = %d",
+                $product_id
+            ));
+        }
+
+        // Orders (not refunds: parent_id = 0) that are paid, i.e. processing or completed.
+        $counts['orders'] = (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(DISTINCT l.order_id)
+             FROM {$wpdb->prefix}wc_order_product_lookup l
+             INNER JOIN {$wpdb->prefix}wc_order_stats s ON s.order_id = l.order_id
+             WHERE l.product_id = %d
+               AND s.parent_id = 0
+               AND s.status IN ('wc-processing', 'wc-completed')
+               AND s.date_created_gmt >= %s",
+            $product_id,
+            gmdate('Y-m-d H:i:s', time() - 7 * DAY_IN_SECONDS)
+        ));
+
+        $wpdb->suppress_errors($suppress);
+        set_transient($key, $counts, HOUR_IN_SECONDS);
+    }
+
+    $badges = array();
+    if ($counts['wishlist'] > 0) {
+        $badges[] = '<div class="dk2-badge badge-like">💖 ' . esc_html(dk2_fa_number($counts['wishlist'])) . ' نفر در لیست علاقه‌مندی</div>';
+    }
+    if ($counts['orders'] > 0) {
+        $badges[] = '<div class="dk2-badge badge-sale">🛒 ' . esc_html(dk2_fa_number($counts['orders'])) . ' سفارش در هفته گذشته</div>';
+    }
+    return $badges;
+}
+
+function dk2_fa_number($number) {
+    return strtr(number_format((int) $number), array(
+        ',' => '٬', '0' => '۰', '1' => '۱', '2' => '۲', '3' => '۳', '4' => '۴',
+        '5' => '۵', '6' => '۶', '7' => '۷', '8' => '۸', '9' => '۹',
+    ));
+}
+
 function dk2_product_shortcode() {
 
     if (!is_singular('product')) return '';
@@ -204,11 +261,13 @@ function dk2_product_shortcode() {
                 </div>
             </div>
 
+            <?php // Real numbers only; the site records no page views, so there is no views badge. ?>
+            <?php $dk2_badges = dk2_social_proof_badges($product_id); ?>
+            <?php if ($dk2_badges) : ?>
             <div class="dk2-badges">
-                <div class="dk2-badge badge-like">💖 ۱۰۰۰+ نفر در لیست علاقه‌مندی</div>
-                <div class="dk2-badge badge-view">👁️ ۱۰۰+ بازدید در ۲۴ ساعت اخیر</div>
-                <div class="dk2-badge badge-sale">🛒 ۲۰+ فروش در هفته گذشته</div>
+                <?php echo implode("\n                ", $dk2_badges); ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 

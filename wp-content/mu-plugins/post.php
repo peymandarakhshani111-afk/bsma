@@ -495,10 +495,84 @@ function fc_ajax_generate_captcha() {
     // 20 minutes, so a visitor writing a long comment doesn't lose it to an expired code (each code is single-use).
     set_transient('fc_captcha_' . $id, $code, 20 * MINUTE_IN_SECONDS);
 
-    wp_send_json_success([
-        'code' => $code,
-        'id'   => $id
-    ]);
+    // The picture is drawn on the server so the answer never reaches the browser as text.
+    // Only if GD is missing does the browser get the code to draw itself (the old, weaker way).
+    $image = fc_captcha_image($code);
+    wp_send_json_success($image ? array('id' => $id, 'image' => $image) : array('id' => $id, 'code' => $code));
+}
+
+/**
+ * Draws the captcha code as a 200x60 PNG (same look as the old canvas) and returns it as a data URI,
+ * or false when GD is not available.
+ */
+function fc_captcha_image($code) {
+    if (!function_exists('imagecreatetruecolor') || !function_exists('imagepng') || !function_exists('imagerotate')) {
+        return false;
+    }
+    $w  = 200;
+    $h  = 60;
+    $im = imagecreatetruecolor($w, $h);
+    imagealphablending($im, true);
+
+    // Background: gradient #051e30 -> #0a3d5c.
+    for ($x = 0; $x < $w; $x++) {
+        $t = $x / ($w - 1);
+        imageline($im, $x, 0, $x, $h - 1, imagecolorallocate($im, (int) (5 + 5 * $t), (int) (30 + 31 * $t), (int) (48 + 44 * $t)));
+    }
+    // Speckles.
+    for ($i = 0; $i < 400; $i++) {
+        $px = wp_rand(0, $w - 2);
+        $py = wp_rand(0, $h - 2);
+        imagefilledrectangle($im, $px, $py, $px + 1, $py + 1, imagecolorallocatealpha($im, 0, 212, 255, wp_rand(95, 125)));
+    }
+
+    // Characters: GD's built-in font, enlarged 3x, each rotated and shifted at random.
+    $len = strlen($code);
+    for ($i = 0; $i < $len; $i++) {
+        $small = imagecreatetruecolor(11, 16);
+        imagealphablending($small, false);
+        imagesavealpha($small, true);
+        imagefill($small, 0, 0, imagecolorallocatealpha($small, 0, 0, 0, 127));
+        imagestring($small, 5, 1, 0, $code[$i], imagecolorallocate($small, 0, 212, 255));
+
+        $big = imagecreatetruecolor(33, 48);
+        imagealphablending($big, false);
+        imagesavealpha($big, true);
+        imagefill($big, 0, 0, imagecolorallocatealpha($big, 0, 0, 0, 127));
+        imagecopyresampled($big, $small, 0, 0, 0, 0, 33, 48, 11, 16);
+
+        $rot = imagerotate($big, wp_rand(-25, 25), imagecolorallocatealpha($big, 0, 0, 0, 127));
+        imagesavealpha($rot, true);
+        $rw = imagesx($rot);
+        $rh = imagesy($rot);
+        imagecopy($im, $rot, (int) (35 + $i * 42 - $rw / 2), (int) (($h - $rh) / 2 + wp_rand(-4, 4)), 0, 0, $rw, $rh);
+    }
+
+    // Wavy lines across the characters.
+    imagesetthickness($im, 2);
+    for ($i = 0; $i < 3; $i++) {
+        $color = imagecolorallocatealpha($im, 0, 212, 255, wp_rand(55, 85));
+        $base  = wp_rand(12, $h - 12);
+        $amp   = wp_rand(4, 10);
+        $freq  = wp_rand(20, 50) / 1000;
+        $phase = wp_rand(0, 628) / 100;
+        $prev  = null;
+        for ($x = 0; $x < $w; $x += 4) {
+            $y = (int) ($base + sin($x * $freq + $phase) * $amp);
+            if ($prev !== null) {
+                imageline($im, $x - 4, $prev, $x, $y, $color);
+            }
+            $prev = $y;
+        }
+    }
+    imagesetthickness($im, 1);
+    imagerectangle($im, 0, 0, $w - 1, $h - 1, imagecolorallocatealpha($im, 0, 212, 255, 90));
+
+    ob_start();
+    imagepng($im);
+    $png = ob_get_clean();
+
+    return $png ? 'data:image/png;base64,' . base64_encode($png) : false;
 }
 
 function fc_generate_code() {
@@ -530,6 +604,10 @@ function fc_verify_captcha($commentdata) {
     $expected = $id ? get_transient('fc_captcha_' . $id) : false;
 
     if ($code === '' || $expected === false || $code !== $expected) {
+        // One attempt per code, so the same picture cannot be brute-forced.
+        if ($id) {
+            delete_transient('fc_captcha_' . $id);
+        }
         wp_die(
             fc_captcha_error_html('کد امنیتی نادرست، خالی یا منقضی شده است.'),
             'خطای امنیتی',
@@ -572,7 +650,16 @@ function fc_captcha_js() {
             .then(function(data) {
                 if (data.success && data.data) {
                     var canvas = document.getElementById('fc-captcha-canvas');
-                    if (canvas) {
+                    if (canvas && data.data.image) {
+                        var pic = new Image();
+                        pic.onload = function() {
+                            var ctx = canvas.getContext('2d');
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(pic, 0, 0, canvas.width, canvas.height);
+                        };
+                        pic.src = data.data.image;
+                    } else if (canvas && data.data.code) {
+                        // Server without GD: draw the code in the browser (old behaviour).
                         canvas.setAttribute('data-code', data.data.code);
                         fcGenerateCaptcha();
                     }
@@ -670,6 +757,15 @@ function fc_captcha_js() {
             } else {
                 fcLoadOnce();
             }
+
+            // A wrong answer uses up the code; coming "back to the form" from the error page may restore
+            // the old picture from the browser cache, so fetch a fresh one.
+            window.addEventListener('pageshow', function(e) {
+                if (!e.persisted || !fcLoaded) return;
+                var input = document.getElementById('fc-captcha-input');
+                if (input) input.value = '';
+                fcLoadCaptcha();
+            });
         }
     });
     </script>
