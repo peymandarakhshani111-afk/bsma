@@ -12,13 +12,26 @@ if (!defined('ABSPATH')) exit;
 
 if (!function_exists('dk_get_category_tree')) {
     function dk_get_category_tree($parent_id = 0, $taxonomy = 'product_cat', $current_cat_id = null) {
-        $terms = get_terms(array(
-            'taxonomy'   => $taxonomy,
-            'parent'     => $parent_id,
-            'hide_empty' => false,
-            'orderby'    => 'name',
-            'order'      => 'ASC',
-        ));
+        // Load every term once per request instead of one get_terms() query per tree node.
+        static $by_parent = array();
+        if (!isset($by_parent[$taxonomy])) {
+            $by_parent[$taxonomy] = array();
+            $all_terms = get_terms(array(
+                'taxonomy'   => $taxonomy,
+                'hide_empty' => false,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+            ));
+            if (!empty($all_terms) && !is_wp_error($all_terms)) {
+                foreach ($all_terms as $t) {
+                    $by_parent[$taxonomy][(int) $t->parent][] = $t;
+                }
+            }
+        }
+        $terms = array();
+        foreach ($by_parent[$taxonomy][(int) $parent_id] ?? array() as $t) {
+            $terms[] = clone $t;
+        }
 
         // bsma 2026-09-24: sub-levels follow the WooCommerce manual category order (ties stay A-Z)
         if ($parent_id > 0 && !empty($terms) && !is_wp_error($terms)) {
@@ -829,6 +842,9 @@ function digikala_archive_accordion_shortcode($atts) {
         if (state.loading) return;
         state.loading = true;
 
+        const prevPage = state.page;
+        const prevHasMore = state.hasMore;
+
         if (!append) {
             state.page = 1;
             state.hasMore = true;
@@ -869,6 +885,20 @@ function digikala_archive_accordion_shortcode($atts) {
         formData.append('page', state.page);
         formData.append('per_page', perPage);
 
+        // On failure (e.g. an expired nonce on a cached page) put the previous products back
+        // instead of leaving the grid hidden.
+        function restoreAfterFailure() {
+            state.page = append ? prevPage - 1 : prevPage;
+            state.hasMore = prevHasMore;
+            if (append) return;
+            if (gridEl.children.length > 0) {
+                gridEl.style.display = 'grid';
+                loadMoreWrap.style.display = state.hasMore ? 'block' : 'none';
+            } else {
+                emptyEl.style.display = 'block';
+            }
+        }
+
         fetch(url, { method: 'POST', body: formData })
         .then(r => r.json())
         .then(res => {
@@ -880,7 +910,10 @@ function digikala_archive_accordion_shortcode($atts) {
                 loadMoreBtn.disabled = false;
             }
 
-            if (!res.success) return;
+            if (!res || !res.success) {
+                restoreAfterFailure();
+                return;
+            }
 
             if (!append) gridEl.innerHTML = '';
 
@@ -919,6 +952,7 @@ function digikala_archive_accordion_shortcode($atts) {
                 loadMoreBtn.classList.remove('loading');
                 loadMoreBtn.disabled = false;
             }
+            restoreAfterFailure();
             console.error('Error:', err);
         });
     }
@@ -940,13 +974,18 @@ add_action('wp_ajax_nopriv_dk_load_accordion_products', 'dk_load_accordion_produ
 function dk_load_accordion_products_callback() {
     check_ajax_referer('dk_archive_nonce', 'nonce');
 
-    $root_cat = intval($_POST['root_cat']);
-    $cats = json_decode(stripslashes($_POST['cats']), true);
-    $mode = sanitize_text_field($_POST['mode']);
-    $page = intval($_POST['page']) ?: 1;
-    $per_page = intval($_POST['per_page']) ?: 12;
-    $sort = sanitize_text_field($_POST['sort']) ?: 'date';
+    $root_cat = intval($_POST['root_cat'] ?? 0);
+    $cats = json_decode(stripslashes($_POST['cats'] ?? ''), true);
+    $mode = sanitize_text_field($_POST['mode'] ?? '');
+    $page = intval($_POST['page'] ?? 0) ?: 1;
+    $per_page = min(intval($_POST['per_page'] ?? 0) ?: 12, 100);
+    if ($per_page < 1) { $per_page = 12; }
+    $sort = sanitize_text_field($_POST['sort'] ?? '') ?: 'date';
     $uid = sanitize_text_field($_POST['uid'] ?? 'dkacc');  // ← FIX: read uid from request
+    // bsma: $uid is echoed unescaped into HTML class attributes in dk_render_product_card(),
+    // so it must not contain quotes or other attribute-breaking characters.
+    $uid = preg_replace('/[^a-zA-Z0-9_-]/', '', $uid);
+    if ($uid === '') { $uid = 'dkacc'; }
 
     if (!is_array($cats)) $cats = array();
     $cats = array_filter(array_map('intval', $cats), function($id) { return $id > 0; });

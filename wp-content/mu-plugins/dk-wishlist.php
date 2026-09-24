@@ -37,6 +37,40 @@ function dk_get_guest_token() {
     return $token;
 }
 
+/**
+ * ساخت جدول علاقه‌مندی‌ها (یک بار)
+ * register_activation_hook برای mu-pluginها هیچ‌وقت اجرا نمی‌شود، پس جدول اینجا ساخته می‌شود.
+ */
+define('DK_WISHLIST_DB_VERSION', '2');
+
+add_action('init', 'dk_wishlist_maybe_create_table');
+function dk_wishlist_maybe_create_table() {
+    if (get_option('dk_wishlist_db_version') === DK_WISHLIST_DB_VERSION) {
+        return;
+    }
+
+    global $wpdb;
+    $table   = $wpdb->prefix . 'dk_wishlist';
+    $charset = $wpdb->get_charset_collate();
+
+    // dbDelta needs two spaces after PRIMARY KEY.
+    $sql = "CREATE TABLE $table (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NULL,
+        session_id VARCHAR(64) NULL,
+        product_id BIGINT UNSIGNED NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY  (id),
+        KEY user_product (user_id,product_id),
+        KEY session_product (session_id,product_id)
+    ) $charset;";
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta($sql);
+
+    update_option('dk_wishlist_db_version', DK_WISHLIST_DB_VERSION);
+}
+
 add_action('wp_ajax_dk_toggle_wishlist', 'dk_toggle_wishlist');
 add_action('wp_ajax_nopriv_dk_toggle_wishlist', 'dk_toggle_wishlist');
 
@@ -46,7 +80,7 @@ function dk_toggle_wishlist() {
     $table      = $wpdb->prefix . 'dk_wishlist';
     $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
 
-    if (!$product_id) {
+    if (!$product_id || get_post_type($product_id) !== 'product') {
         wp_send_json_error(['message' => 'invalid_product_id'], 400);
     }
 
@@ -71,7 +105,7 @@ function dk_toggle_wishlist() {
         $wpdb->delete($table, ['id' => $exists], ['%d']);
         wp_send_json(['status' => 'removed']);
     } else {
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $table,
             [
                 'user_id'    => $user_id ?: null,
@@ -80,6 +114,9 @@ function dk_toggle_wishlist() {
             ],
             ['%d','%s','%d']
         );
+        if ($inserted === false) {
+            wp_send_json_error(['message' => 'db_error'], 500);
+        }
         wp_send_json(['status' => 'added']);
     }
 }
@@ -97,7 +134,13 @@ function dk_check_wishlist() {
         wp_send_json(['in_wishlist' => false]);
     }
 
-    $user_id    = get_current_user_id();
+    $user_id = get_current_user_id();
+
+    // A guest without a token has nothing saved yet; don't set a cookie just for a check.
+    if (!$user_id && empty($_COOKIE['dk_wishlist_token'])) {
+        wp_send_json(['in_wishlist' => false]);
+    }
+
     $guest_token = $user_id ? null : dk_get_guest_token();
 
     if ($user_id) {
@@ -116,22 +159,3 @@ function dk_check_wishlist() {
 
     wp_send_json(['in_wishlist' => (bool) $exists]);
 }
-
-register_activation_hook(__FILE__, function() {
-    global $wpdb;
-    $table = $wpdb->prefix . 'dk_wishlist';
-
-    $charset = $wpdb->get_charset_collate();
-
-    $sql = "CREATE TABLE $table (
-        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-        user_id BIGINT UNSIGNED NULL,
-        session_id VARCHAR(64) NULL,
-        product_id BIGINT UNSIGNED NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY(id)
-    ) $charset;";
-
-    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-    dbDelta($sql);
-});

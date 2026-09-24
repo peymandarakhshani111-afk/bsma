@@ -8,57 +8,79 @@ Author: محمد قربانی
 
 if (!defined('ABSPATH')) exit;
 
-add_action('init', 'fire_account_start_session', 1);
-function fire_account_start_session() {
-    if (!session_id() && is_user_logged_in()) {
-        session_start();
-    }
-}
-
 add_shortcode('fire_account_widget', 'fire_account_widget_render');
 add_action('init', 'fire_account_widget_handle_forms');
+
+// One-time message stored per user (replaces the PHP session, which locked every request).
+function fire_account_set_msg($user_id, $msg) {
+    set_transient('fire_msg_' . $user_id, $msg, 5 * MINUTE_IN_SECONDS);
+}
 
 function fire_account_widget_handle_forms() {
     if (!is_user_logged_in()) return;
 
+    $actions = array('fire_update_account', 'fire_change_password', 'fire_save_addresses', 'fire_logout');
+    $submitted = false;
+    foreach ($actions as $action) {
+        if (isset($_POST[$action])) { $submitted = true; break; }
+    }
+    if (!$submitted) return;
+
+    // CSRF protection: every form carries this nonce.
     $user_id = get_current_user_id();
 
+    if (!isset($_POST['fire_nonce']) || !wp_verify_nonce(sanitize_key(wp_unslash($_POST['fire_nonce'])), 'fire_account_action')) {
+        fire_account_set_msg($user_id, 'اعتبار فرم تمام شده است؛ صفحه را تازه کنید و دوباره تلاش کنید.');
+        return;
+    }
+
     if (isset($_POST['fire_update_account'])) {
-        $email   = sanitize_email($_POST['email']);
-        $display = sanitize_text_field($_POST['display_name']);
+        $email   = sanitize_email(wp_unslash($_POST['email'] ?? ''));
+        $display = sanitize_text_field(wp_unslash($_POST['display_name'] ?? ''));
 
-        wp_update_user([
-            'ID'           => $user_id,
-            'user_email'   => $email,
-            'display_name' => $display
-        ]);
-
-        $_SESSION['fire_msg'] = 'اطلاعات حساب با موفقیت ذخیره شد.';
+        if (!is_email($email)) {
+            fire_account_set_msg($user_id, 'ایمیل وارد شده معتبر نیست.');
+        } else {
+            $result = wp_update_user([
+                'ID'           => $user_id,
+                'user_email'   => $email,
+                'display_name' => $display
+            ]);
+            fire_account_set_msg($user_id, is_wp_error($result)
+                ? 'ذخیره انجام نشد: ' . $result->get_error_message()
+                : 'اطلاعات حساب با موفقیت ذخیره شد.');
+        }
     }
 
     if (isset($_POST['fire_change_password'])) {
-        $pass1 = $_POST['password_1'];
-        $pass2 = $_POST['password_2'];
+        // Passwords are not sanitized, only unslashed, so special characters are kept exactly.
+        $current = wp_unslash($_POST['password_current'] ?? '');
+        $pass1   = wp_unslash($_POST['password_1'] ?? '');
+        $pass2   = wp_unslash($_POST['password_2'] ?? '');
+        $user    = get_userdata($user_id);
 
-        if ($pass1 === $pass2 && !empty($pass1)) {
-            wp_set_password($pass1, $user_id);
-            $_SESSION['fire_msg'] = 'رمز عبور با موفقیت تغییر کرد.';
-            wp_redirect(wc_get_page_permalink('myaccount'));
-            exit;
+        if (!$user || !wp_check_password($current, $user->user_pass, $user_id)) {
+            fire_account_set_msg($user_id, 'رمز فعلی درست نیست.');
+        } elseif ($pass1 === '' || $pass1 !== $pass2) {
+            fire_account_set_msg($user_id, 'رمزها مطابقت ندارند.');
         } else {
-            $_SESSION['fire_msg'] = 'رمزها مطابقت ندارند.';
+            // wp_update_user() keeps the user logged in after the change (wp_set_password() logs them out).
+            wp_update_user(['ID' => $user_id, 'user_pass' => $pass1]);
+            fire_account_set_msg($user_id, 'رمز عبور با موفقیت تغییر کرد.');
+            wp_safe_redirect(wc_get_page_permalink('myaccount'));
+            exit;
         }
     }
 
     if (isset($_POST['fire_save_addresses'])) {
-        update_user_meta($user_id, 'billing_address_1', sanitize_textarea_field($_POST['billing']));
-        update_user_meta($user_id, 'shipping_address_1', sanitize_textarea_field($_POST['shipping']));
-        $_SESSION['fire_msg'] = 'آدرس‌ها ذخیره شدند.';
+        update_user_meta($user_id, 'billing_address_1', sanitize_textarea_field(wp_unslash($_POST['billing'] ?? '')));
+        update_user_meta($user_id, 'shipping_address_1', sanitize_textarea_field(wp_unslash($_POST['shipping'] ?? '')));
+        fire_account_set_msg($user_id, 'آدرس‌ها ذخیره شدند.');
     }
 
     if (isset($_POST['fire_logout'])) {
         wp_logout();
-        wp_redirect(home_url());
+        wp_safe_redirect(home_url());
         exit;
     }
 }
@@ -72,9 +94,10 @@ function fire_account_widget_render() {
 
     ob_start();
 
-    if (!empty($_SESSION['fire_msg'])) {
-        echo '<div class="fire-msg">'.$_SESSION['fire_msg'].'</div>';
-        unset($_SESSION['fire_msg']);
+    $msg = get_transient('fire_msg_' . $u->ID);
+    if ($msg) {
+        echo '<div class="fire-msg">' . esc_html($msg) . '</div>';
+        delete_transient('fire_msg_' . $u->ID);
     }
 
     ?>
@@ -174,6 +197,7 @@ function fire_account_widget_render() {
     <div class="fire-section">
         <h3>ویرایش حساب</h3>
         <form method="post">
+            <?php wp_nonce_field('fire_account_action', 'fire_nonce'); ?>
             <input type="text" name="display_name" value="<?php echo esc_attr($u->display_name); ?>" placeholder="نام نمایشی">
             <input type="email" name="email" value="<?php echo esc_attr($u->user_email); ?>" placeholder="ایمیل">
             <button name="fire_update_account">ذخیره تغییرات</button>
@@ -184,8 +208,10 @@ function fire_account_widget_render() {
     <div class="fire-section">
         <h3>تغییر رمز عبور</h3>
         <form method="post">
-            <input type="password" name="password_1" placeholder="رمز جدید">
-            <input type="password" name="password_2" placeholder="تکرار رمز">
+            <?php wp_nonce_field('fire_account_action', 'fire_nonce'); ?>
+            <input type="password" name="password_current" placeholder="رمز فعلی" autocomplete="current-password">
+            <input type="password" name="password_1" placeholder="رمز جدید" autocomplete="new-password">
+            <input type="password" name="password_2" placeholder="تکرار رمز" autocomplete="new-password">
             <button name="fire_change_password">تغییر رمز</button>
         </form>
     </div>
@@ -211,6 +237,7 @@ function fire_account_widget_render() {
     <div class="fire-section">
         <h3>آدرس‌ها</h3>
         <form method="post">
+            <?php wp_nonce_field('fire_account_action', 'fire_nonce'); ?>
             <textarea name="billing" placeholder="آدرس صورتحساب"><?php echo esc_textarea(get_user_meta(get_current_user_id(), 'billing_address_1', true)); ?></textarea>
             <textarea name="shipping" placeholder="آدرس ارسال"><?php echo esc_textarea(get_user_meta(get_current_user_id(), 'shipping_address_1', true)); ?></textarea>
             <button name="fire_save_addresses">ذخیره آدرس‌ها</button>
@@ -221,6 +248,7 @@ function fire_account_widget_render() {
     <div class="fire-section">
         <h3>خروج</h3>
         <form method="post">
+            <?php wp_nonce_field('fire_account_action', 'fire_nonce'); ?>
             <button name="fire_logout">خروج از حساب</button>
         </form>
     </div>

@@ -3,6 +3,8 @@
  * شورت‌کد نمایش پست فعلی + کپچای Canvas (سازگار با کش)
  */
 
+if (!defined('ABSPATH')) exit;
+
 add_shortcode('current_post_article', function($atts) {
     if (!is_singular('post')) {
         return '<p>پست یافت نشد.</p>';
@@ -441,7 +443,7 @@ function fc_render_captcha() {
     if (empty($GLOBALS['fc_captcha_active'])) return;
     ?>
     <div class="fc-captcha-wrap" style="margin: 20px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); max-width: 360px; text-align: center;">
-        <label style="display: block; margin-bottom: 12px; color: #000; font-size: 14px; font-family: Vazirmatn, system-ui, Tahoma; font-weight: 700;">
+        <label style="display: block; margin-bottom: 12px; color: rgba(255,255,255,0.85); font-size: 14px; font-family: Vazirmatn, system-ui, Tahoma; font-weight: 700;">
             کد امنیتی تصویر را وارد کنید:
         </label>
 
@@ -500,18 +502,26 @@ function fc_generate_code() {
     return $code;
 }
 
-// ─── اعتبارسنجی ۱: قبل از ذخیره ───
+// ─── اعتبارسنجی (یک بار، قبل از ذخیره) ───
+// The earlier "backup" checks on wp_insert_comment / comment_post ran after this one had already
+// deleted the transient, so they deleted every valid comment. One check before saving is enough.
 add_filter('preprocess_comment', 'fc_verify_captcha', 1);
 function fc_verify_captcha($commentdata) {
-    if (current_user_can('administrator')) return $commentdata;
+    if (current_user_can('moderate_comments')) return $commentdata;
 
-    if (!isset($_POST['fc_captcha'])) return $commentdata;
+    // The captcha is shown on blog posts; comments there must carry it, so a bot cannot skip
+    // the check by leaving the field out. Product reviews and pingbacks are not affected.
+    $post_id = isset($commentdata['comment_post_ID']) ? (int) $commentdata['comment_post_ID'] : 0;
+    $type    = $commentdata['comment_type'] ?? '';
+    if (get_post_type($post_id) !== 'post' || in_array($type, array('pingback', 'trackback'), true)) {
+        return $commentdata;
+    }
 
-    $code = isset($_POST['fc_captcha']) ? strtoupper(trim(sanitize_text_field($_POST['fc_captcha']))) : '';
-    $id   = isset($_POST['fc_captcha_id']) ? sanitize_text_field($_POST['fc_captcha_id']) : '';
-    $expected = get_transient('fc_captcha_' . $id);
+    $code = strtoupper(trim(sanitize_text_field(wp_unslash($_POST['fc_captcha'] ?? ''))));
+    $id   = absint($_POST['fc_captcha_id'] ?? 0);
+    $expected = $id ? get_transient('fc_captcha_' . $id) : false;
 
-    if (empty($code) || empty($id) || $expected === false || $code !== $expected) {
+    if ($code === '' || $expected === false || $code !== $expected) {
         wp_die(
             fc_captcha_error_html('کد امنیتی نادرست، خالی یا منقضی شده است.'),
             'خطای امنیتی',
@@ -521,50 +531,6 @@ function fc_verify_captcha($commentdata) {
 
     delete_transient('fc_captcha_' . $id);
     return $commentdata;
-}
-
-// ─── اعتبارسنجی ۲: فوراً بعد از درج در دیتابیس (پشتیبان) ───
-add_action('wp_insert_comment', 'fc_verify_captcha_insert', 1, 2);
-function fc_verify_captcha_insert($comment_id, $comment) {
-    if (current_user_can('administrator')) return;
-    if (!isset($_POST['fc_captcha'])) return;
-
-    $code = isset($_POST['fc_captcha']) ? strtoupper(trim(sanitize_text_field($_POST['fc_captcha']))) : '';
-    $id   = isset($_POST['fc_captcha_id']) ? sanitize_text_field($_POST['fc_captcha_id']) : '';
-    $expected = get_transient('fc_captcha_' . $id);
-
-    if (empty($code) || empty($id) || $expected === false || $code !== $expected) {
-        wp_delete_comment($comment_id, true);
-        wp_die(
-            fc_captcha_error_html('کد امنیتی نادرست. نظر بلافاصله حذف شد.'),
-            'خطای امنیتی',
-            ['response' => 403, 'back_link' => false]
-        );
-    }
-
-    delete_transient('fc_captcha_' . $id);
-}
-
-// ─── اعتبارسنجی ۳: پشتیبان نهایی ───
-add_action('comment_post', 'fc_verify_captcha_backup', 1, 2);
-function fc_verify_captcha_backup($comment_id, $comment_approved) {
-    if (current_user_can('administrator')) return;
-    if (!isset($_POST['fc_captcha'])) return;
-
-    $code = isset($_POST['fc_captcha']) ? strtoupper(trim(sanitize_text_field($_POST['fc_captcha']))) : '';
-    $id   = isset($_POST['fc_captcha_id']) ? sanitize_text_field($_POST['fc_captcha_id']) : '';
-    $expected = get_transient('fc_captcha_' . $id);
-
-    if (empty($code) || empty($id) || $expected === false || $code !== $expected) {
-        wp_delete_comment($comment_id, true);
-        wp_die(
-            fc_captcha_error_html('کد امنیتی نادرست. نظر ثبت نشد.'),
-            'خطای امنیتی',
-            ['response' => 403, 'back_link' => false]
-        );
-    }
-
-    delete_transient('fc_captcha_' . $id);
 }
 
 function fc_captcha_error_html($message) {

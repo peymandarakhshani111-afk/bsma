@@ -290,9 +290,15 @@ function dk2_product_shortcode() {
         <ul class="dk2-specs-list">
             <?php if (!empty($attributes)): ?>
                 <?php foreach ($attributes as $attribute): ?>
+                    <?php
+                    // Global (taxonomy) attributes store term IDs in get_options(), so read the term names instead.
+                    $attr_values = $attribute->is_taxonomy()
+                        ? wc_get_product_terms($product_id, $attribute->get_name(), array('fields' => 'names'))
+                        : $attribute->get_options();
+                    ?>
                     <li>
-                        <strong><?php echo wc_attribute_label($attribute->get_name()); ?>:</strong>
-                        <?php echo implode('، ', $attribute->get_options()); ?>
+                        <strong><?php echo esc_html(wc_attribute_label($attribute->get_name(), $product)); ?>:</strong>
+                        <?php echo esc_html(implode('، ', $attr_values)); ?>
                     </li>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -328,14 +334,20 @@ function dk2_product_shortcode() {
         <div class="dk2-sticky-price">
             <?php echo $product->get_price_html(); ?>
         </div>
-        <?php if ($has_price) : ?>
+        <?php if ($has_price && $product->is_in_stock()) : ?>
         <div class="dk2-sticky-btn">
+            <?php if ($product->is_type('simple')) : ?>
             <form class="cart" action="#" method="post">
                 <div class="quantity" style="display:none"></div>
                 <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="single_add_to_cart_button button alt">
                     افزودن به سبد خرید
                 </button>
             </form>
+            <?php else : // Variable/grouped products need their options chosen in the main form first. ?>
+            <button type="button" class="single_add_to_cart_button button alt" onclick="document.querySelector('.dk2-buy').scrollIntoView({behavior: 'smooth', block: 'center'});">
+                افزودن به سبد خرید
+            </button>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
     </div>
@@ -405,19 +417,63 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function dk2OpenLightbox(images) {
-    let overlay = document.createElement("div");
+    let index = 0;
+    const overlay = document.createElement("div");
     overlay.className = "dk2-lightbox-overlay";
-    let img = document.createElement("img");
+    const img = document.createElement("img");
     img.className = "dk2-lightbox-img";
-    img.src = images[0];
-    let closeBtn = document.createElement("div");
+    const closeBtn = document.createElement("div");
     closeBtn.className = "dk2-lightbox-close";
     closeBtn.innerHTML = "&times;";
     overlay.appendChild(img);
     overlay.appendChild(closeBtn);
+
+    const counter = document.createElement("div");
+    counter.style.cssText = "position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.5);padding:4px 12px;border-radius:12px;font-size:14px;direction:ltr";
+
+    function show(i) {
+        index = (i + images.length) % images.length;
+        img.src = images[index];
+        counter.textContent = (index + 1) + " / " + images.length;
+    }
+    function close() {
+        overlay.remove();
+        document.removeEventListener("keydown", onKey);
+    }
+    // RTL layout: the next image is on the left.
+    function onKey(e) {
+        if (e.key === "Escape") close();
+        else if (e.key === "ArrowLeft") show(index + 1);
+        else if (e.key === "ArrowRight") show(index - 1);
+    }
+
+    if (images.length > 1) {
+        [["‹", "left", 1], ["›", "right", -1]].forEach(function (cfg) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = cfg[0];
+            btn.setAttribute("aria-label", cfg[2] > 0 ? "تصویر بعدی" : "تصویر قبلی");
+            btn.style.cssText = "position:absolute;top:50%;" + cfg[1] + ":16px;transform:translateY(-50%);width:44px;height:44px;border:none;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:28px;line-height:1;cursor:pointer;z-index:2";
+            btn.onclick = function (e) { e.stopPropagation(); show(index + cfg[2]); };
+            overlay.appendChild(btn);
+        });
+        overlay.appendChild(counter);
+
+        let touchX = null;
+        overlay.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+        overlay.addEventListener("touchend", e => {
+            if (touchX === null) return;
+            const dx = e.changedTouches[0].clientX - touchX;
+            if (Math.abs(dx) > 40) show(index + (dx > 0 ? 1 : -1));
+            touchX = null;
+        });
+    }
+
+    show(0);
     document.body.appendChild(overlay);
-    closeBtn.onclick = () => overlay.remove();
-    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+    document.addEventListener("keydown", onKey);
+    closeBtn.onclick = close;
+    overlay.onclick = e => { if (e.target === overlay) close(); };
 }
 </script>
 
