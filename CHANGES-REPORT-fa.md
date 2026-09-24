@@ -607,6 +607,10 @@ git diff 67d68eb claude/keen-albattani-it7rx4 -- wp-content/
   - فهرست فایل‌های افزونه‌ها که در آن درخواست بارگذاری شدند، به تفکیک افزونه
   - فایل‌هایی که نامشان به export، backup، db و مانند آن‌ها می‌خورد
   - رمز یا محتوای فرم ثبت نمی‌شود.
+- **حجم لاگ:** فقط وقتی خطا واقعاً رخ دهد، برای هر درخواست حداکثر یک خط نوشته می‌شود.
+  - هر بخش خط کوتاه می‌شود: آدرس ۳۰۰ کاراکتر، User-Agent ۸۰، آخرین کوئری ۱۶۰، حداکثر ۲۰ رویداد، ۱۵ فایل مشکوک و ۲۵ افزونه. پس هر خط حداکثر حدود ۴ کیلوبایت است.
+  - با تعداد فعلی (حدود ۲۰۵ بار در دو روز)، کمتر از ۱ مگابایت در دو روز.
+  - سقف جداگانه‌ای برای کل لاگ ندارد؛ لاگ همان `error_log` خود سایت است.
 - **حالت اختیاری:** با `define('BSMA_DB_SYNC_GUARD_RECONNECT', true);` در `wp-config.php`، بعد از ثبت، اتصال دیتابیس را از نو برقرار می‌کند تا بقیه‌ی کارهای shutdown انجام شوند.
   - در تست: خطا ۰ شد و نوشتن قربانی ذخیره شد.
   - **خطر:** اگر خود افزونه‌ی مقصر بعداً بخواهد همان نتیجه را ادامه بدهد، شکست می‌خورد. این حالت فقط با تأیید و بعد از شناختن مقصر.
@@ -614,3 +618,27 @@ git diff 67d68eb claude/keen-albattani-it7rx4 -- wp-content/
   - درخواست عادی: بدون خط و بدون خطا.
   - درخواست AJAX مقصر: خط با `action=fake_backup_worker`، `ajax` و `suspect_files=fake-backup/includes/class-db-export.php`.
   - **تست cron نتیجه‌ای نداد:** رویداد cron در محیط تست اجرا نشد، پس ثبت رویدادهای cron تأیید نشده است.
+
+**جست‌وجو در سورس افزونه‌ها** برای `MYSQLI_USE_RESULT`، `mysqli_use_result`، `use_result(`، `multi_query`، `real_query`، `mysqli_query(` و `->dbh`:
+- **هیچ موردی ندارند:** LiteSpeed Cache 7.9.1 (همان نسخه‌ی سایت)، WooCommerce 10.1.2 (سایت 11.1.2 دارد)، Elementor (نسخه‌ی فعلی GitHub)، Rank Math رایگان، One User Avatar. در خود وردپرس فقط کدهای عادی wpdb هست.
+- **سورسشان در دسترس نبود و بررسی نشدند:** duplicator-pro، products-extractor-for-woocommerce، افزونه‌ی ترب، digbuilder، digits_ippanel، js_composer، mellat-woocommerce، persian-woocommerce و persian-woocommerce-shipping، seo-by-rank-math-pro، goftino.
+- **محتمل‌ترین:** duplicator-pro، چون افزونه‌ی پشتیبان‌گیری است و خواندن unbuffered جدول‌ها برای خروجی دیتابیس رایج است. بعد از آن products-extractor-for-woocommerce. این **تأیید نشده** است.
+
+**بررسی قطعی روی سرور (فقط خواندن، بدون تغییر)**، در Terminal سی‌پنل:
+
+```
+cd /home/bsma/public_html/wp-content/plugins
+grep -rlE "MYSQLI_USE_RESULT|mysqli_use_result|use_result\(|multi_query|real_query" --include=*.php . | cut -d/ -f2 | sort | uniq -c
+```
+
+خروجی نام افزونه‌هایی است که چنین کدی دارند.
+
+**تطبیق با گزارش دسترسی:** زمان‌های لاگ خطا UTC است. اگر لاگ دسترسی به وقت تهران باشد (UTC+03:30)، مثلاً 24-Sep 08:44:33 UTC برابر 12:14:33 تهران است.
+
+```
+zcat /home/bsma/logs/bsma.ir-ssl_log-Sep-2026.gz | grep -E "24/Sep/2026:(08:44:[3-5][0-9]|12:1[45]:[0-5][0-9])" | awk '{print $4, $6, $7, $9}' | head -60
+```
+
+باید دنبال درخواست‌های `admin-ajax.php` با `action` مربوط به یک افزونه، `wp-cron.php`، یا مسیرهای REST بود که هر چند ثانیه تکرار می‌شوند.
+
+**نکته‌ی زمانی:** سری 23-Sep 06:49 و مورد 24-Sep 06:50 (UTC)، یعنی حدود 10:19 تا 10:20 تهران، به یک کار زمان‌بندی‌شده‌ی روزانه شبیه‌اند. زمان‌بندی‌های Duplicator Pro (Schedules) را با این ساعت مقایسه کنید.
