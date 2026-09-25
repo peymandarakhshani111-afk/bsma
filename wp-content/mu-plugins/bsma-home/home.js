@@ -35,6 +35,42 @@
     apply();
   }
 
+  // inspection story: play once in view; on wide screens the standards scene follows the fire-dept one
+  var insp = d.getElementById('bhm-inspect');
+  if (insp && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    var scenes = Array.prototype.slice.call(insp.querySelectorAll('.bhm-sc'));
+    var replay = insp.querySelector('.bhm-replay');
+    var wide = window.matchMedia ? matchMedia('(min-width: 761px)') : { matches: true };
+    var LEN = 7600, timer;
+    var play = function (sc, delay) {
+      sc.style.setProperty('--d', (delay / 1000) + 's');
+      sc.classList.remove('is-play');
+      sc.classList.add('is-reset');
+      void sc.getBoundingClientRect();
+      sc.classList.remove('is-reset');
+      sc.classList.add('is-play');
+      clearTimeout(timer);
+      timer = setTimeout(function () { if (replay) replay.hidden = false; }, delay + LEN);
+    };
+    var playAll = function () { scenes.forEach(function (sc, i) { play(sc, wide.matches ? i * LEN : 0); }); };
+    if (replay) replay.addEventListener('click', playAll);
+    if (!('IntersectionObserver' in window)) {
+      playAll();
+    } else if (wide.matches) {
+      var io = new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting) { io.disconnect(); playAll(); }
+      }, { threshold: 0.35 });
+      io.observe(insp.querySelector('.bhm-scenes'));
+    } else {
+      var io2 = new IntersectionObserver(function (en) {
+        en.forEach(function (e) {
+          if (e.isIntersecting) { io2.unobserve(e.target); play(e.target, 0); }
+        });
+      }, { threshold: 0.5 });
+      scenes.forEach(function (sc) { io2.observe(sc); });
+    }
+  }
+
   // quote form -> REST -> Eitaa
   var form = d.getElementById('bhm-qform');
   if (!form || !window.BSMA_HOME) return;

@@ -39,6 +39,8 @@ if (!defined('ABSPATH')) {
   </div>
 </section>
 
+<?php require __DIR__ . '/inspect.php'; ?>
+
 <?php if ($tk_cards) : ?>
 <section class="bhm-sec bhm-tk-sec" id="bhm-teknim">
   <div class="bhm-wrap">

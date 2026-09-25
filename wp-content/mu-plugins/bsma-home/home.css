@@ -203,6 +203,45 @@
 .bhm .bhm-pb time{font-size:12px;color:var(--muted);font-weight:700}
 .bhm .bhm-pt{font-size:15px;font-weight:800;line-height:1.8;color:var(--ink)}
 
+/* inspection story (SVG). Base styles are the final frame; animations run from the start frame, paused until .is-play */
+.bhm .bhm-insp .bhm-head{align-items:center}
+.bhm .bhm-replay{gap:8px;height:42px;padding-inline:16px;border-radius:14px;background:#fff;border:1px solid var(--line);font-weight:800;font-size:13.5px;color:var(--ink);box-shadow:0 2px 0 #D5DBE3}
+.bhm .bhm-replay[hidden]{display:none}
+.bhm .bhm-scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.bhm .bhm-sc{margin:0;border-radius:22px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 2px 0 #E1E5EB,0 4px 0 #D5DBE3,0 26px 40px -26px rgba(22,25,31,.45);--d:0s}
+.bhm .bhm-sc svg{width:100%;height:auto;aspect-ratio:8/5}
+.bhm .bhm-sc text{font-family:inherit}
+.bhm .bhm-sc figcaption{font-style:normal;display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13.5px;font-weight:800;color:var(--ink);line-height:1.7;border-top:1px solid var(--line)}
+.bhm .bhm-sc figcaption b{width:28px;height:28px;flex:none;border-radius:9px;display:grid;place-items:center;color:#fff;background:linear-gradient(160deg,var(--red-hi),var(--red));box-shadow:0 2px 0 var(--red-deep)}
+.bhm .bhm-sc:not(.is-play) *{animation-play-state:paused!important}
+.bhm .bhm-sc.is-reset *{animation:none!important}
+.bhm .bhm-walker{transform:translateX(230px);animation:bhm-in 1.8s cubic-bezier(.3,.2,.4,1) calc(var(--d) + .8s) both,bhm-out 1.8s cubic-bezier(.5,0,.8,.6) calc(var(--d) + 5.3s) forwards}
+.bhm .bhm-flip{animation:bhm-flip .01s calc(var(--d) + 5.2s) forwards}
+.bhm .bhm-leg{animation:bhm-step .45s linear calc(var(--d) + .8s) 4,bhm-step .45s linear calc(var(--d) + 5.3s) 4}
+.bhm .bhm-leg-b{animation-direction:reverse}
+.bhm .bhm-arm{animation:bhm-stamp 1.1s var(--ease) calc(var(--d) + 4s)}
+.bhm .bhm-mark{animation:bhm-slam .4s cubic-bezier(.3,1.4,.5,1) calc(var(--d) + 4.35s) backwards}
+.bhm .bhm-ripple{opacity:0;animation:bhm-ripple .6s ease-out calc(var(--d) + 4.45s)}
+.bhm .bhm-box{animation:bhm-shake .25s ease-out calc(var(--d) + 4.4s)}
+.bhm .bhm-chip,.bhm .bhm-badge,.bhm .bhm-ribbon{transform-box:fill-box;transform-origin:center;animation:bhm-pop .4s cubic-bezier(.3,1.5,.5,1) calc(var(--d) + 2.8s) backwards}
+.bhm .bhm-c2{animation-delay:calc(var(--d) + 3.2s)}
+.bhm .bhm-c3{animation-delay:calc(var(--d) + 3.6s)}
+.bhm .bhm-badge{animation-delay:calc(var(--d) + .1s)}
+.bhm .bhm-ribbon{animation-delay:calc(var(--d) + 7.1s)}
+.bhm .bhm-line{animation:bhm-line 2.2s cubic-bezier(.2,.7,.3,1) calc(var(--d) + .2s) backwards}
+.bhm .bhm-belt{animation:bhm-belt .5s linear calc(var(--d) + .2s) 4}
+@keyframes bhm-in{from{transform:translateX(230px)}to{transform:translateX(0)}}
+@keyframes bhm-out{from{transform:translateX(0)}to{transform:translateX(230px)}}
+@keyframes bhm-flip{to{transform:scaleX(-1)}}
+@keyframes bhm-step{0%,100%{transform:rotate(0)}25%{transform:rotate(20deg)}75%{transform:rotate(-20deg)}}
+@keyframes bhm-stamp{0%,100%{transform:rotate(0)}32%{transform:rotate(96deg)}46%{transform:rotate(88deg)}64%{transform:rotate(94deg)}}
+@keyframes bhm-slam{from{opacity:0;transform:scale(1.9)}60%{opacity:1;transform:scale(.9)}}
+@keyframes bhm-ripple{from{opacity:.55;transform:scale(1)}to{opacity:0;transform:scale(1.9)}}
+@keyframes bhm-shake{0%,100%{transform:none}40%{transform:translate(-2px,1px)}}
+@keyframes bhm-pop{from{opacity:0;transform:scale(.6)}}
+@keyframes bhm-line{from{transform:translateX(-330px)}}
+@keyframes bhm-belt{to{stroke-dashoffset:-18}}
+
 @media (max-width:1000px){
   .bhm .bhm-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .bhm .bhm-trust-in{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -243,6 +282,8 @@
   .bhm .bhm-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
   .bhm .bhm-tab{flex:none}
   .bhm .bhm-rail{grid-auto-columns:62%}
+  .bhm .bhm-scenes{grid-template-columns:1fr;gap:14px}
+  .bhm .bhm-sc figcaption{font-size:12.5px;padding:10px 12px}
 }
 @media (prefers-reduced-motion:reduce){
   .bhm *,.bhm *::before,.bhm *::after{animation:none!important;transition:none!important}
