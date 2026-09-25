@@ -17,9 +17,9 @@ $fb_url = function_exists('bsma_home_cat_url') ? bsma_home_cat_url('fire-box', h
         <a class="bhm-btn bhm-ghost" href="#bhm-quote"><?php echo bsma_home_ic('chat'); ?>استعلام قیمت پروژه</a>
       </div>
       <div class="bhm-stats">
-        <div class="bhm-stat"><b>۱۳۸۵</b><span>آغاز تولید</span></div>
-        <div class="bhm-stat"><b>وندور لیست</b><span>سازمان آتش‌نشانی</span></div>
-        <div class="bhm-stat"><b>نمایندگی تکنیم</b><span>در ایران</span></div>
+        <div class="bhm-stat"><span class="bhm-tile bhm-steel"><?php echo bsma_home_ic('factory'); ?></span><div><b>تولید جعبه</b><span>از سال ۱۳۸۵</span></div></div>
+        <div class="bhm-stat"><span class="bhm-tile bhm-amber"><?php echo bsma_home_ic('bell'); ?></span><div><b>نماینده‌ی تکنیم</b><span>اعلام حریق</span></div></div>
+        <div class="bhm-stat"><span class="bhm-tile"><?php echo bsma_home_ic('shield'); ?></span><div><b>وندور لیست</b><span>آتش‌نشانی</span></div></div>
       </div>
     </div>
     <div class="bhm-showcase">

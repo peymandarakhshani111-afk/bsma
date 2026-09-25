@@ -45,10 +45,13 @@
 .bhm h1 em{font-style:normal;color:var(--red);background:linear-gradient(transparent 62%,rgba(255,178,26,.4) 62% 88%,transparent 88%)}
 .bhm .bhm-sub{margin-top:14px;font-size:16px;line-height:2;color:var(--muted);max-width:54ch}
 .bhm .bhm-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
-.bhm .bhm-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
-.bhm .bhm-stat{display:flex;flex-direction:column;padding:10px 16px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:0 2px 0 #E1E5EB;line-height:1.5}
-.bhm .bhm-stat b{font-size:18px;font-weight:900;color:var(--ink)}
-.bhm .bhm-stat span{font-size:12px;color:var(--muted)}
+.bhm .bhm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:28px;max-width:560px}
+.bhm .bhm-stat{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:0 2px 0 #E1E5EB;line-height:1.5;min-width:0}
+.bhm .bhm-stat .bhm-tile{width:36px;height:36px;border-radius:11px}
+.bhm .bhm-stat .bhm-tile svg{width:19px;height:19px}
+.bhm .bhm-stat b{display:block;font-size:15px;font-weight:900;color:var(--ink)}
+.bhm .bhm-stat div span{font-size:12px;color:var(--muted)}
+.bhm .bhm-stat div{min-width:0}
 .bhm .bhm-showcase{perspective:1200px}
 .bhm .bhm-card3d{position:relative;border-radius:28px;background:#fff;padding:18px;transform:rotateY(-8deg) rotateX(4deg);transition:transform .5s var(--ease);
   box-shadow:0 2px 0 #E1E5EB,0 4px 0 #D5DBE3,0 6px 0 #C9D0DA,0 50px 70px -30px rgba(22,25,31,.45)}
@@ -261,6 +264,10 @@
   .bhm .bhm-f1{inset-inline-end:-6px}
   .bhm .bhm-f2{inset-inline-start:-6px}
   .bhm .bhm-ctas .bhm-btn{flex:1 1 160px;justify-content:center}
+  .bhm .bhm-stats{gap:8px}
+  .bhm .bhm-stat{flex-direction:column;text-align:center;gap:6px;padding:10px 6px}
+  .bhm .bhm-stat b{font-size:13px}
+  .bhm .bhm-stat div span{font-size:11px;display:block}
   .bhm .bhm-sec{padding-block:30px}
   .bhm h2{font-size:21px}
   .bhm .bhm-wrap{padding-inline:14px}
