@@ -64,10 +64,28 @@ add_action('wp_head', function () {
     $src = wp_get_attachment_image_src(BSMA_HOME_HERO_ID, 'large');
     $set = wp_get_attachment_image_srcset(BSMA_HOME_HERO_ID, 'large');
     if ($src) {
-        echo '<link rel="preload" as="image" fetchpriority="high" href="' . esc_url($src[0]) . '"'
+        echo '<link rel="preload" id="bsma-hero-preload" as="image" fetchpriority="high" href="' . esc_url($src[0]) . '"'
             . ($set ? ' imagesrcset="' . esc_attr($set) . '" imagesizes="(max-width: 760px) 280px, 520px"' : '') . ">\n";
     }
 }, 1);
+
+// The old slider still preloads its first slide from another wp_head hook; on the new home
+// that image isn't shown and competes with the hero, so drop image preloads other than ours.
+add_action('wp_head', function () {
+    if (bsma_home_active()) {
+        $GLOBALS['bsma_home_ob'] = ob_get_level();
+        ob_start(function ($html) {
+            return preg_replace_callback('/<link\b[^>]*\brel=["\']preload["\'][^>]*\bas=["\']image["\'][^>]*>\s*/i', function ($m) {
+                return false !== strpos($m[0], 'id="bsma-hero-preload"') ? $m[0] : '';
+            }, $html);
+        });
+    }
+}, 0);
+add_action('wp_head', function () {
+    if (isset($GLOBALS['bsma_home_ob']) && ob_get_level() === $GLOBALS['bsma_home_ob'] + 1) {
+        ob_end_flush();
+    }
+}, 2);
 
 // Rendered sections are cached; any product/post change clears the cache.
 function bsma_home_flush()
