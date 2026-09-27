@@ -1,13 +1,13 @@
 <?php
 /*
  * Plugin Name: bsma welcome
- * Description: First-visit welcome for bsma.ir: a ~4 s full-screen brand intro (logo + «بهسازان») and, a few seconds later, the turquoise Isfahan gift card with a close button. Each is shown once per visitor (browser localStorage), on whatever page they land on; returning visitors load nothing extra. Delete this file to remove both.
+ * Description: First-visit welcome for bsma.ir: a ~4 s full-screen brand intro (logo + «بهسازان») and, a few seconds later, the turquoise Isfahan gift card as a small corner card (tap to enlarge, X to close). Each is shown once per visitor (browser localStorage), on whatever page they land on; returning visitors load nothing extra. Delete this file to remove both.
  */
 if (!defined('ABSPATH')) {
     exit;
 }
 
-const BSMA_W_VER = '1.0.0';
+const BSMA_W_VER = '1.0.1';
 
 function bsma_w_active()
 {
