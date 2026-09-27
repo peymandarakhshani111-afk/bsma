@@ -93,33 +93,3 @@
   .pz-overlay,.pz-card,.pz .pz-close{transition:none!important}
   .pz-art *{animation:none!important}
 }
-
-/* corner card */
-.pz-dock{
-  position:fixed;right:20px;bottom:24px;z-index:2147483600;
-  width:min(236px,calc((100vh - 150px)/1.95));width:min(236px,calc((100dvh - 150px)/1.95));
-  aspect-ratio:600/1170;border-radius:16px;background:#07080B;box-sizing:border-box;
-  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 24px 50px -18px rgba(0,0,0,.7),0 0 40px -8px rgba(60,211,203,.35);
-  transform:translateX(calc(100% + 40px)) rotate(4deg);opacity:0;
-  transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .6s ease;
-}
-.pz-dock.is-open{transform:none;opacity:1}
-.pz .pz-open,.pz .pz-open:hover,.pz .pz-open:focus{
-  -webkit-appearance:none;appearance:none;display:block;width:100%;height:100%;margin:0;padding:0;border:0;border-radius:16px;
-  background:transparent;color:inherit;box-shadow:none;cursor:zoom-in;overflow:hidden;line-height:0;
-  transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-.pz .pz-open:hover{transform:scale(1.02)}
-.pz .pz-open:focus-visible{outline:3px solid #3CD3CB;outline-offset:3px}
-.pz-dock .pz-close,.pz-dock .pz-close:focus{top:-12px;left:-12px;width:32px;height:32px;background:#07080B;border-color:rgba(60,211,203,.6);box-shadow:0 6px 14px -6px rgba(0,0,0,.6)}
-.pz-dock .pz-close svg{width:12px;height:12px}
-.pz-hint{position:absolute;left:50%;bottom:10px;transform:translate(-50%,6px);padding:5px 10px;border-radius:99px;white-space:nowrap;direction:rtl;
-  background:rgba(7,8,11,.82);border:1px solid rgba(60,211,203,.5);color:#DAFFFC;font-size:11.5px;font-weight:700;line-height:1.4;opacity:0;pointer-events:none;
-  transition:opacity .25s,transform .25s}
-.pz-dock:hover .pz-hint{opacity:1;transform:translate(-50%,0)}
-@media (max-width:760px){
-  .pz-dock{right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));width:118px;border-radius:12px}
-  .pz .pz-open{border-radius:12px}
-  .pz-dock .pz-close,.pz-dock .pz-close:focus{top:-10px;left:-10px;width:30px;height:30px}
-  .pz-hint{display:none}
-}
-@media (prefers-reduced-motion:reduce){.pz-dock,.pz .pz-open{transition:none!important}}

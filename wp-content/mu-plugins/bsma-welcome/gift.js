@@ -1,5 +1,4 @@
-/* bsma welcome gift: the Isfahan poster as a small card in the bottom-right corner, shown once per visitor.
-   Tapping the card opens it large; the X removes it. Injected by bsma-welcome.php only while it hasn't been shown. */
+/* bsma welcome gift: the Isfahan poster card, shown once per visitor. Injected by bsma-welcome.php only while it hasn't been shown. */
 (function (d, w) {
   'use strict';
   var KEY = 'bsma_w';
@@ -10,8 +9,6 @@
   var state = function () { try { return JSON.parse(w.localStorage.getItem(KEY) || '{}'); } catch (e) { return null; } };
   var save = function (s) { try { w.localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} };
   var reduce = !!(w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  var X = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>';
-  var LABEL = 'هدیه‌ی بهسازان: اصفهان، شهر صنعت، هنر و عشق';
 
   var css = d.createElement('link');
   css.rel = 'stylesheet';
@@ -28,64 +25,10 @@
     }
     return art;
   };
-  var animate = function (host) {
-    var a = host.querySelector('.pz-art');
-    if (a && !reduce) a.classList.add('pz-anim');
-  };
+
   var busy = function () {
     var a = d.activeElement;
     return a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
-  };
-
-  var build = function (svg) {
-    var root = d.createElement('div');
-    root.className = 'pz';
-    root.innerHTML = '<div class="pz-dock" role="region" aria-label="' + LABEL + '">'
-      + '<button class="pz-close pz-x" type="button" aria-label="بستن">' + X + '</button>'
-      + '<button class="pz-open" type="button" aria-label="نمایش بزرگ‌تر">' + svg + '</button>'
-      + '<span class="pz-hint" aria-hidden="true">برای دیدن بزرگ‌تر بزنید</span></div>';
-    d.body.appendChild(root);
-    var dock = root.firstChild;
-    animate(dock);
-
-    var overlay = null, last = null;
-    var onKey = function (e) {
-      if (e.key === 'Escape') { e.preventDefault(); shrink(); }
-      else if (e.key === 'Tab') { e.preventDefault(); overlay.querySelector('.pz-close').focus(); }
-    };
-    var shrink = function () {
-      if (!overlay) return;
-      var o = overlay;
-      overlay = null;
-      o.classList.remove('is-open');
-      d.removeEventListener('keydown', onKey);
-      setTimeout(function () { o.parentNode && o.parentNode.removeChild(o); }, 600);
-      if (last && last.focus) { try { last.focus({ preventScroll: true }); } catch (e) {} }
-    };
-    var expand = function () {
-      if (overlay) return;
-      last = d.activeElement;
-      overlay = d.createElement('div');
-      overlay.className = 'pz-overlay';
-      overlay.innerHTML = '<div class="pz-card" role="dialog" aria-modal="true" aria-label="' + LABEL + '" tabindex="-1">'
-        + '<button class="pz-close" type="button" aria-label="بستن">' + X + '</button>' + svg + '</div>';
-      root.appendChild(overlay);
-      animate(overlay);
-      var card = overlay.firstChild;
-      card.firstChild.addEventListener('click', shrink);
-      overlay.addEventListener('click', function (e) { if (e.target === overlay) shrink(); });
-      d.addEventListener('keydown', onKey);
-      requestAnimationFrame(function () {
-        overlay.classList.add('is-open');
-        setTimeout(function () { try { card.focus({ preventScroll: true }); } catch (e) { card.focus(); } }, 80);
-      });
-    };
-    dock.querySelector('.pz-open').addEventListener('click', expand);
-    dock.querySelector('.pz-x').addEventListener('click', function () {
-      dock.classList.remove('is-open');
-      setTimeout(function () { root.parentNode && root.parentNode.removeChild(root); }, 700);
-    });
-    requestAnimationFrame(function () { requestAnimationFrame(function () { dock.classList.add('is-open'); }); });
   };
 
   var open = function () {
@@ -97,14 +40,46 @@
       if (!s || s.g) return;
       s.g = Date.now();
       save(s);
+
+      var root = d.createElement('div');
+      root.className = 'pz';
+      root.innerHTML = '<div class="pz-overlay"><div class="pz-card" role="dialog" aria-modal="true" aria-label="هدیه‌ی بهسازان: اصفهان، شهر صنعت، هنر و عشق" tabindex="-1">'
+        + '<button class="pz-close" type="button" aria-label="بستن"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button>'
+        + svg + '</div></div>';
+      d.body.appendChild(root);
+      var overlay = root.firstChild, card = overlay.firstChild, btn = card.firstChild;
+      var artEl = card.querySelector('.pz-art');
+      if (artEl && !reduce) artEl.classList.add('pz-anim');
+      var last = d.activeElement;
+
+      var onKey = function (e) {
+        if (e.key === 'Escape') { e.preventDefault(); close(); }
+        else if (e.key === 'Tab') { e.preventDefault(); btn.focus(); }
+      };
+      var close = function () {
+        overlay.classList.remove('is-open');
+        d.removeEventListener('keydown', onKey);
+        if (last && last.focus) { try { last.focus({ preventScroll: true }); } catch (e) {} }
+        setTimeout(function () { root.parentNode && root.parentNode.removeChild(root); }, 600);
+      };
+      btn.addEventListener('click', close);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+      d.addEventListener('keydown', onKey);
+
       // wait for the stylesheet so the card never flashes unstyled
-      if (css.sheet) build(svg); else css.addEventListener('load', function () { build(svg); });
+      var show = function () {
+        requestAnimationFrame(function () {
+          overlay.classList.add('is-open');
+          setTimeout(function () { try { card.focus({ preventScroll: true }); } catch (e) { card.focus(); } }, 80);
+        });
+      };
+      if (css.sheet) show(); else { css.addEventListener('load', show); css.addEventListener('error', close); }
     }).catch(function () { art = null; });
   };
 
   var start = function () {
     // after the intro (if it played on this page) plus a few seconds on the site
-    var delay = w.bsmaIntro ? 6000 : 3000;
+    var delay = w.bsmaIntro ? 8000 : 4000;
     setTimeout(function () { getArt(); }, Math.max(0, delay - 2500));
     setTimeout(open, delay);
   };
