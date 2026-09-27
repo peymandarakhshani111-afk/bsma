@@ -71,7 +71,7 @@
     }
   }
 
-  // quote form -> REST -> Eitaa
+  // quote form -> REST -> e-mail
   var form = d.getElementById('bhm-qform');
   if (!form || !window.BSMA_HOME) return;
   var status = d.getElementById('bhm-status');

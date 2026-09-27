@@ -1,19 +1,18 @@
 <?php
 /*
  * Plugin Name: bsma home page
- * Description: Coded home page for bsma.ir (fire boxes, Teknim fire alarm, building guide, customers, quote form to Eitaa, best sellers, FAQ, latest articles). While this file exists it replaces the Elementor front page; delete it (and purge the cache) to get the old page back. Admins can compare with ?old_home=1.
+ * Description: Coded home page for bsma.ir (fire boxes, Teknim fire alarm, building guide, customers, quote form to e-mail, best sellers, FAQ, latest articles). While this file exists it replaces the Elementor front page; delete it (and purge the cache) to get the old page back. Admins can compare with ?old_home=1.
  */
 if (!defined('ABSPATH')) {
     exit;
 }
 
-define('BSMA_HOME_VER', '1.0.0');
+define('BSMA_HOME_VER', '1.0.1');
 
 const BSMA_HOME_HERO_ID   = 26472; // behsazan-fire-box-2-cabin-copper-stainless-door-installed.jpg
 const BSMA_HOME_TEKNIM    = [26250, 26253, 26244, 26236, 23580, 26257, 26266, 23588];
 const BSMA_HOME_CACHE_KEY = 'bsma_home_html_v1';
-// Eitaa (eitaayar.ir) credentials live in wp-config.php:
-//   define('BSMA_EITAA_TOKEN', '...');  define('BSMA_EITAA_CHAT', '...');
+const BSMA_HOME_QUOTE_TO  = 'behsazan01@gmail.com'; // quote-form requests go here (site admin e-mail as fallback)
 
 function bsma_home_active()
 {
@@ -268,7 +267,7 @@ function bsma_home_sections()
     return $html;
 }
 
-// ---------- quote form -> Eitaa (fallback: site e-mail) ----------
+// ---------- quote form -> e-mail ----------
 add_action('rest_api_init', function () {
     register_rest_route('bsma/v1', '/quote', [
         'methods' => 'POST',
@@ -326,19 +325,11 @@ function bsma_home_quote(WP_REST_Request $r)
         . ($msg ? "📝 شرح: {$msg}\n" : '')
         . "🕒 {$when}";
 
-    $sent = false;
-    if (defined('BSMA_EITAA_TOKEN') && defined('BSMA_EITAA_CHAT') && BSMA_EITAA_TOKEN && BSMA_EITAA_CHAT) {
-        $res = wp_remote_post('https://eitaayar.ir/api/' . rawurlencode(BSMA_EITAA_TOKEN) . '/sendMessage', [
-            'timeout' => 8,
-            'body' => ['chat_id' => BSMA_EITAA_CHAT, 'text' => $text],
-        ]);
-        if (!is_wp_error($res) && 200 === (int) wp_remote_retrieve_response_code($res)) {
-            $body = json_decode(wp_remote_retrieve_body($res), true);
-            $sent = is_array($body) && !empty($body['ok']);
-        }
-    }
-    if (!$sent) {
-        $sent = wp_mail(get_option('admin_email'), 'استعلام قیمت جدید از سایت: ' . $name, $text);
+    $subject = 'استعلام قیمت از سایت: ' . $name . ' - ' . $phone;
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+    $sent = wp_mail(BSMA_HOME_QUOTE_TO, $subject, $text, $headers);
+    if (!$sent && get_option('admin_email') !== BSMA_HOME_QUOTE_TO) {
+        $sent = wp_mail(get_option('admin_email'), $subject, $text, $headers);
     }
     if (!$sent) {
         return $fail('ارسال انجام نشد؛ لطفاً با ۰۳۱-۳۶۲۴۲۵۳۲ تماس بگیرید.', 500);

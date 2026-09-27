@@ -97,7 +97,7 @@ if (!defined('ABSPATH')) {
         <li><?php echo bsma_home_ic('check'); ?>مشاوره‌ی رایگان برای انتخاب تجهیزات</li>
         <li><?php echo bsma_home_ic('check'); ?>نصب، اجرا و خدمات پس از فروش</li>
       </ul>
-      <span class="bhm-eitaa"><b>ا</b>درخواست شما مستقیم در ایتا به کارشناس فروش می‌رسد</span>
+      <span class="bhm-via bhm-eitaa"><b><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></b>درخواست شما مستقیم به کارشناس فروش می‌رسد</span>
     </div>
     <form class="bhm-qform" id="bhm-qform" novalidate>
       <div class="bhm-field"><label for="bhm-name">نام و نام خانوادگی</label><input id="bhm-name" name="name" autocomplete="name" required maxlength="80"><span class="bhm-err" id="bhm-e-name"></span></div>

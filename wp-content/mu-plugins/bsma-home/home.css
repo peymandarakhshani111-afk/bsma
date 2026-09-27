@@ -163,8 +163,8 @@
 .bhm .bhm-qside ul{margin-top:18px;display:grid;gap:10px}
 .bhm .bhm-qside li{display:flex;gap:10px;align-items:center;font-size:13.5px;font-weight:700}
 .bhm .bhm-qside li svg{width:20px;height:20px;flex:none;color:var(--amber)}
-.bhm .bhm-eitaa{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.12);font-size:12.5px;font-weight:700}
-.bhm .bhm-eitaa b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;background:#EE6F12;font-weight:900}
+.bhm .bhm-via{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.12);font-size:12.5px;font-weight:700}
+.bhm .bhm-via b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;background:var(--red);color:#fff}
 .bhm .bhm-qform{background:#fff;border-radius:24px;border:1px solid var(--line);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:14px;box-shadow:0 2px 0 #E1E5EB,0 30px 50px -34px rgba(22,25,31,.45)}
 .bhm .bhm-field{display:flex;flex-direction:column;gap:6px}
 .bhm .bhm-full{grid-column:1/-1}
