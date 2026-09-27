@@ -7,9 +7,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('BSMA_HOME_VER', '1.0.2');
+define('BSMA_HOME_VER', '1.0.3');
 
-const BSMA_HOME_HERO_ID   = 26472; // behsazan-fire-box-2-cabin-copper-stainless-door-installed.jpg
+const BSMA_HOME_HERO_ID   = 26473; // behsazan-fire-box-2-cabin-black-metal.jpg (product 25230)
 const BSMA_HOME_TEKNIM    = [26250, 26253, 26244, 26236, 23580, 26257, 26266, 23588];
 const BSMA_HOME_CACHE_KEY = 'bsma_home_html_v1';
 const BSMA_HOME_QUOTE_TO  = 'behsazan01@gmail.com'; // quote-form requests go here (site admin e-mail as fallback)

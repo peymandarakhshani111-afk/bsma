@@ -29,12 +29,12 @@ $fb_url = function_exists('bsma_home_cat_url') ? bsma_home_cat_url('fire-box', h
             echo wp_get_attachment_image(BSMA_HOME_HERO_ID, 'large', false, [
                 'fetchpriority' => 'high', 'loading' => 'eager', 'decoding' => 'async', 'data-no-lazy' => '1',
                 'sizes' => '(max-width: 760px) 280px, 520px',
-                'alt' => 'جعبه آتش نشانی دو کابین درب استیل مسی بهسازان',
+                'alt' => 'جعبه آتش نشانی دو کابین فلزی مشکی بهسازان',
             ]);
         }
         ?>
         <div class="bhm-float bhm-f1"><span class="bhm-tile"><?php echo bsma_home_ic('shield'); ?></span><div>تأییدیه‌ی آتش‌نشانی<small>شماره‌ی ۶۷۵۴/۷</small></div></div>
-        <div class="bhm-float bhm-f2"><span class="bhm-tile bhm-amber"><?php echo bsma_home_ic('box'); ?></span><div>دوکابین درب استیل مسی<small>تولید کارخانه‌ی بهسازان</small></div></div>
+        <div class="bhm-float bhm-f2"><span class="bhm-tile bhm-amber"><?php echo bsma_home_ic('box'); ?></span><div>دوکابین فلزی مشکی<small>تولید کارخانه‌ی بهسازان</small></div></div>
       </div>
     </div>
   </div>
