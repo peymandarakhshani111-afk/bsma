@@ -45,12 +45,12 @@ if (!defined('ABSPATH')) {
 <section class="bhm-sec bhm-tk-sec" id="bhm-teknim">
   <div class="bhm-wrap">
     <div class="bhm-head">
-      <div><span class="bhm-eyebrow"><i></i>نمایندگی تکنیم در ایران</span><h2 class="bhm-tk-h"><img src="<?php echo esc_url($img . 'teknim.webp'); ?>" width="142" height="32" loading="lazy" decoding="async" alt="Teknim">سیستم اعلام حریق تکنیم</h2><p class="bhm-lead">به‌عنوان نماینده‌ی کارخانه‌ی تکنیم در ایران، پنل‌ها، ریپیترها، ماژول‌ها و تجهیزات جانبی آدرس‌پذیر و کانونشنال (متعارف) تکنیم را عرضه، طراحی و اجرا می‌کنیم. سیستم اعلام حریق تکنیم در وندور لیست سازمان آتش‌نشانی قرار دارد.</p></div>
+      <div><span class="bhm-eyebrow"><i></i>نمایندگی تکنیم در ایران</span><h2 class="bhm-tk-h"><img src="<?php echo esc_url($img . 'teknim.webp'); ?>" width="142" height="32" loading="lazy" decoding="async" alt="">سیستم اعلام حریق تکنیم</h2><p class="bhm-lead">به‌عنوان نماینده‌ی کارخانه‌ی تکنیم در ایران، پنل‌ها، ریپیترها، ماژول‌ها و تجهیزات جانبی آدرس‌پذیر و کانونشنال (متعارف) تکنیم را عرضه، طراحی و اجرا می‌کنیم. سیستم اعلام حریق تکنیم در وندور لیست سازمان آتش‌نشانی قرار دارد.</p></div>
       <a class="bhm-more" href="<?php echo esc_url($tk_url); ?>">همه‌ی محصولات تکنیم ←</a>
     </div>
     <div class="bhm-tk-in">
       <div class="bhm-tk-side">
-        <a class="bhm-kind" href="<?php echo esc_url($tk_addr); ?>"><span class="bhm-tile"><?php echo bsma_home_ic('panel'); ?></span><span><b>آدرس‌پذیر</b><span class="bhm-kp">هر دتکتور و شاسی آدرس جداگانه دارد و پنل دقیقاً نشان می‌دهد کدام نقطه اعلام کرده است. مناسب ساختمان‌های بزرگ، بیمارستان‌ها و مجموعه‌های صنعتی.</span><span class="bhm-kgo">محصولات آدرس‌پذیر ←</span></span></a>
+        <a class="bhm-kind" href="<?php echo esc_url($tk_addr); ?>"><span class="bhm-tile"><?php echo bsma_home_ic('panel'); ?></span><span><b>آدرس‌پذیر</b><span class="bhm-kp">هر دتکتور و شاسی آدرس جداگانه دارد. پنل دقیقاً نشان می‌دهد کدام نقطه اعلام کرده است. مناسب ساختمان‌های بزرگ، بیمارستان‌ها و مجموعه‌های صنعتی.</span><span class="bhm-kgo">محصولات آدرس‌پذیر ←</span></span></a>
         <a class="bhm-kind" href="<?php echo esc_url($tk_conv); ?>"><span class="bhm-tile bhm-steel"><?php echo bsma_home_ic('bell'); ?></span><span><b>کانونشنال (متعارف)</b><span class="bhm-kp">تجهیزات به‌صورت زون‌بندی به پنل وصل می‌شوند و پنل زونِ اعلام‌کننده را نشان می‌دهد. انتخاب اقتصادی برای ساختمان‌های کوچک و متوسط.</span><span class="bhm-kgo">محصولات کانونشنال ←</span></span></a>
         <div class="bhm-certs"><b>گواهی‌های استاندارد</b>
           <a href="<?php echo esc_url(content_url('/uploads/2025/11/2757AB61-01A4-88C4-EAEAECF115B4A459.pdf')); ?>"><?php echo bsma_home_ic('doc'); ?>گواهی استاندارد 1922-CPR کنترل پنل متعارف تکنیم (PDF)</a>
@@ -129,8 +129,8 @@ if (!defined('ABSPATH')) {
       $faq = [
           ['جعبه آتش‌نشانی تک‌کابین و دوکابین چه فرقی دارند؟', 'جعبه‌ی تک‌کابین یک محفظه برای قرقره و شیلنگ آتش‌نشانی دارد. جعبه‌ی دوکابین علاوه بر آن، یک محفظه‌ی جدا برای کپسول آتش‌نشانی هم دارد.'],
           ['درب استیل بهتر است یا درب فلزی؟', 'درب استیل در برابر زنگ‌زدگی مقاوم‌تر است و برای لابی و فضاهای اداری ظاهر شیک‌تری دارد. درب فلزی رنگ‌شده اقتصادی‌تر است و برای پارکینگ، انبار و فضاهای صنعتی انتخاب رایجی است.'],
-          ['سیستم اعلام حریق آدرس‌پذیر بگیرم یا کانونشنال؟', 'در سیستم آدرس‌پذیر پنل محل دقیق هر دتکتور یا شاسی را نشان می‌دهد و برای ساختمان‌های بزرگ و صنعتی مناسب است. سیستم کانونشنال محل حریق را در حد زون نشان می‌دهد و برای ساختمان‌های کوچک و متوسط اقتصادی‌تر است. برای انتخاب دقیق، <a href="#bhm-quote">مشاوره‌ی رایگان</a> بگیرید.'],
-          ['آیا نصب و راه‌اندازی هم انجام می‌دهید؟', 'بله. مشاوره، نصب و اجرا و خدمات پس از فروش سیستم‌های اعلام و اطفای حریق را با تأییدیه‌ی سازمان آتش‌نشانی اصفهان انجام می‌دهیم.'],
+          ['سیستم اعلام حریق آدرس‌پذیر بگیرم یا کانونشنال؟', 'در سیستم آدرس‌پذیر، پنل محل دقیق هر دتکتور یا شاسی را نشان می‌دهد. این سیستم برای ساختمان‌های بزرگ و صنعتی مناسب است. سیستم کانونشنال محل حریق را در حد زون نشان می‌دهد و برای ساختمان‌های کوچک و متوسط اقتصادی‌تر است. برای انتخاب دقیق، <a href="#bhm-quote">مشاوره‌ی رایگان</a> بگیرید.'],
+          ['آیا نصب و راه‌اندازی هم انجام می‌دهید؟', 'بله. نصب و اجرای سیستم‌های اعلام و اطفای حریق را با تأییدیه‌ی سازمان آتش‌نشانی اصفهان انجام می‌دهیم. مشاوره و خدمات پس از فروش هم با ماست.'],
           ['کپسول آتش‌نشانی را هر چند وقت باید شارژ کرد؟', 'بسته به نوع کپسول (پودر و گاز، CO2 یا آبی) فرق دارد. راهنمای کامل را در <a href="' . esc_url(home_url('/?s=' . rawurlencode('شارژ کپسول'))) . '">مقاله‌های شارژ کپسول</a> بخوانید.'],
           ['برای خرید عمده یا پروژه چه کنم؟', 'فرم <a href="#bhm-quote">استعلام قیمت</a> را پر کنید یا با ۰۳۱-۳۶۲۴۲۵۳۲ تماس بگیرید؛ کارشناس فروش پیش‌فاکتور پروژه را برایتان می‌فرستد.'],
       ];
@@ -158,7 +158,7 @@ echo wp_json_encode([
     <div class="bhm-posts">
       <?php foreach ($posts as $p) : ?>
       <a class="bhm-post" href="<?php echo esc_url(get_permalink($p)); ?>">
-        <span class="bhm-pi"><?php echo get_the_post_thumbnail($p, 'medium_large', ['loading' => 'lazy', 'decoding' => 'async', 'alt' => '']); ?></span>
+        <span class="bhm-pi"><?php echo get_the_post_thumbnail($p, 'medium_large', ['loading' => 'lazy', 'decoding' => 'async', 'alt' => get_the_title($p)]); ?></span>
         <span class="bhm-pb"><time datetime="<?php echo esc_attr(get_the_date('c', $p)); ?>"><?php echo esc_html(get_the_date('', $p)); ?></time><span class="bhm-pt"><?php echo esc_html(get_the_title($p)); ?></span></span>
       </a>
       <?php endforeach; ?>

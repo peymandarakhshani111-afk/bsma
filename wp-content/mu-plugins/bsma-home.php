@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('BSMA_HOME_VER', '1.0.1');
+define('BSMA_HOME_VER', '1.0.2');
 
 const BSMA_HOME_HERO_ID   = 26472; // behsazan-fire-box-2-cabin-copper-stainless-door-installed.jpg
 const BSMA_HOME_TEKNIM    = [26250, 26253, 26244, 26236, 23580, 26257, 26266, 23588];
@@ -54,7 +54,29 @@ add_action('wp_enqueue_scripts', function () {
     foreach ($drop as $h) {
         wp_dequeue_style($h);
     }
+    bsma_home_drop_elementor();
 }, 999);
+
+// Nothing on the coded home page (content, header, footer) is an Elementor or WPBakery element, so their
+// front-end runtime (~6 JS files incl. Swiper and jQuery UI) and base CSS are not needed here. Elementor can
+// enqueue late, so this also runs just before the footer prints.
+function bsma_home_drop_elementor()
+{
+    if (!bsma_home_active()) {
+        return;
+    }
+    foreach (['elementor-frontend', 'elementor-pro-frontend', 'pro-elements-handlers', 'swiper', 'vc_woocommerce-add-to-cart-js'] as $h) {
+        wp_dequeue_script($h);
+    }
+    $kit = (int) get_option('elementor_active_kit');
+    foreach (['elementor-frontend', 'elementor-icons', 'e-animations', 'elementor-pro', $kit ? 'elementor-post-' . $kit : ''] as $h) {
+        if ($h) {
+            wp_dequeue_style($h);
+        }
+    }
+}
+add_action('wp_footer', 'bsma_home_drop_elementor', 1);
+add_action('wp_print_footer_scripts', 'bsma_home_drop_elementor', 1);
 
 add_action('wp_head', function () {
     if (!bsma_home_active() || !wp_attachment_is_image(BSMA_HOME_HERO_ID)) {

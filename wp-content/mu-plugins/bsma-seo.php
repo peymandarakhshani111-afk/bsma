@@ -1,12 +1,13 @@
 <?php
 /*
  * Plugin Name: bsma SEO fixes
- * Description: Small, targeted fixes on top of Rank Math: home-page meta description and share image, a complete Organization schema (no Article/Person on the home page), an H1 for blog posts, trimmed over-long meta descriptions, product image alt text, removal of the unsupported rating schema on shop/category pages, and crawlable/accessible markup for the Digits login modal. Delete this file to undo all of it.
+ * Description: Small, targeted fixes on top of Rank Math: home-page title (under 60 characters), meta description and 1200x630 share image, a complete Organization schema (no Article/Person on the home page), an H1 for blog posts, trimmed over-long meta descriptions, product image alt text, removal of the unsupported rating schema on shop/category pages, and crawlable/accessible markup for the Digits login modal. Delete this file to undo all of it.
  */
 if (!defined('ABSPATH')) {
     exit;
 }
 
+const BSMA_SEO_HOME_TITLE = 'جعبه آتش نشانی، اعلام حریق تکنیم و کپسول | بهسازان';
 const BSMA_SEO_HOME_DESC = 'تولیدکننده‌ی جعبه آتش‌نشانی بهسازان در اصفهان از ۱۳۸۵ و نماینده‌ی سیستم اعلام حریق تکنیم در ایران؛ عضو وندور لیست آتش‌نشانی، با ارسال به سراسر کشور.';
 const BSMA_SEO_SAME_AS   = [
     'https://www.instagram.com/bsma.ir/',
@@ -32,23 +33,33 @@ add_filter('rank_math/frontend/description', function ($d) {
     return rtrim(mb_substr($cut, 0, $sp ?: 160), '،,:;- ') . '…';
 }, 20);
 
-// ---------- home-page share image: the installed fire box instead of the favicon ----------
+// ---------- home page: title under 60 characters, same title/description on social cards ----------
+add_filter('rank_math/frontend/title', function ($t) {
+    return is_front_page() ? BSMA_SEO_HOME_TITLE : $t;
+}, 20);
+foreach (['facebook/og_title', 'twitter/twitter_title'] as $bsma_seo_k) {
+    add_filter('rank_math/opengraph/' . $bsma_seo_k, function ($t) {
+        return is_front_page() ? BSMA_SEO_HOME_TITLE : $t;
+    }, 20);
+}
+foreach (['facebook/og_description', 'twitter/twitter_description'] as $bsma_seo_k) {
+    add_filter('rank_math/opengraph/' . $bsma_seo_k, function ($t) {
+        return is_front_page() ? BSMA_SEO_HOME_DESC : $t;
+    }, 20);
+}
+
+// ---------- home-page share image: a 1200x630 brand card instead of the 300x300 favicon ----------
 foreach (['facebook', 'twitter'] as $bsma_seo_net) {
     add_filter("rank_math/opengraph/{$bsma_seo_net}/image_array", function ($att) {
-        if (!is_front_page() || !defined('BSMA_HOME_HERO_ID')) {
-            return $att;
-        }
-        $src = wp_get_attachment_image_src(BSMA_HOME_HERO_ID, 'full');
-        if (!$src) {
+        if (!is_front_page()) {
             return $att;
         }
         return [
-            'id' => BSMA_HOME_HERO_ID,
-            'url' => $src[0],
-            'width' => $src[1],
-            'height' => $src[2],
-            'alt' => 'جعبه آتش نشانی دو کابین درب استیل مسی بهسازان',
-            'type' => get_post_mime_type(BSMA_HOME_HERO_ID),
+            'url' => plugins_url('bsma-seo/og-home.jpg', __FILE__),
+            'width' => 1200,
+            'height' => 630,
+            'alt' => 'جعبه آتش‌نشانی بهسازان؛ تولیدکننده‌ی جعبه آتش‌نشانی و نماینده‌ی اعلام حریق تکنیم',
+            'type' => 'image/jpeg',
         ];
     }, 20);
 }
