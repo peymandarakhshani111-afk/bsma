@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const BSMA_W_VER = '1.0.0';
+const BSMA_W_VER = '1.0.2';
 
 function bsma_w_active()
 {
@@ -52,7 +52,7 @@ add_action('wp_head', function () {
   animation:bw-name .9s cubic-bezier(.2,.8,.2,1) .95s both,bw-shine 1.3s ease-in-out 1.8s both}
 .bw-bar{width:min(46vw,260px);height:3px;margin-top:1.4vh;border-radius:3px;background:linear-gradient(90deg,transparent,#E0232C,#3CD3CB,transparent);transform:scaleX(0);animation:bw-bar .8s cubic-bezier(.2,.8,.2,1) 1.4s forwards}
 .bw-sub{margin-top:1.6vh;font:700 clamp(14px,3.8vw,20px)/1.7 Vazirmatn,Vazir,Tahoma,"Segoe UI",sans-serif;color:#c9ced8;opacity:0;animation:bw-up .7s cubic-bezier(.2,.8,.2,1) 1.6s forwards}
-.bw-skip{position:absolute;bottom:max(22px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);font:600 13px/1 Vazirmatn,Tahoma,sans-serif;color:rgba(255,255,255,.55);opacity:0;animation:bw-up .5s ease 1s forwards;white-space:nowrap}
+.bw-sub2{margin-top:.4vh;font-weight:600;font-size:clamp(13px,3.4vw,18px);color:#9fe9e4;animation-delay:1.95s}
 @keyframes bw-out{to{opacity:0;visibility:hidden;transform:scale(1.07)}}
 @keyframes bw-rot{to{transform:rotate(360deg)}}
 @keyframes bw-fade{from{opacity:0}}
@@ -62,7 +62,6 @@ add_action('wp_head', function () {
 @keyframes bw-shine{from{background-position:100% 0}to{background-position:0 0}}
 @keyframes bw-bar{to{transform:scaleX(1)}}
 @keyframes bw-up{from{opacity:0;transform:translate(var(--tx,0),8px)}to{opacity:1;transform:translate(var(--tx,0),0)}}
-.bw-skip{--tx:-50%}
 @keyframes bw-beat{0%,100%{transform:scale(1)}40%{transform:scale(1.045)}70%{transform:scale(.995)}}
 </style>
 <script id="bsma-w-js" data-no-optimize="1" data-no-defer="1" data-cfasync="false">
@@ -104,9 +103,9 @@ add_action('wp_body_open', function () {
     <svg class="bw-logo" viewBox="8 0 700 382" focusable="false"><g mask="url(#bhf-logo-mask)"><use class="bw-p bw-p1" href="#bhf-lp-rb"/><use class="bw-p bw-p2" href="#bhf-lp-s"/><use class="bw-p bw-p3" href="#bhf-lp-m"/><use class="bw-p bw-p4" href="#bhf-lp-ab"/></g></svg>
     <div class="bw-name">بهسازان</div>
     <div class="bw-bar"></div>
-    <div class="bw-sub">سرای مهرآهنگ، سازنده‌ی جعبه آتش‌نشانی از ۱۳۸۵</div>
+    <div class="bw-sub">تولیدکننده‌ی جعبه آتش‌نشانی بهسازان</div>
+    <div class="bw-sub bw-sub2">نماینده‌ی سیستم اعلام حریق تکنیم در ایران</div>
   </div>
-  <div class="bw-skip">برای ورود ضربه بزنید</div>
 </div>
     <?php
 }, 1);
