@@ -253,7 +253,7 @@
     { t: 'سیستم اعلام حریق', d: 'دتکتور، کنترل پنل و تجهیزات تست و نگهداری؛ برندهای GFE و تکنیم، متعارف و آدرس‌پذیر.', u: 'https://bsma.ir/product-category/سیستم-اعلام-حریق/' },
   ];
   let pi = 0;
-  const pDots = $('#p-dots'), pInfo = $('#product-info');
+  const pDots = $('#p-dots'), pInfo = $('#product-info'), photoStage = $('#photo-stage');
   PRODUCTS.forEach((p, i) => {
     const li = document.createElement('li');
     const b = document.createElement('button');
@@ -270,18 +270,51 @@
     $('#p-link').href = p.u;
     $$('button', pDots).forEach((b, k) => b.classList.toggle('on', k === pi));
     pInfo.classList.remove('swap'); void pInfo.offsetWidth; pInfo.classList.add('swap');
+    // product 0 is presented with real photos of the company's own boxes
+    const photos = pi === 0;
+    BS().ui.photo0 = true;
+    photoStage.hidden = !photos;
+    $('#drag-hint').hidden = photos;
+    if (photos && !reduced) gsap.fromTo('#photo-card', { autoAlpha: 0, y: 34, scale: 0.94 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out' });
   }
   $('#p-next').addEventListener('click', () => showProduct(pi - 1)); // RTL: "next" points left
   $('#p-prev').addEventListener('click', () => showProduct(pi + 1));
   showProduct(0);
 
+  const PHOTOS = [
+    { src: 'img/firebox-black.webp', cap: 'جعبه آتش‌نشانی دو کابین، فلزی مشکی', alt: 'جعبه آتش‌نشانی دو کابین فلزی مشکی بهسازان' },
+    { src: 'img/firebox-steel.webp', cap: 'جعبه آتش‌نشانی دو کابین، استیل مات', alt: 'جعبه آتش‌نشانی دو کابین با درب استیل مات بهسازان' },
+    { src: 'img/firebox-open.webp', cap: 'داخل جعبه: کپسول و قرقره‌ی شیلنگ', alt: 'جعبه آتش‌نشانی باز با کپسول و قرقره‌ی شیلنگ' },
+  ];
+  const photoImg = $('#photo-main'), photoCap = $('#photo-cap'), photoCard = $('#photo-card');
+  $$('#photo-thumbs button').forEach((b) => b.addEventListener('click', () => {
+    const ph = PHOTOS[+b.dataset.photo];
+    $$('#photo-thumbs button').forEach((x) => x.classList.toggle('on', x === b));
+    gsap.to(photoImg, { opacity: 0, duration: 0.15, onComplete: () => {
+      photoImg.src = ph.src; photoImg.alt = ph.alt; photoCap.textContent = ph.cap;
+      gsap.to(photoImg, { opacity: 1, duration: 0.3 });
+    } });
+  }));
+  // the card leans toward the pointer (hover) and follows a drag, like turning it on a turntable
+  let tilt = { x: 0, y: 0 };
+  const setTilt = () => { photoCard.style.setProperty('--rx', tilt.x.toFixed(1) + 'deg'); photoCard.style.setProperty('--ry', tilt.y.toFixed(1) + 'deg'); };
+
   const stage = $('#product-stage');
+  stage.addEventListener('pointermove', (e) => {
+    if (photoStage.hidden || dragging) return;
+    const r = stage.getBoundingClientRect();
+    tilt.y = ((e.clientX - r.left) / r.width - 0.5) * 18;
+    tilt.x = -((e.clientY - r.top) / r.height - 0.5) * 10;
+    setTilt();
+  });
+  stage.addEventListener('pointerleave', () => { tilt = { x: 0, y: 0 }; setTilt(); });
   let dragging = false, lastX = 0, lastT = 0;
-  stage.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastT = performance.now(); BS().ui.dragging = true; stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener('pointerdown', (e) => { if (e.target.closest('.photo-thumbs')) return; dragging = true; lastX = e.clientX; lastT = performance.now(); BS().ui.dragging = true; stage.setPointerCapture(e.pointerId); });
   stage.addEventListener('pointermove', (e) => {
     if (!dragging) return;
     const now = performance.now(), dt = Math.max(8, now - lastT) / 1000;
     BS().ui.dragVel = ((e.clientX - lastX) * 0.012) / dt;
+    if (!photoStage.hidden) { tilt.y = Math.max(-28, Math.min(28, tilt.y + (e.clientX - lastX) * 0.35)); setTilt(); }
     lastX = e.clientX; lastT = now;
   });
   const endDrag = () => { dragging = false; if (BS().ui) BS().ui.dragging = false; };
