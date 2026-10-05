@@ -306,13 +306,9 @@
           <img id="photo-main" src="img/firebox-black.webp" width="880" height="880" alt="جعبه آتش‌نشانی دو کابین فلزی مشکی بهسازان" decoding="async">
           <figcaption id="photo-cap">جعبه آتش‌نشانی دو کابین، فلزی مشکی</figcaption>
         </figure>
-        <div class="photo-thumbs" id="photo-thumbs" role="group" aria-label="تصویرهای جعبه آتش‌نشانی">
-          <button type="button" class="on" data-photo="0" aria-label="فلزی مشکی" data-sfx><img src="img/firebox-black.webp" alt="" width="64" height="64" loading="lazy"></button>
-          <button type="button" data-photo="1" aria-label="استیل مات" data-sfx><img src="img/firebox-steel.webp" alt="" width="64" height="64" loading="lazy"></button>
-          <button type="button" data-photo="2" aria-label="داخل جعبه با کپسول و قرقره" data-sfx><img src="img/firebox-open.webp" alt="" width="64" height="64" loading="lazy"></button>
-        </div>
+        <div class="photo-thumbs" id="photo-thumbs" role="group" aria-label="تصویرهای محصول"></div>
       </div>
-      <span class="drag-hint" id="drag-hint" aria-hidden="true">← بکشید و بچرخانید →</span>
+      <span class="drag-hint" id="drag-hint" aria-hidden="true" hidden>← بکشید و بچرخانید →</span>
     </div>
     <div class="panel portfolio-panel">
       <p class="tag"><b>نمونه کارها</b> تجهیزاتی که با این داستان سروکار دارند</p>
@@ -325,7 +321,7 @@
       <div class="product-info" id="product-info" aria-live="polite">
         <h3 id="p-title"></h3>
         <p id="p-text"></p>
-        <a class="btn btn-fire" id="p-link" href="#" target="_blank" rel="noopener" data-sfx>مشاهده در فروشگاه ↗</a>
+        <div class="p-actions"><a class="btn btn-fire" id="p-link" href="#" target="_blank" rel="noopener" data-sfx>مشاهده در فروشگاه ↗</a><button class="btn btn-ghost view-toggle" id="view-toggle" type="button" data-sfx>مشاهده‌ی مدل سه‌بعدی</button></div>
       </div>
       <div class="p-controls">
         <button class="icon-btn" id="p-next" type="button" aria-label="محصول بعدی" data-sfx><svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>

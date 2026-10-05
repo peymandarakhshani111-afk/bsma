@@ -17,6 +17,7 @@
 | `vendor/` | gsap، ScrollTrigger، howler (نسخه‌ی محلی؛ بدون وابستگی به CDN) |
 | `fonts/` | وزیرمتن (Vazirmatn) |
 | `audio/` | صداهای ساخته‌شده‌ی اختصاصی (WAV کوچک) |
+| `img/` | عکس‌های واقعی محصولات از صفحه‌های فروش bsma.ir (WebP بهینه‌شده) |
 | `article-fa.md` | متن به‌روزشده‌ی مقاله برای وردپرس (Markdown) |
 
 ## بازسازی `js/scene.js`

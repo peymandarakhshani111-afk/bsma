@@ -247,18 +247,20 @@ td { color: var(--soft); }
 .product-stage:active { cursor: grabbing; }
 .photo-stage { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 16px; pointer-events: none; }
 .photo-card { position: relative; width: min(430px, 74vw); max-height: 52vh; aspect-ratio: 1; margin: 0; padding: 9px; border-radius: 30px; background: linear-gradient(145deg, #ff6b1f, #27e6ff66 55%, #ff6b1f66); box-shadow: 0 0 90px #ff6b1f40, 0 40px 90px #000c; transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.28s ease-out; pointer-events: auto; will-change: transform; }
-.photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 22px; background: #fff; }
+.photo-card img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; border-radius: 22px; background: #fff; }
 .photo-card figcaption { position: absolute; inset-inline: 22px; bottom: 22px; padding: 2px 14px; border-radius: 999px; font-size: 0.74em; line-height: 1.8; text-align: center; background: #05060ab8; backdrop-filter: blur(8px); border: 1px solid #ffffff1c; }
 .photo-thumbs { display: flex; gap: 10px; pointer-events: auto; }
 .photo-thumbs button { width: 60px; height: 60px; border-radius: 14px; overflow: hidden; border: 2px solid #ffffff22; opacity: 0.65; padding: 0; transition: opacity 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s; }
 .photo-thumbs button img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .photo-thumbs button:hover { opacity: 1; transform: translateY(-3px); }
 .photo-thumbs button.on { opacity: 1; border-color: var(--fire); box-shadow: 0 0 18px #ff6b1f88; }
+.p-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.view-toggle { font-size: 0.82em; padding: 0.3em 1.1em; white-space: nowrap; }
 .drag-hint { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font-size: 0.75em; color: var(--muted); animation: nudge 2.4s ease-in-out infinite; }
 @keyframes nudge { 50% { transform: translateX(-50%) translateX(8px); opacity: 0.5; } }
 .badges { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 14px; }
 .badges li { font-size: 0.72em; color: var(--amber); border: 1px solid #ffb4543a; background: #ffb4540c; padding: 0 0.9em; border-radius: 999px; }
-.product-info { min-height: 12.5em; }
+.product-info { min-height: 13em; }
 .product-info.swap { animation: swap 0.45s ease; }
 .product-info h3 { color: #fff; }
 .product-info p { font-size: 0.93em; margin-bottom: 0.9em; }
@@ -314,7 +316,7 @@ td { color: var(--soft); }
   .hud-steps { top: 70px; bottom: auto; width: auto; max-width: calc(100% - 20px); left: 50%; }
   .hud-steps li { padding: 0 0.5em; font-size: 0.72em; }
   .product-stage { width: 100%; inset: 7vh 0 62vh; }
-  .photo-card { width: min(300px, 62vw, 26vh); max-height: none; }
+  .photo-card { width: min(300px, 62vw, 24vh); max-height: none; }
   .photo-thumbs button { width: 46px; height: 46px; border-radius: 11px; }
   .photo-card figcaption { display: none; }
   .quick .row { grid-template-columns: 1fr; }

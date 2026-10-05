@@ -280,8 +280,8 @@ export function createProducts(env) {
         ph = 0;
       }
       const cm = models[cur];
-      // the first product is shown as real photographs (HTML layer), so its primitive model stays hidden
-      cm.slot.visible = !(cur === 0 && s.ui.photo0);
+      // in photo mode the real product photographs (HTML layer) are shown, so the primitive model stays hidden
+      cm.slot.visible = !s.ui.photoMode;
       ph = Math.min(1, ph + dt / (phase === 'out' ? 0.28 : 0.6));
       if (phase === 'out') {
         const k = 1 - ph;

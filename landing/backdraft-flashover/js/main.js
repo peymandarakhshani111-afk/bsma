@@ -270,31 +270,75 @@
     $('#p-link').href = p.u;
     $$('button', pDots).forEach((b, k) => b.classList.toggle('on', k === pi));
     pInfo.classList.remove('swap'); void pInfo.offsetWidth; pInfo.classList.add('swap');
-    // product 0 is presented with real photos of the company's own boxes
-    const photos = pi === 0;
-    BS().ui.photo0 = true;
-    photoStage.hidden = !photos;
-    $('#drag-hint').hidden = photos;
-    if (photos && !reduced) gsap.fromTo('#photo-card', { autoAlpha: 0, y: 34, scale: 0.94 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out' });
+    showProductView(pi);
   }
   $('#p-next').addEventListener('click', () => showProduct(pi - 1)); // RTL: "next" points left
   $('#p-prev').addEventListener('click', () => showProduct(pi + 1));
-  showProduct(0);
 
-  const PHOTOS = [
-    { src: 'img/firebox-black.webp', cap: 'جعبه آتش‌نشانی دو کابین، فلزی مشکی', alt: 'جعبه آتش‌نشانی دو کابین فلزی مشکی بهسازان' },
-    { src: 'img/firebox-steel.webp', cap: 'جعبه آتش‌نشانی دو کابین، استیل مات', alt: 'جعبه آتش‌نشانی دو کابین با درب استیل مات بهسازان' },
-    { src: 'img/firebox-open.webp', cap: 'داخل جعبه: کپسول و قرقره‌ی شیلنگ', alt: 'جعبه آتش‌نشانی باز با کپسول و قرقره‌ی شیلنگ' },
+  /* real photographs from bsma.ir product pages (optimised WebP in /img) */
+  const W = { fit: 'contain', bg: '#fff' };
+  const GALLERY = [
+    [ // جعبه آتش‌نشانی
+      { src: 'img/firebox-black.webp', cap: 'جعبه آتش‌نشانی دو کابین، فلزی مشکی', alt: 'جعبه آتش‌نشانی دو کابین فلزی مشکی بهسازان' },
+      { src: 'img/firebox-steel.webp', cap: 'جعبه آتش‌نشانی دو کابین، استیل مات', alt: 'جعبه آتش‌نشانی دو کابین با درب استیل مات بهسازان' },
+      { src: 'img/firebox-open.webp', cap: 'داخل جعبه: کپسول و قرقره‌ی شیلنگ', alt: 'جعبه آتش‌نشانی باز با کپسول و قرقره‌ی شیلنگ' },
+    ],
+    [ // کپسول
+      { src: 'img/ext-6kg.webp', cap: 'کپسول پودر و گاز ۶ کیلوگرمی', alt: 'کپسول آتش‌نشانی پودر و گاز ۶ کیلوگرمی', ...W },
+      { src: 'img/ext-12kg.webp', cap: 'کپسول ۱۲ کیلوگرمی', alt: 'کپسول آتش‌نشانی ۱۲ کیلوگرمی با نشان BSMA', ...W },
+      { src: 'img/ext-25kg.webp', cap: 'کپسول چرخ‌دار ۲۵ کیلوگرمی', alt: 'کپسول آتش‌نشانی چرخ‌دار ۲۵ کیلوگرمی', ...W },
+    ],
+    [ // فن
+      { src: 'img/fan-aris.webp', cap: 'فن تخلیه‌ی دود صنعتی ARIS', alt: 'فن تخلیه دود صنعتی قابل‌حمل ARIS' },
+    ],
+    [ // درب
+      { src: 'img/door-cream.webp', cap: 'درب با بار پانیک، رنگ کرم', alt: 'درب آتش‌نشانی با بار پانیک و تابلوی FIRE EXIT، رنگ کرم', pos: '50% 36%' },
+      { src: 'img/door-brown.webp', cap: 'درب با بار پانیک، رنگ قهوه‌ای', alt: 'درب آتش‌نشانی با بار پانیک و تابلوی FIRE EXIT، رنگ قهوه‌ای', pos: '50% 36%' },
+      { src: 'img/door-white.webp', cap: 'درب با بار پانیک، رنگ سفید', alt: 'درب آتش‌نشانی با بار پانیک و تابلوی FIRE EXIT، رنگ سفید', pos: '50% 36%' },
+    ],
+    [ // اعلام حریق
+      { src: 'img/alarm-detector.webp', cap: 'دتکتور دود اپتیکال', alt: 'دتکتور دود اپتیکال', ...W },
+      { src: 'img/alarm-panel.webp', cap: 'کنترل پنل اعلام حریق تکنیم', alt: 'کنترل پنل اعلام حریق تکنیم', ...W },
+    ],
   ];
-  const photoImg = $('#photo-main'), photoCap = $('#photo-cap'), photoCard = $('#photo-card');
-  $$('#photo-thumbs button').forEach((b) => b.addEventListener('click', () => {
-    const ph = PHOTOS[+b.dataset.photo];
-    $$('#photo-thumbs button').forEach((x) => x.classList.toggle('on', x === b));
-    gsap.to(photoImg, { opacity: 0, duration: 0.15, onComplete: () => {
-      photoImg.src = ph.src; photoImg.alt = ph.alt; photoCap.textContent = ph.cap;
-      gsap.to(photoImg, { opacity: 1, duration: 0.3 });
-    } });
-  }));
+  const photoImg = $('#photo-main'), photoCap = $('#photo-cap'), photoCard = $('#photo-card'), thumbs = $('#photo-thumbs');
+  let view = 'photo';
+  function paint(ph) {
+    photoImg.src = ph.src; photoImg.alt = ph.alt; photoCap.textContent = ph.cap;
+    photoImg.style.objectFit = ph.fit || 'cover';
+    photoImg.style.objectPosition = ph.pos || '50% 50%';
+    photoImg.style.background = ph.bg || '#fff';
+  }
+  function renderGallery(i) {
+    const list = GALLERY[i] || [];
+    thumbs.replaceChildren();
+    list.forEach((ph, k) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.sfx = ''; b.setAttribute('aria-label', ph.cap); b.classList.toggle('on', k === 0);
+      const im = document.createElement('img');
+      im.src = ph.src; im.alt = ''; im.width = 60; im.height = 60; im.loading = 'lazy';
+      im.style.objectFit = ph.fit || 'cover'; im.style.objectPosition = ph.pos || '50% 50%'; im.style.background = ph.bg || '#fff';
+      b.appendChild(im);
+      b.addEventListener('click', () => {
+        $$('button', thumbs).forEach((x) => x.classList.toggle('on', x === b));
+        gsap.to(photoImg, { opacity: 0, duration: 0.15, onComplete: () => { paint(ph); gsap.to(photoImg, { opacity: 1, duration: 0.3 }); } });
+      });
+      thumbs.appendChild(b);
+    });
+    thumbs.hidden = list.length < 2;
+    if (list[0]) paint(list[0]);
+  }
+  function applyView() {
+    const photo = view === 'photo';
+    BS().ui.photoMode = photo;
+    photoStage.hidden = !photo;
+    $('#drag-hint').hidden = photo;
+    $('#view-toggle').textContent = photo ? 'مشاهده‌ی مدل سه‌بعدی' : 'مشاهده‌ی عکس واقعی';
+    if (photo && !reduced) gsap.fromTo('#photo-card', { autoAlpha: 0, y: 34, scale: 0.94 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out' });
+  }
+  $('#view-toggle').addEventListener('click', () => { view = view === 'photo' ? '3d' : 'photo'; applyView(); });
+  const showProductView = (i) => { renderGallery(i); applyView(); };
+  showProduct(0); // everything it needs is defined above
   // the card leans toward the pointer (hover) and follows a drag, like turning it on a turntable
   let tilt = { x: 0, y: 0 };
   const setTilt = () => { photoCard.style.setProperty('--rx', tilt.x.toFixed(1) + 'deg'); photoCard.style.setProperty('--ry', tilt.y.toFixed(1) + 'deg'); };
