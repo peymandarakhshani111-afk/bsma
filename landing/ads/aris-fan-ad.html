@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>تبلیغ فن تخلیه دود ARIS</title>
+<style>
+@font-face { font-family: "Vazirmatn"; src: url("../backdraft-flashover/fonts/Vazirmatn-VF.woff2") format("woff2"); font-weight: 100 900; }
+:root { --bg: #05060a; --ink: #f2f4fa; --soft: #c4cbdb; --fire: #ff6b1f; --amber: #ffb454; --cyan: #27e6ff; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); }
+body { font-family: "Vazirmatn", Tahoma, sans-serif; color: var(--ink); letter-spacing: 0; line-height: 1.5; }
+
+/* ───────── canvas sizes ───────── */
+.ad { position: relative; overflow: hidden; background: var(--bg); isolation: isolate; }
+body[data-f="feed"]  .ad { width: 1080px; height: 1350px; }
+body[data-f="story"] .ad { width: 1080px; height: 1920px; }
+body[data-f="wide"]  .ad { width: 1200px; height: 628px; }
+
+/* ───────── atmosphere: the door-light motif from the landing page ───────── */
+.glow { position: absolute; inset: 0; z-index: -3; background:
+  radial-gradient(ellipse 60% 46% at 50% 54%, #ff6b1f55 0%, #ff6b1f1c 38%, transparent 70%),
+  radial-gradient(ellipse 90% 70% at 50% 100%, #1b0c05 0%, transparent 70%); }
+.rays { position: absolute; left: 50%; top: 54%; width: 220%; aspect-ratio: 1; transform: translate(-50%, -50%); z-index: -2; opacity: 0.55;
+  background: repeating-conic-gradient(from 0deg, #ffb45433 0deg 2.2deg, transparent 2.2deg 9deg, #ff6b1f22 9deg 10.4deg, transparent 10.4deg 19deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 46%); mask-image: radial-gradient(circle, #000 0%, transparent 46%); }
+.grid { position: absolute; left: -20%; right: -20%; bottom: -4%; height: 34%; z-index: -2; opacity: 0.55;
+  background:
+    linear-gradient(#27e6ff55 1px, transparent 1px) 0 0 / 100% 54px,
+    linear-gradient(90deg, #27e6ff55 1px, transparent 1px) 0 0 / 78px 100%;
+  transform: perspective(520px) rotateX(62deg); transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 92%); mask-image: linear-gradient(to top, #000 10%, transparent 92%); }
+.vignette { position: absolute; inset: 0; z-index: 5; pointer-events: none; background: radial-gradient(ellipse at center, transparent 52%, #000a 100%); }
+
+/* ───────── content ───────── */
+.brand { display: flex; align-items: center; gap: 14px; font-weight: 800; }
+.mark { width: 22px; height: 36px; border: 3px solid var(--fire); border-radius: 3px 3px 0 0; box-shadow: 0 0 22px #ff6b1fbb; position: relative; }
+.mark::after { content: ""; position: absolute; inset: 3px 3px 0; background: #ff6b1f33; }
+.eyebrow { color: var(--amber); font-weight: 600; border: 1.5px solid #ffb4543d; background: #ffb4540f; border-radius: 999px; padding: 2px 20px; }
+h1 { font-weight: 900; line-height: 1.28; filter: drop-shadow(0 8px 36px #000); }
+.accent { background: linear-gradient(100deg, #ffd08a, #ff6b1f 75%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.sub { color: var(--soft); font-weight: 500; }
+.sub b { color: #fff; font-weight: 800; }
+
+.card { position: relative; border-radius: 44px; padding: 14px; background: linear-gradient(145deg, #ff6b1f, #27e6ff66 55%, #ff6b1f66); box-shadow: 0 0 90px #ff6b1f66, 0 40px 90px #000c; }
+.card::before { content: ""; position: absolute; inset: 14px; border-radius: 32px; background: #0b0d14; }
+.card img { position: relative; display: block; border-radius: 32px; }
+.card .badge { z-index: 3; position: absolute; top: -18px; inset-inline-start: 34px; background: linear-gradient(135deg, #ff8a3d, #ff4b14); color: #1a0700; font-weight: 800; padding: 3px 24px; border-radius: 999px; box-shadow: 0 10px 30px #ff4b1470; }
+
+.chips { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.chips li { display: flex; align-items: center; gap: 14px; background: #0a0d16cc; border: 1.5px solid #ffffff1a; border-radius: 20px; padding: 10px 20px; color: var(--ink); font-weight: 600; backdrop-filter: blur(6px); }
+.chips li::before { content: ""; flex: none; width: 14px; height: 14px; background: var(--cyan); transform: rotate(45deg); box-shadow: 0 0 16px var(--cyan); }
+
+.cta { display: flex; align-items: center; justify-content: space-between; gap: 20px; border-radius: 28px; background: linear-gradient(135deg, #ff8a3d, #ff4b14); color: #1a0700; padding: 16px 34px; box-shadow: 0 0 0 8px #ff6b1f22, 0 24px 70px #ff4b1470; }
+.cta .t { font-weight: 800; }
+.cta .p { font-weight: 900; direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+.foot { color: #9aa3b8; text-align: center; }
+.foot b { color: #d7dcea; }
+
+/* ───────── FEED 1080×1350 ───────── */
+body[data-f="feed"] .ad { padding: 54px 72px 44px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; }
+body[data-f="feed"] .brand { font-size: 30px; }
+body[data-f="feed"] .eyebrow { font-size: 23px; margin-top: 14px; }
+body[data-f="feed"] h1 { font-size: 96px; margin-top: 18px; line-height: 1.25; }
+body[data-f="feed"] .sub { font-size: 29px; margin-top: 4px; }
+body[data-f="feed"] .card img { width: 372px; height: 372px; }
+body[data-f="feed"] .art { margin-top: 22px; }
+body[data-f="feed"] .card .badge { font-size: 24px; }
+body[data-f="feed"] .chips { width: 100%; }
+body[data-f="feed"] .chips li { font-size: 25px; padding: 8px 18px; }
+body[data-f="feed"] .cta { width: 100%; }
+body[data-f="feed"] .cta .t { font-size: 34px; }
+body[data-f="feed"] .cta .p { font-size: 40px; }
+body[data-f="feed"] .foot { font-size: 20px; line-height: 1.7; margin-top: 8px; }
+body[data-f="feed"] .top { display: grid; justify-items: center; }
+
+/* ───────── STORY 1080×1920 ───────── */
+body[data-f="story"] .ad { padding: 190px 76px 220px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; }
+body[data-f="story"] .brand { font-size: 34px; }
+body[data-f="story"] .eyebrow { font-size: 27px; margin-top: 24px; }
+body[data-f="story"] h1 { font-size: 132px; margin-top: 34px; }
+body[data-f="story"] .sub { font-size: 33px; margin-top: 14px; }
+body[data-f="story"] .card img { width: 480px; height: 480px; }
+body[data-f="story"] .art { margin-top: 30px; }
+body[data-f="story"] .card .badge { font-size: 28px; }
+body[data-f="story"] .chips { width: 100%; gap: 18px; }
+body[data-f="story"] .chips li { font-size: 30px; padding: 14px 24px; }
+body[data-f="story"] .cta { width: 100%; padding: 22px 38px; }
+body[data-f="story"] .cta .t { font-size: 40px; }
+body[data-f="story"] .cta .p { font-size: 46px; }
+body[data-f="story"] .foot { font-size: 24px; line-height: 1.7; margin-top: 20px; }
+body[data-f="story"] .top { display: grid; justify-items: center; }
+
+/* ───────── WIDE 1200×628 ───────── */
+body[data-f="wide"] .ad { display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: center; padding: 38px 56px; gap: 28px; }
+body[data-f="wide"] .copy { display: grid; gap: 10px; align-content: center; }
+body[data-f="wide"] .brand { font-size: 22px; }
+body[data-f="wide"] .mark { width: 16px; height: 26px; border-width: 2.5px; }
+body[data-f="wide"] .eyebrow { display: none; }
+body[data-f="wide"] h1 { font-size: 78px; margin-top: 6px; }
+body[data-f="wide"] .sub { font-size: 21.5px; line-height: 1.6; }
+body[data-f="wide"] .chips { grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 6px; }
+body[data-f="wide"] .chips li { font-size: 18px; padding: 6px 14px; border-radius: 14px; }
+body[data-f="wide"] .chips li::before { width: 10px; height: 10px; }
+body[data-f="wide"] .cta { margin-top: 8px; padding: 10px 26px; border-radius: 22px; }
+body[data-f="wide"] .cta .t { font-size: 24px; }
+body[data-f="wide"] .cta .p { font-size: 28px; }
+body[data-f="wide"] .foot { display: none; }
+body[data-f="wide"] .art { display: grid; place-items: center; }
+body[data-f="wide"] .card { border-radius: 36px; padding: 11px; }
+body[data-f="wide"] .card::before { inset: 11px; border-radius: 26px; }
+body[data-f="wide"] .card img { width: 360px; height: 360px; border-radius: 26px; }
+body[data-f="wide"] .card .badge { font-size: 19px; top: -16px; }
+body[data-f="wide"] .grid { height: 30%; }
+</style>
+</head>
+<body data-f="feed">
+<div class="ad">
+  <div class="glow"></div><div class="rays"></div><div class="grid"></div><div class="vignette"></div>
+
+  <div class="copy top">
+    <div class="brand"><span class="mark"></span><span>به‌سازان سرای مهرآهنگ</span></div>
+    <p class="eyebrow">تجهیزات آتش‌نشانی و تهویه‌ی صنعتی</p>
+    <h1>جریان هوا را<br><span class="accent">کنترل کنید.</span></h1>
+    <p class="sub">فن تخلیه‌ی دود صنعتی <b>ARIS</b> — قابل‌حمل، سبک، آماده‌ی عملیات</p>
+    <ul class="chips">
+      <li>بدنه‌ی آلیاژ آلومینیوم</li>
+      <li>دسته و پایه‌ی متحرک</li>
+      <li>تک‌فاز / سه‌فاز (بسته به مدل)</li>
+      <li>۵ سال ضمانت</li>
+    </ul>
+    <div class="cta"><span class="t">استعلام قیمت و مشاوره</span><span class="p">031-3624 2532</span></div>
+  </div>
+
+  <div class="art"><div class="card"><span class="badge">فن آکسیال صنعتی</span><img src="assets/fan-photo.jpg" alt="فن تخلیه دود صنعتی ARIS"></div></div>
+
+  <p class="foot">از ۱۳۸۵ تأمین‌کننده‌ی تجهیزات مبارزه با حریق · <b>bsma.ir</b><br>استفاده در عملیات حریق فقط توسط نیروی آموزش‌دیده و با تهویه‌ی هماهنگ.</p>
+</div>
+<script>
+  const f = new URLSearchParams(location.search).get('f') || 'feed';
+  document.body.dataset.f = f;
+  // the feed/story layouts stack top → art → foot; the wide one is two columns. Re-order the DOM to suit.
+  const ad = document.querySelector('.ad'), copy = document.querySelector('.copy'), art = document.querySelector('.art'), foot = document.querySelector('.foot');
+  if (f !== 'wide') {
+    // split the copy block: headline stays on top, chips + cta move under the art
+    const chips = copy.querySelector('.chips'), cta = copy.querySelector('.cta');
+    const bottom = document.createElement('div');
+    bottom.style.cssText = 'width:100%;display:grid;gap:' + (f === 'story' ? '30px' : '22px');
+    bottom.append(chips, cta);
+    ad.insertBefore(bottom, foot);
+    ad.insertBefore(art, bottom);
+  }
+</script>
+</body>
+</html>
