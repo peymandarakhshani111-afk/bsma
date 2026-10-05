@@ -21,8 +21,8 @@ const STZ = 80; // distance between stations along -z
 const CH_ST = [0, 1, 1, 2, 3, 4, 5, 6]; // chapter → station
 const CAMS = [
   { p: [0, 1.6, 13], l: [0, 1.55, 0], fov: 40, shift: 0, mob: 1.0 }, //          0 hero
-  { p: [0.3, 2.5, 16.5], l: [-0.2, 1.7, -0.2], fov: 38, shift: 0.19, mob: 2.0 }, //  1 growth
-  { p: [-1.2, 1.9, 7.8], l: [0.2, 1.7, -1.4], fov: 50, shift: 0.19, mob: 1.8 }, // 2 flashover
+  { p: [0.3, 2.5, 16.5], l: [-0.2, 1.7, -0.2], fov: 38, shift: 0.19, mob: 2.0, my: 0.09 }, //  1 growth
+  { p: [-1.2, 1.9, 7.8], l: [0.2, 1.7, -1.4], fov: 50, shift: 0.19, mob: 1.8, my: 0.09 }, // 2 flashover
   { p: [0, 1.5, 9.8], l: [0, 1.25, 0], fov: 38, shift: 0.13, mob: 1.5 }, //       3 backdraft
   { p: [0, 1.8, 6.8], l: [0, 1.6, 0], fov: 36, shift: 0.15, mob: 1.9 }, //        4 signs
   { p: [0, 0.6, 11], l: [0, 0, 0], fov: 40, shift: 0.15, mob: 1.5 }, //           5 research
@@ -32,19 +32,25 @@ const CAMS = [
 const LEVELS = [
   { pr: 2, dens: 1, bloom: true, name: 'high' },
   { pr: 1.5, dens: 0.7, bloom: true, name: 'mid' },
-  { pr: 1, dens: 0.5, bloom: false, name: 'low' },
+  { pr: 1.25, dens: 0.55, bloom: true, name: 'low' },
+  { pr: 1, dens: 0.4, bloom: false, name: 'min' }, // also renders at 30 fps
 ];
 
-const BSMA = (window.BSMA = {
+/* js/main.js (the UI layer) may already have created window.BSMA with its `ui` and `cue`; adopt those instead of replacing them */
+const pre = window.BSMA || {};
+const BSMA = (window.BSMA = Object.assign(pre, {
   P: new Array(CAMS.length).fill(0),
-  ui: { sign: -1, node: -1, product: 0, dragging: false, dragVel: 0, dragRot: 0 },
-  cue: null,
+  ui: Object.assign({ sign: -1, node: -1, product: 0, dragging: false, dragVel: 0, dragRot: 0 }, pre.ui),
+  cue: pre.cue || null,
   ready: false,
   failed: false,
   level: 0,
-});
+  marks: {},
+}));
+const mark = (n) => (BSMA.marks[n] = Math.round(performance.now()));
 
-function start() {
+async function start() {
+  mark('start');
   const canvas = document.getElementById('gl');
   const flashEl = document.getElementById('flash');
   const params = new URLSearchParams(location.search);
@@ -70,9 +76,17 @@ function start() {
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
 
-  /* image-based light only for the product models */
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  mark('renderer');
+  /* image-based light only for the product models: built the first time that station is created */
+  let envTex = null;
+  const getEnv = () => {
+    if (!envTex) {
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      pmrem.dispose();
+    }
+    return envTex;
+  };
 
   const composer = new EffectComposer(
     renderer,
@@ -83,14 +97,27 @@ function start() {
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
-  /* stations */
-  const makers = [createHero, createRoom, createBackdraft, createSigns, createScience, () => createProducts(env), createContact];
-  const stations = makers.map((mk, k) => {
-    const st = mk();
-    st.group.position.z = -STZ * k;
-    scene.add(st.group);
-    return st;
+  /* stations are built on demand: the hero first so the page can show something at once, the rest while the browser is idle
+     (or immediately, if the visitor scrolls to one that is not built yet) */
+  const makers = [createHero, createRoom, createBackdraft, createSigns, createScience, () => createProducts(getEnv()), createContact];
+  const stations = new Array(makers.length).fill(null);
+  let pxScale = 600;
+  const setScale = (root) => root.traverse((o) => {
+    const u = o.material && o.material.uniforms;
+    if (u && u.uScale) u.uScale.value = pxScale;
   });
+  function build(k) {
+    if (stations[k]) return stations[k];
+    const st = makers[k]();
+    st.group.position.z = -STZ * k;
+    st.group.visible = false;
+    scene.add(st.group);
+    stations[k] = st;
+    setScale(st.group);
+    applyDensity(LEVELS[level].dens);
+    mark('st' + k);
+    return st;
+  }
 
   /* shared state handed to every station each frame */
   const S = (BSMA.s = {
@@ -110,6 +137,7 @@ function start() {
 
   /* layout metrics (sections are tall; their sticky child holds the viewport) */
   let L = [];
+  let artTop = Infinity; // the opaque article section covers the canvas from here down: stop drawing
   let vh = innerHeight;
   BSMA.measure = () => {
     const y = scrollY;
@@ -118,14 +146,19 @@ function start() {
       const r = el.getBoundingClientRect();
       return { top: r.top + y, h: r.height };
     });
+    const art = document.getElementById('article');
+    artTop = art ? art.getBoundingClientRect().top + y : Infinity;
   };
 
   /* quality */
   const forced = params.get('q');
-  let level = forced ? { high: 0, mid: 1, low: 2 }[forced] ?? 0 : coarse || innerWidth < 820 ? 1 : 0;
+  const weak = (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const phone = coarse || innerWidth < 820;
+  let level = forced ? { high: 0, mid: 1, low: 2, min: 3 }[forced] ?? 0 : phone ? (weak ? 2 : 1) : 0;
   if (reduced && !forced) level = Math.max(level, 1);
+  const MAXL = LEVELS.length - 1;
   function setLevel(n) {
-    level = clamp(n, 0, 2);
+    level = clamp(n, 0, MAXL);
     BSMA.level = level;
     const Lv = LEVELS[level];
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, Lv.pr));
@@ -136,7 +169,6 @@ function start() {
   }
   BSMA.setLevel = setLevel;
 
-  let pxScale = 600;
   function resize() {
     const w = innerWidth, h = innerHeight;
     S.width = w;
@@ -147,10 +179,7 @@ function start() {
     camera.aspect = w / h;
     const pr = renderer.getPixelRatio();
     pxScale = (h * pr) / (2 * Math.tan(THREE.MathUtils.degToRad(20)));
-    scene.traverse((o) => {
-      const u = o.material && o.material.uniforms;
-      if (u && u.uScale) u.uScale.value = pxScale;
-    });
+    setScale(scene);
     BSMA.measure();
   }
   addEventListener('resize', () => {
@@ -179,8 +208,10 @@ function start() {
   let flashSm = 0;
   const smoothScroll = !params.has('nosmooth') && !reduced;
 
+  let tick = 0;
   function frame(now) {
     requestAnimationFrame(frame);
+    if (level >= MAXL && tick++ % 2) return; // the lightest level draws at half rate
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     t += dt;
@@ -199,6 +230,7 @@ function start() {
     S.T = T;
     S.ch = Math.round(T);
     BSMA.T = T;
+    if (sy > artTop + 4 && !(S.fx.flash > 0.01)) { BSMA.onFrame && BSMA.onFrame(S); return; }
 
     /* pointer easing */
     S.mouse.x += (mTarget.x - S.mouse.x) * 0.05;
@@ -227,6 +259,7 @@ function start() {
     if (cross) pos.y += Math.sin(Math.PI * e) * 0.9;
     let fov = lerp(CAMS[i].fov, CAMS[i + 1].fov, e) + (cross ? 10 * Math.sin(Math.PI * e) : 0);
     const shift = lerp(CAMS[i].shift, CAMS[i + 1].shift, e);
+    const my = lerp(CAMS[i].my ?? 0.2, CAMS[i + 1].my ?? 0.2, e); // phones: how far the picture is lifted above the text sheet
 
     const parallax = innerWidth < 820 ? 0.25 : 1;
     camera.position.set(pos.x + S.mouse.x * 0.55 * parallax, pos.y - S.mouse.y * 0.3 * parallax, pos.z);
@@ -234,11 +267,13 @@ function start() {
     camera.updateMatrixWorld();
 
     /* stations in range */
-    stations.forEach((st, k) => {
+    for (let k = 0; k < stations.length; k++) {
       const near = Math.abs(camera.position.z + STZ * k) < 62;
+      const st = stations[k] || (near ? build(k) : null);
+      if (!st) continue;
       st.group.visible = near;
       if (near) st.update(t, dt, S);
-    });
+    }
 
     /* apply what the stations asked for */
     camera.position.add(fx.cam);
@@ -246,7 +281,7 @@ function start() {
     camera.lookAt(look.x + fx.look.x, look.y + fx.look.y, look.z);
     camera.fov = fov + fx.fov + (innerWidth < 820 ? 8 : 0);
     const W = innerWidth, H = innerHeight;
-    if (W < 820) camera.setViewOffset(W, H, 0, H * 0.2 * (S.ch === 0 ? 0.4 : 1), W, H);
+    if (W < 820) camera.setViewOffset(W, H, 0, H * my * (S.ch === 0 ? 0.4 : 1), W, H);
     else if (shift > 0.001) camera.setViewOffset(W, H, W * shift, 0, W, H);
     else camera.clearViewOffset();
     camera.updateProjectionMatrix();
@@ -260,21 +295,43 @@ function start() {
 
     /* adaptive quality (skip warm-up frames; ignore when forced) */
     frames++;
-    if (!forced && frames > 70 && level < 2) {
+    if (!forced && frames > 40 && level < MAXL - 1) {
       acc += dt;
-      if (frames % 50 === 0) {
-        if (acc / 50 > 0.04) setLevel(level + 1);
+      if (frames % 30 === 0) {
+        if (acc / 30 > 0.036) setLevel(level + 1);
         acc = 0;
       }
     }
   }
 
+  const hero = build(0);
+  /* compile the hero's shaders in parallel (off the main thread where the GPU driver allows it) before the first frame */
+  hero.group.visible = true;
+  if (renderer.extensions.has('KHR_parallel_shader_compile')) {
+    try {
+      await Promise.race([renderer.compileAsync(hero.group, camera, scene), new Promise((r) => setTimeout(r, 1500))]);
+    } catch (e) { /* the first frame compiles them instead */ }
+  }
+  mark('hero');
   BSMA.ready = true;
   requestAnimationFrame((n) => {
     last = n;
     frame(n);
   });
+
+  /* the other stations (and the product environment map) are built one per idle slice, hero first */
+  const idle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 900 }) : (f) => setTimeout(f, 140);
+  let nextSt = 1;
+  const pump = () => {
+    while (nextSt < stations.length && stations[nextSt]) nextSt++;
+    if (nextSt >= stations.length) { mark('all'); return; }
+    build(nextSt++);
+    idle(pump);
+  };
+  setTimeout(() => idle(pump), 1200);
 }
 
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
-else start();
+/* let the browser paint the page first, then boot the 3D scene */
+const boot = () => requestAnimationFrame(() => setTimeout(start, 30));
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();

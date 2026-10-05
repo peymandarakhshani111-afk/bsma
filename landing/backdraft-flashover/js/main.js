@@ -9,28 +9,41 @@
   const root = document.documentElement;
   root.classList.add('js');
 
+  // the 3D scene (js/scene.js) loads asynchronously and adopts this object when it starts
+  const BSMA0 = (window.BSMA = window.BSMA || {});
+  BSMA0.ui = Object.assign({ sign: -1, node: -1, product: 0, dragging: false, dragVel: 0, dragRot: 0, photoMode: true }, BSMA0.ui);
   const BS = () => window.BSMA || {};
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
+  const phone = () => innerWidth < 820;
+  // storage can be blocked (private mode, embedded views): every access is guarded
+  const store = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } };
+  const recall = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 
   /* ───────────────────────── sound (Howler.js) ───────────────────────── */
   const BASE = window.BSMA_BASE || ''; // set by the WordPress plugin; empty when opened standalone
   const html5 = location.protocol === 'file:'; // Web Audio cannot XHR files from file://
   if (html5) Howler.html5PoolSize = 24;
-  const mk = (name, o = {}) => new Howl(Object.assign({ src: [BASE + 'audio/' + name + '.wav'], html5, preload: true }, o));
-  const SFX = {
-    hover: mk('hover', { volume: 0.2 }),
-    click: mk('click', { volume: 0.32 }),
-    section: mk('section', { volume: 0.28 }),
-    whoosh: mk('whoosh', { volume: 0.4 }),
-    boom: mk('boom', { volume: 0.5 }),
-    ambient: mk('ambient', { volume: 0, loop: true }),
-  };
+  // nothing is downloaded until the visitor switches sound on (the files are tiny, but the first paint should not compete with them)
+  let SFX = null;
+  function loadSounds() {
+    if (SFX) return;
+    const mk = (name, volume) => new Howl({ src: [BASE + 'audio/' + name + '.mp3'], html5, preload: true, volume });
+    SFX = {
+      hover: mk('hover', 0.2),
+      click: mk('click', 0.32),
+      section: mk('section', 0.28),
+      whoosh: mk('whoosh', 0.4),
+      boom: mk('boom', 0.5),
+      ambient: new Howl({ src: [BASE + 'audio/ambient.ogg', BASE + 'audio/ambient.mp3'], html5, preload: true, loop: true, volume: 0 }),
+    };
+  }
   let soundOn = false;
   let lastHover = 0;
   const soundBtn = $('#sound');
 
   function play(name, vol) {
-    if (!soundOn || !SFX[name]) return;
+    if (!soundOn || !SFX || !SFX[name]) return;
     const id = SFX[name].play();
     if (vol != null) SFX[name].volume(vol, id);
   }
@@ -38,11 +51,12 @@
     soundOn = on;
     soundBtn.setAttribute('aria-pressed', String(on));
     soundBtn.setAttribute('aria-label', on ? 'صدا: روشن' : 'صدا: خاموش');
-    try { localStorage.setItem('bsma-sound', on ? '1' : '0'); } catch (e) { /* storage may be blocked */ }
+    store('bsma-sound', on ? '1' : '0');
     if (on) {
+      loadSounds();
       if (!SFX.ambient.playing()) SFX.ambient.play();
       SFX.ambient.fade(SFX.ambient.volume(), 0.16, 1600);
-    } else {
+    } else if (SFX) {
       SFX.ambient.fade(SFX.ambient.volume(), 0, 500);
       setTimeout(() => !soundOn && SFX.ambient.pause(), 560);
     }
@@ -69,54 +83,13 @@
     };
   }
 
-  /* ───────────────────────── loader ───────────────────────── */
-  const loader = $('#loader');
-  const fill = $('#loader-fill');
-  const actions = $('#loader-actions');
-  const note = $('#loader-note');
-  document.body.classList.add('locked');
-  let loaded = 0;
-  const total = 3;
-  // On the live, indexed page the start screen must never cover the content: BSMA_GATE === false starts silently by itself.
-  const gateOff = window.BSMA_GATE === false;
-  const tick = () => { loaded++; fill.style.width = Math.round((loaded / total) * 100) + '%'; if (loaded >= (gateOff ? 2 : total)) ready(); };
-  let readied = false;
-  function ready() {
-    if (readied) return;
-    readied = true;
-    if (gateOff) { begin(false); soundHint(); return; }
-    fill.style.width = '100%';
-    note.textContent = BS().failed ? 'مرورگر شما WebGL را پشتیبانی نمی‌کند؛ نسخه‌ی ساده نمایش داده می‌شود.' : 'صحنه آماده است.';
-    actions.hidden = false;
-    $('#start-sound').focus({ preventScroll: true });
-  }
-  document.fonts && document.fonts.ready ? document.fonts.ready.then(tick) : tick();
-  (function waitScene() { BS().ready ? requestAnimationFrame(() => requestAnimationFrame(tick)) : setTimeout(waitScene, 60); })();
-  let aLoaded = 0;
-  const aTotal = Object.keys(SFX).length;
-  Object.values(SFX).forEach((h) => { const f = () => ++aLoaded === aTotal && tick(); h.once('load', f); h.once('loaderror', f); });
-  setTimeout(ready, 7000); // never block the page on slow audio
-
-  function soundHint() {
-    const h = document.createElement('div');
-    h.className = 'sound-hint';
-    h.textContent = 'برای شنیدن صدا، دکمه‌ی بلندگو را بزنید';
-    document.body.appendChild(h);
-    setTimeout(() => h.classList.add('show'), 600);
-    setTimeout(() => h.remove(), 9000);
-    soundBtn.addEventListener('click', () => h.remove(), { once: true });
-  }
-  function begin(withSound) {
-    loader.classList.add('done');
-    document.body.classList.remove('locked');
-    bindCues();
-    if (withSound) setSound(true);
-    BS().measure && BS().measure();
-    ScrollTrigger.refresh();
-    intro();
-  }
-  $('#start-sound').addEventListener('click', () => begin(true));
-  $('#start-silent').addEventListener('click', () => begin(false));
+  /* ───────────────────────── start ─────────────────────────
+     There is no start screen: the page is readable at once and the 3D canvas fades in when the scene is ready. */
+  bindCues();
+  (function waitScene() {
+    if (BS().ready) { root.classList.add('scene-on'); BS().measure && BS().measure(); ScrollTrigger.refresh(); }
+    else setTimeout(waitScene, 80);
+  })();
 
   /* ───────────────────────── GSAP ───────────────────────── */
   gsap.registerPlugin(ScrollTrigger);
@@ -133,6 +106,7 @@
       .to('.stats li', { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1 }, 1.0);
   }
   if (reduced) { gsap.set('.hero-title .line', { yPercent: 0 }); gsap.set('.eyebrow, .hero-lead, .stats li', { autoAlpha: 1, y: 0 }); }
+  else requestAnimationFrame(intro);
 
   // the hero copy lifts away as the camera starts to move
   gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '+=70%', scrub: 0.4 } })
@@ -146,10 +120,12 @@
     const list = $$('.beat', el);
     const tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: el, start: 'top top', end: 'bottom bottom', scrub: 0.5 } });
     const f = 0.035;
+    const fl = touch || phone() ? {} : { filter: 'blur(10px)' };
+    const fl0 = touch || phone() ? {} : { filter: 'blur(0px)' };
     list.forEach((b, i) => {
       const [s, e] = ranges[i];
-      tl.fromTo(b, { autoAlpha: 0, y: 46, filter: 'blur(10px)' }, { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: f }, s);
-      if (i < list.length - 1) tl.to(b, { autoAlpha: 0, y: -46, filter: 'blur(10px)', duration: f }, e - f);
+      tl.fromTo(b, { autoAlpha: 0, y: 46, ...fl }, { autoAlpha: 1, y: 0, ...fl0, duration: f }, s);
+      if (i < list.length - 1) tl.to(b, { autoAlpha: 0, y: -46, ...fl, duration: f }, e - f);
     });
     extra && extra(tl);
     tl.set({}, {}, 1); // pin the timeline length to exactly 1 so positions are scroll fractions
@@ -172,26 +148,14 @@
   /* ───────────────────────── per-frame UI sync (HUD, nav, dots, sounds) ───────────────────────── */
   const hudRoom = $('#hud-room'), hudBd = $('#hud-bd');
   const elStage = $('#hud-stage'), elTemp = $('#hud-temp'), elTempBar = $('#hud-temp-bar'), elO2 = $('#hud-o2'), elO2Bar = $('#hud-o2-bar');
-  const dots = $$('.dots a'), navs = $$('.nav a');
-  const started = () => loader.classList.contains('done');
-  let lastCh = -1, lastStage = '', lastStep = -1;
+  let lastStage = '', lastStep = -1;
 
   const syncUI = () => {
     const b = BS();
     if (!b.s) return;
-    const T = b.T || 0, ch = b.s.ch;
+    const T = b.T || 0;
 
-    if (ch !== lastCh) {
-      if (lastCh !== -1 && started()) play('section');
-      lastCh = ch;
-      dots.forEach((a) => a.classList.toggle('on', +a.dataset.go === ch));
-      navs.forEach((a) => {
-        const g = +a.dataset.go;
-        a.classList.toggle('on', g === ch || (g === 1 && (ch === 2 || ch === 3)));
-      });
-    }
-
-    hudRoom.classList.toggle('on', T > 0.72 && T < 2.72 && started());
+    hudRoom.classList.toggle('on', T > 0.72 && T < 2.72);
     const rt = b.s.state.roomT || 0, heat = b.s.state.roomHeat || 0;
     const temp = 20 + 580 * heat;
     elTemp.textContent = fa(Math.round(temp / 10) * 10) + '°C';
@@ -203,7 +167,7 @@
     if (stage !== lastStage) { elStage.textContent = stage; lastStage = stage; }
 
     const P3 = clamp((b.P[3] || 0) / 0.64);
-    hudBd.classList.toggle('on', T > 2.72 && T < 3.55 && P3 > 0.01 && started());
+    hudBd.classList.toggle('on', T > 2.72 && T < 3.55 && P3 > 0.01);
     const step = P3 < 0.22 ? 0 : P3 < 0.44 ? 1 : P3 < 0.545 ? 2 : P3 < 0.9 ? 3 : 4;
     if (step !== lastStep) {
       lastStep = step;
@@ -213,12 +177,151 @@
   // driven by the scene's own render loop so UI and 3D never drift apart
   (function hook() { BS().s ? (BS().onFrame = syncUI) : setTimeout(hook, 50); })();
 
+
+  /* ───────────────────────── where am I: progress line, chapter chip, dots, nav ─────────────────────────
+     Driven by scrolling itself (not by the 3D loop) so it keeps working even where WebGL is unavailable. */
+  const CHAPTERS = ['شروع', 'رشد آتش', 'فلش‌اور', 'بک‌درفت', 'نشانه‌ها', 'یافته‌های ۱۴۰۵', 'نمونه کارها', 'تماس با ما', 'متن مقاله'];
+  const chEls = [...$$('main > .chapter'), $('#article')].filter(Boolean);
+  const dots = $$('.dots a'), navs = $$('.nav a'), tocs = $$('.toc a');
+  const progress = $('#progress'), whereN = $('#where-n'), whereT = $('#where-t');
+  let tops = [], artTop = 0, lastCh = -1, ticking = false;
+  const measureUI = () => {
+    const y = scrollY;
+    tops = chEls.map((el) => el.getBoundingClientRect().top + y);
+    artTop = tops[tops.length - 1] || 1;
+  };
+  const currentChapter = () => {
+    const probe = scrollY + innerHeight * 0.5;
+    let c = 0;
+    for (let i = 0; i < tops.length; i++) if (probe >= tops[i]) c = i;
+    return c;
+  };
+  function paintWhere() {
+    ticking = false;
+    const y = scrollY;
+    progress.style.transform = 'scaleX(' + clamp(y / Math.max(1, artTop - innerHeight)).toFixed(4) + ')';
+    if (!galleryOn && tops[6] && y + innerHeight * 3 > tops[6]) enableGallery();
+    const ch = currentChapter();
+    if (ch === lastCh) return;
+    if (lastCh !== -1) play('section');
+    lastCh = ch;
+    whereN.textContent = fa(ch + 1);
+    whereT.textContent = CHAPTERS[ch] || '';
+    dots.forEach((a) => a.classList.toggle('on', +a.dataset.go === ch));
+    navs.forEach((a) => {
+      const g = a.dataset.go;
+      a.classList.toggle('on', g != null && (+g === ch || (+g === 1 && (ch === 2 || ch === 3))));
+    });
+    tocs.forEach((a) => a.classList.toggle('on', +a.dataset.go === ch));
+    onChapter(ch);
+  }
+  const queuePaint = () => { if (!ticking) { ticking = true; requestAnimationFrame(paintWhere); } };
+  addEventListener('scroll', queuePaint, { passive: true });
+  addEventListener('resize', () => { measureUI(); queuePaint(); });
+  addEventListener('load', () => { measureUI(); queuePaint(); });
+  measureUI();
+
+  /* ───────────────────────── menu + how-to sheets ───────────────────────── */
+  let openSheetEl = null, sheetOpener = null;
+  const focusable = (el) => [...el.querySelectorAll('a[href], button:not([disabled])')].filter((x) => !x.closest('[hidden]'));
+  function openSheet(el, opener) {
+    closeSheet(true);
+    sheetOpener = opener || document.activeElement;
+    openSheetEl = el;
+    el.hidden = false;
+    root.classList.add('sheet-open');
+    if (opener && opener.id === 'where') opener.setAttribute('aria-expanded', 'true');
+    const f = $('.help-ok', el) || $('.toc a.on', el) || focusable(el)[0];
+    f && f.focus({ preventScroll: true });
+  }
+  function closeSheet(silent) {
+    if (!openSheetEl) return;
+    openSheetEl.hidden = true;
+    openSheetEl = null;
+    root.classList.remove('sheet-open');
+    $('#where').setAttribute('aria-expanded', 'false');
+    if (!silent && sheetOpener && sheetOpener.focus) sheetOpener.focus({ preventScroll: true });
+  }
+  $('#where').addEventListener('click', (e) => { play('click'); openSheet($('#menu'), e.currentTarget); });
+  $$('.sheet').forEach((sh) => sh.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) closeSheet(); }));
+  addEventListener('keydown', (e) => {
+    if (!openSheetEl) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeSheet(); return; }
+    if (e.key === 'Tab') { // keep focus inside the open sheet
+      const f = focusable(openSheetEl);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ───────────────────────── guidance for first-time visitors ───────────────────────── */
+  // first visit: the help button wears its label and pulses until it is used (or for a while)
+  const helpBtn = $('#help');
+  function dismissTip() {
+    if (!helpBtn.classList.contains('pulse-me')) return;
+    helpBtn.classList.remove('pulse-me');
+    store('bsma-tip', '1');
+  }
+  if (recall('bsma-tip') !== '1') {
+    helpBtn.classList.add('pulse-me');
+    setTimeout(dismissTip, 20000);
+  }
+  helpBtn.addEventListener('click', (e) => { dismissTip(); openSheet($('#help-dlg'), e.currentTarget); });
+
+  /* a short hint the first time each interactive chapter comes on screen; it stops for good once the visitor has used it */
+  const HINTS = {
+    4: { key: 'signs', t: 'روی دایره‌های شماره‌دارِ روی پنجره بزنید' },
+    5: { key: 'cards', t: touch ? 'روی هر کارت بزنید تا نقطه‌اش در صحنه روشن شود' : 'نشانگر را روی هر کارت ببرید تا نقطه‌اش در صحنه روشن شود' },
+    6: { key: 'products', t: touch ? 'محصول را با انگشت بکشید و بچرخانید؛ با فلش‌ها محصول بعدی' : 'محصول را بکشید و بچرخانید؛ با فلش‌ها بین محصولات بروید' },
+  };
+  const used = (() => { try { return JSON.parse(recall('bsma-used') || '{}'); } catch (e) { return {}; } })();
+  const shown = {};
+  const hintEl = $('#hint'), hintT = $('#hint-t');
+  let hintTimer = 0, hintCh = -1;
+  function hideHint() {
+    clearTimeout(hintTimer);
+    hintEl.classList.remove('show');
+    setTimeout(() => !hintEl.classList.contains('show') && (hintEl.hidden = true), 420);
+    $$('.hs.nudge').forEach((h) => h.classList.remove('nudge'));
+    hintCh = -1;
+  }
+  function markUsed(key) {
+    if (used[key]) return;
+    used[key] = 1;
+    store('bsma-used', JSON.stringify(used));
+    hideHint();
+  }
+  function showHint(ch) {
+    const h = HINTS[ch];
+    if (!h || used[h.key] || shown[ch] || openSheetEl) return;
+    shown[ch] = 1;
+    hintCh = ch;
+    hintT.textContent = h.t;
+    hintEl.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => hintEl.classList.add('show')));
+    if (ch === 4) { const first = $('.hs'); first && first.classList.add('nudge'); }
+    hintTimer = setTimeout(hideHint, 9000);
+  }
+  let hintDelay = 0;
+  function onChapter(ch) {
+    clearTimeout(hintDelay);
+    if (hintCh !== -1 && hintCh !== ch) hideHint();
+    if (HINTS[ch]) hintDelay = setTimeout(() => currentChapter() === ch && showHint(ch), 900);
+  }
+  $('#hint-x').addEventListener('click', () => { const h = HINTS[hintCh]; h ? markUsed(h.key) : hideHint(); });
+  $$('.hs, .sign-list button').forEach((b) => b.addEventListener('click', () => markUsed('signs')));
+  $$('.card').forEach((c) => c.addEventListener('click', () => markUsed('cards')));
+  ['#product-stage', '#p-next', '#p-prev', '#view-toggle', '#p-dots'].forEach((sel) => $(sel).addEventListener('pointerdown', () => markUsed('products')));
+
   /* ───────────────────────── anchors → cinematic scroll ───────────────────────── */
   const targetFor = (hash) => { const el = $(hash); return el ? el.getBoundingClientRect().top + scrollY : 0; };
   $$('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
     const h = a.getAttribute('href');
     if (h.length < 2 || !$(h)) return;
     e.preventDefault();
+    if (openSheetEl && openSheetEl.contains(a)) closeSheet(true);
     scrollTo({ top: targetFor(h), behavior: reduced ? 'auto' : 'smooth' });
     try { history.replaceState(null, '', h); } catch (err) { /* not allowed in some embedded views */ }
   }));
@@ -316,8 +419,16 @@
   ];
   const photoImg = $('#photo-main'), photoCap = $('#photo-cap'), photoCard = $('#photo-card'), thumbs = $('#photo-thumbs');
   let view = 'photo';
+  // photos are fetched only when the portfolio is about to come on screen (paintWhere calls enableGallery while scrolling)
+  let galleryOn = false;
+  const setSrc = (img, url) => { img.dataset.src = url; if (galleryOn) img.src = url; };
+  function enableGallery() {
+    if (galleryOn) return;
+    galleryOn = true;
+    $$('img[data-src]', $('#product-stage')).forEach((im) => { im.src = im.dataset.src; });
+  }
   function paint(ph) {
-    photoImg.src = BASE + ph.src; photoImg.alt = ph.alt; photoCap.textContent = ph.cap;
+    setSrc(photoImg, BASE + ph.src); photoImg.alt = ph.alt; photoCap.textContent = ph.cap;
     photoImg.style.objectFit = ph.fit || 'cover';
     photoImg.style.objectPosition = ph.pos || '50% 50%';
     photoImg.style.background = ph.bg || '#fff';
@@ -329,7 +440,7 @@
       const b = document.createElement('button');
       b.type = 'button'; b.dataset.sfx = ''; b.setAttribute('aria-label', ph.cap); b.classList.toggle('on', k === 0);
       const im = document.createElement('img');
-      im.src = BASE + ph.src; im.alt = ''; im.width = 60; im.height = 60; im.loading = 'lazy';
+      setSrc(im, BASE + ph.src); im.alt = ''; im.width = 60; im.height = 60;
       im.style.objectFit = ph.fit || 'cover'; im.style.objectPosition = ph.pos || '50% 50%'; im.style.background = ph.bg || '#fff';
       b.appendChild(im);
       b.addEventListener('click', () => {

@@ -12,30 +12,15 @@
 <meta property="og:title" content="بک‌درفت و فلش‌اور؛ پشت در چه خبر است؟">
 <meta property="og:description" content="سفری سه‌بعدی در دل یک اتاق در حال سوختن، با آخرین یافته‌های علمی ایمنی حریق.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2305060a'/%3E%3Crect x='10' y='6' width='12' height='20' rx='1.5' fill='none' stroke='%23ff6b1f' stroke-width='2.2'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/Vazirmatn-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"بک‌درفت چیست و چه تفاوتی با فلش‌اور دارد؟","inLanguage":"fa","datePublished":"2025-05-03","dateModified":"2026-10-05","author":{"@type":"Person","name":"پیمان درخشانی"},"publisher":{"@type":"Organization","name":"به‌سازان سرای مهرآهنگ","url":"https://bsma.ir/"}}
 </script>
-<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#loader{display:none!important}#gl,.hud,.dots{display:none!important}.hs,.stage{display:none!important}</style></noscript>
+<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#gl,.hud,.dots,.progress,.where,.tip,.hint{display:none!important}.hs,.stage{display:none!important}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#story">پرش به محتوا</a>
-
-<!-- ───────── loader / sound gate ───────── -->
-<div id="loader" role="dialog" aria-label="شروع تجربه">
-  <div class="loader-inner">
-    <div class="loader-door" aria-hidden="true"><i></i></div>
-    <p class="loader-brand">به‌سازان سرای مهرآهنگ</p>
-    <h2 class="loader-title">بک‌درفت و فلش‌اور</h2>
-    <div class="loader-bar" aria-hidden="true"><b id="loader-fill"></b></div>
-    <p class="loader-note" id="loader-note">در حال آماده‌سازی صحنه…</p>
-    <div class="loader-actions" id="loader-actions" hidden>
-      <button class="btn btn-fire" id="start-sound" type="button">شروع با صدا</button>
-      <button class="btn btn-ghost" id="start-silent" type="button">شروع بدون صدا</button>
-    </div>
-    <p class="loader-tip">برای بهترین تجربه از هدفون استفاده کنید. صداها ملایم‌اند و هر لحظه می‌توانید قطعشان کنید.</p>
-  </div>
-</div>
 
 <canvas id="gl" aria-hidden="true"></canvas>
 <div id="flash" aria-hidden="true"></div>
@@ -43,6 +28,7 @@
 <div class="grain" aria-hidden="true"></div>
 
 <!-- ───────── top bar ───────── -->
+<div class="progress" aria-hidden="true"><i id="progress"></i></div>
 <header class="topbar">
   <a class="brand" href="https://bsma.ir/" aria-label="صفحه‌ی اصلی به‌سازان سرای مهرآهنگ">
     <span class="brand-mark" aria-hidden="true"></span>
@@ -57,9 +43,16 @@
     <a href="#article">متن مقاله</a>
     <a href="https://bsma.ir/shop/">فروشگاه</a>
   </nav>
-  <button id="sound" class="icon-btn" type="button" aria-pressed="false" aria-label="صدا: خاموش" data-sfx>
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path class="spk" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="mute" d="M16 9l5 6m0-6l-5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  <button id="where" class="where" type="button" aria-haspopup="dialog" aria-controls="menu" aria-expanded="false" aria-label="فهرست بخش‌های صفحه">
+    <b id="where-n">۱</b><span id="where-t">شروع</span>
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
+  <div class="tools">
+    <button id="help" class="icon-btn help-btn" type="button" aria-haspopup="dialog" aria-controls="help-dlg" aria-label="راهنمای استفاده از صفحه" data-sfx><span class="q" aria-hidden="true">؟</span><em>راهنما</em></button>
+    <button id="sound" class="icon-btn" type="button" aria-pressed="false" aria-label="صدا: خاموش" data-sfx>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path class="spk" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="mute" d="M16 9l5 6m0-6l-5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
 </header>
 
 <ol class="dots" aria-label="پیشرفت در صفحه">
@@ -94,6 +87,45 @@
   </ol>
 </aside>
 
+
+<!-- section menu (phones) -->
+<div id="menu" class="sheet" role="dialog" aria-modal="true" aria-label="فهرست بخش‌ها" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-box">
+    <div class="sheet-head"><b>بخش‌های صفحه</b><button type="button" class="icon-btn" data-close aria-label="بستن فهرست"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+    <ol class="toc">
+      <li><a href="#hero" data-go="0"><b>۰۱</b><span>شروع<small>پرونده‌ی علمی ایمنی حریق</small></span></a></li>
+      <li><a href="#story" data-go="1"><b>۰۲</b><span>رشد آتش<small>اتاقی که نفس می‌کشد</small></span></a></li>
+      <li><a href="#flashover" data-go="2"><b>۰۳</b><span>فلش‌اور<small>وقتی همه‌چیز با هم می‌گیرد</small></span></a></li>
+      <li><a href="#backdraft" data-go="3"><b>۰۴</b><span>بک‌درفت<small>لحظه‌ی باز شدن در</small></span></a></li>
+      <li><a href="#features" data-go="4"><b>۰۵</b><span>نشانه‌ها<small>پنج علامت هشدار</small></span></a></li>
+      <li><a href="#research" data-go="5"><b>۰۶</b><span>یافته‌های ۱۴۰۵<small>آخرین پژوهش‌ها</small></span></a></li>
+      <li><a href="#portfolio" data-go="6"><b>۰۷</b><span>نمونه کارها<small>تجهیزات واقعی بهسازان</small></span></a></li>
+      <li><a href="#contact" data-go="7"><b>۰۸</b><span>تماس با ما<small>مشاوره‌ی رایگان</small></span></a></li>
+    </ol>
+    <div class="sheet-links"><a href="#article" data-close>متن کامل مقاله</a><a href="https://bsma.ir/shop/">فروشگاه</a></div>
+  </div>
+</div>
+
+<!-- how-to dialog -->
+<div id="help-dlg" class="sheet" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-box">
+    <div class="sheet-head"><h2 id="help-title">چطور از این صفحه استفاده کنم؟</h2><button type="button" class="icon-btn" data-close aria-label="بستن راهنما"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+    <ul class="howto">
+      <li><i class="hi hi-scroll" aria-hidden="true"></i><div><b>داستان را با اسکرول جلو ببرید</b><span class="m-touch">انگشت را روی صفحه به بالا بکشید؛ دوربین وارد اتاق می‌شود و متن‌ها به‌ترتیب می‌آیند.</span><span class="m-mouse">چرخ ماوس، کلیدهای ↑ ↓ یا Space؛ دوربین وارد اتاق می‌شود و متن‌ها به‌ترتیب می‌آیند.</span></div></li>
+      <li><i class="hi hi-menu" aria-hidden="true"></i><div><b>به هر بخش بپرید</b><span class="m-touch">دکمه‌ی «فهرست» در بالای صفحه را بزنید.</span><span class="m-mouse">از نوار بالای صفحه یا نقطه‌های سمت چپ استفاده کنید.</span> متن کامل مقاله هم در انتهای صفحه است.</div></li>
+      <li><i class="hi hi-tap" aria-hidden="true"></i><div><b>روی نقطه‌ها و کارت‌ها بزنید</b>در بخش «نشانه‌ها» دایره‌های شماره‌دارِ روی پنجره را بزنید؛ در «یافته‌ها» <span class="m-touch">کارت‌ها را لمس کنید</span><span class="m-mouse">نشانگر را روی کارت‌ها ببرید</span> تا نقطه‌ی مربوط در صحنه روشن شود.</div></li>
+      <li><i class="hi hi-drag" aria-hidden="true"></i><div><b>محصولات را بچرخانید</b>در «نمونه کارها» محصول را <span class="m-touch">با انگشت</span><span class="m-mouse">با ماوس</span> بکشید یا با فلش‌ها محصول بعدی را ببینید. می‌توانید بین عکس واقعی و مدل سه‌بعدی جابه‌جا شوید.</div></li>
+      <li><i class="hi hi-sound" aria-hidden="true"></i><div><b>صدا اختیاری است</b>پیش‌فرض خاموش است. دکمه‌ی بلندگوی بالای صفحه صدای محیط و افکت‌ها را روشن می‌کند.</div></li>
+    </ul>
+    <button type="button" class="btn btn-fire help-ok" data-close>متوجه شدم</button>
+  </div>
+</div>
+
+<!-- contextual hint for the interactive chapters -->
+<div class="hint" id="hint" role="status" aria-live="polite" hidden><span class="hint-ico" aria-hidden="true"></span><span id="hint-t"></span><button type="button" id="hint-x" aria-label="بستن">×</button></div>
+
 <main>
 
 <!-- ═════════ HERO ═════════ -->
@@ -114,7 +146,10 @@
         <li><b>~۶۰۰ <small>°C</small></b><span>دمای آستانه‌ی فلش‌اور</span><em>NFPA 921</em></li>
       </ul>
     </div>
-    <div class="scroll-cue" aria-hidden="true"><i></i><span>اسکرول کنید</span></div>
+    <a class="scroll-cue" href="#story" data-go="1" aria-label="ادامه‌ی داستان؛ اسکرول کنید">
+      <span class="cue-ico" aria-hidden="true"><i></i></span>
+      <span class="cue-t"><b class="m-touch">انگشت را به بالا بکشید</b><b class="m-mouse">اسکرول کنید</b><small>داستان با حرکت صفحه جلو می‌رود</small></span>
+    </a>
   </div>
 </section>
 
@@ -306,7 +341,7 @@
     <div class="stage product-stage" id="product-stage" role="group" aria-label="مدل سه‌بعدی محصول؛ با کشیدن بچرخانید" tabindex="0">
       <div class="photo-stage" id="photo-stage" hidden>
         <figure class="photo-card" id="photo-card">
-          <img id="photo-main" src="img/firebox-black.webp" width="880" height="880" alt="جعبه آتش‌نشانی دو کابین فلزی مشکی بهسازان" decoding="async">
+          <img id="photo-main" width="880" height="880" alt="جعبه آتش‌نشانی دو کابین فلزی مشکی بهسازان" decoding="async">
           <figcaption id="photo-cap">جعبه آتش‌نشانی دو کابین، فلزی مشکی</figcaption>
         </figure>
         <div class="photo-thumbs" id="photo-thumbs" role="group" aria-label="تصویرهای محصول"></div>
@@ -448,7 +483,7 @@
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
 <script src="vendor/howler.min.js"></script>
-<script src="js/scene.js"></script>
 <script src="js/main.js"></script>
+<script src="js/scene.js" async></script>
 </body>
 </html>

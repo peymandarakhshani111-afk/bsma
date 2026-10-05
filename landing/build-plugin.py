@@ -31,12 +31,12 @@ noscript = re.search(r'<noscript>.*?</noscript>', html, re.S).group(0)
 open(os.path.join(DEST, 'head-extra.html'), 'w', encoding='utf-8').write(noscript + '\n')
 
 # local preview that mimics template.php (BASE = plugin assets folder)
-scripts = ['vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js', 'vendor/howler.min.js', 'js/scene.js', 'js/main.js']
+scripts = ['vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js', 'vendor/howler.min.js', 'js/main.js', 'js/scene.js']
 prev = f'''<!doctype html><html lang="fa-IR" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>preview</title><link rel="stylesheet" href="{NAME}/assets/css/style.css">{noscript}</head><body class="bsma-story">
+<title>preview</title><link rel="preload" href="{NAME}/assets/fonts/Vazirmatn-VF.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="{NAME}/assets/css/style.css">{noscript}</head><body class="bsma-story">
 {body.replace('%BASE%', NAME + '/assets/')}
-<script>window.BSMA_BASE = "{NAME}/assets/"; window.BSMA_GATE = false;</script>
-''' + '\n'.join(f'<script src="{NAME}/assets/{s}"></script>' for s in scripts) + '\n</body></html>\n'
+<script>window.BSMA_BASE = "{NAME}/assets/";</script>
+''' + '\n'.join(f'<script src="{NAME}/assets/{s}"' + (' async' if s == 'js/scene.js' else '') + '></script>' for s in scripts) + '\n</body></html>\n'
 open(os.path.join(OUT, 'preview.html'), 'w', encoding='utf-8').write(prev)
 
 zp = os.path.join(OUT, NAME + '.zip')
