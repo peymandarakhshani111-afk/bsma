@@ -115,9 +115,11 @@
     .to('.scroll-cue', { autoAlpha: 0, ease: 'none' }, 0);
 
   /* beats: each text card fades in/out over a fraction of the chapter's scroll */
-  function beats(section, ranges, extra) {
+  const STORY = []; // every scrolled chapter, in page order: used by story mode (the self-playing film)
+  function beats(section, ranges, extra, focus) {
     const el = $(section);
     const list = $$('.beat', el);
+    STORY.push({ el, ranges, list, focus: focus || [] });
     const tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: el, start: 'top top', end: 'bottom bottom', scrub: 0.5 } });
     const f = 0.035;
     const fl = touch || phone() ? {} : { filter: 'blur(10px)' };
@@ -131,12 +133,20 @@
     tl.set({}, {}, 1); // pin the timeline length to exactly 1 so positions are scroll fractions
     return tl;
   }
-  beats('#story', [[0, 0.34], [0.34, 0.67], [0.67, 1]]);
+  beats('#story', [[0, 0.34], [0.34, 0.67], [0.67, 1]], null, [null, null, 0.97]);
   beats('#flashover', [[0, 0.46], [0.52, 0.78], [0.8, 1]], (tl) => {
     $$('#flashover .fill').forEach((f, i) => tl.fromTo(f, { width: '0%' }, { width: f.dataset.w + '%', duration: 0.1 }, 0.58 + i * 0.03));
     $$('#flashover .thermo i').forEach((f, i) => tl.fromTo(f, { height: '0px' }, { height: (f.dataset.h / 100) * (innerWidth < 820 ? 100 : 130) + 'px', duration: 0.1 }, 0.84 + i * 0.03));
-  });
-  beats('#backdraft', [[0, 0.13], [0.14, 0.26], [0.27, 0.34], [0.35, 0.52], [0.58, 0.78], [0.8, 1]]);
+  }, [null, 0.75, 0.97]);
+  beats('#backdraft', [[0, 0.13], [0.14, 0.26], [0.27, 0.34], [0.35, 0.52], [0.58, 0.78], [0.8, 1]], null, [null, null, null, null, null, 0.97]);
+
+  /* each card says where it is in its chapter ("2 از 3") and what comes next, so the visitor is never left wondering whether to scroll */
+  STORY.forEach(({ list }) => list.forEach((b, i) => {
+    const tag = $('.tag', b);
+    if (tag && list.length > 1) tag.append(Object.assign(document.createElement('span'), { className: 'step', textContent: fa(i + 1) + ' از ' + fa(list.length) }));
+    const txt = b.dataset.next || (i < list.length - 1 ? 'ادامه' : '');
+    if (txt) b.append(Object.assign(document.createElement('p'), { className: 'nextline', textContent: '↓ ' + txt }));
+  }));
 
   // a card or panel that simply holds its place (interactive chapters)
   ['#features', '#research', '#portfolio'].forEach((sel) => {
@@ -162,8 +172,8 @@
     elTempBar.style.width = Math.round(heat * 100) + '%';
     const o2 = 1 - 0.78 * clamp((rt - 0.04) / 0.5);
     elO2Bar.style.width = Math.round(o2 * 100) + '%';
-    elO2.textContent = o2 > 0.7 ? 'بالا' : o2 > 0.4 ? 'در حال افت' : 'بسیار کم';
-    const stage = rt >= 0.76 ? 'فلش‌اور' : rt > 0.5 ? 'تابش و گرمایش' : rt > 0.2 ? 'تهویه‌محور' : 'رشد';
+    elO2.textContent = o2 > 0.7 ? 'کافی' : o2 > 0.4 ? 'در حال کم شدن' : 'بسیار کم';
+    const stage = rt >= 0.76 ? 'فلش‌اور' : rt > 0.5 ? 'گرمای شدید' : rt > 0.2 ? 'کمبود هوا' : 'رشد آتش';
     if (stage !== lastStage) { elStage.textContent = stage; lastStage = stage; }
 
     const P3 = clamp((b.P[3] || 0) / 0.64);
@@ -180,7 +190,7 @@
 
   /* ───────────────────────── where am I: progress line, chapter chip, dots, nav ─────────────────────────
      Driven by scrolling itself (not by the 3D loop) so it keeps working even where WebGL is unavailable. */
-  const CHAPTERS = ['شروع', 'رشد آتش', 'فلش‌اور', 'بک‌درفت', 'نشانه‌ها', 'یافته‌های ۱۴۰۵', 'نمونه کارها', 'تماس با ما', 'متن مقاله'];
+  const CHAPTERS = ['شروع', 'آتش در اتاق', 'فلش‌اور', 'بک‌درفت', 'نشانه‌های خطر', 'یافته‌ها', 'نمونه کارها', 'تماس با ما', 'متن مقاله'];
   const chEls = [...$$('main > .chapter'), $('#article')].filter(Boolean);
   const dots = $$('.dots a'), navs = $$('.nav a'), tocs = $$('.toc a');
   const progress = $('#progress'), whereN = $('#where-n'), whereT = $('#where-t');
@@ -272,48 +282,145 @@
 
   /* a short hint the first time each interactive chapter comes on screen; it stops for good once the visitor has used it */
   const HINTS = {
-    4: { key: 'signs', t: 'روی دایره‌های شماره‌دارِ روی پنجره بزنید' },
-    5: { key: 'cards', t: touch ? 'روی هر کارت بزنید تا نقطه‌اش در صحنه روشن شود' : 'نشانگر را روی هر کارت ببرید تا نقطه‌اش در صحنه روشن شود' },
-    6: { key: 'products', t: touch ? 'محصول را با انگشت بکشید و بچرخانید؛ با فلش‌ها محصول بعدی' : 'محصول را بکشید و بچرخانید؛ با فلش‌ها بین محصولات بروید' },
+    4: { key: 'signs', t: 'روی دایره‌های شماره‌دار روی پنجره بزنید' },
+    5: { key: 'cards', t: touch ? 'روی هر کارت بزنید تا نقطه‌ی هم‌رنگش در صحنه روشن شود' : 'نشانگر را روی هر کارت ببرید تا نقطه‌ی هم‌رنگش روشن شود' },
+    6: { key: 'products', t: touch ? 'محصول را با انگشت بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' : 'محصول را بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' },
   };
   const used = (() => { try { return JSON.parse(recall('bsma-used') || '{}'); } catch (e) { return {}; } })();
   const shown = {};
-  const hintEl = $('#hint'), hintT = $('#hint-t');
-  let hintTimer = 0, hintCh = -1;
+  const hintEl = $('#hint'), hintT = $('#hint-t'), hintGo = $('#hint-go');
+  let hintTimer = 0, hintCh = -1, hintKey = null;
   function hideHint() {
     clearTimeout(hintTimer);
     hintEl.classList.remove('show');
     setTimeout(() => !hintEl.classList.contains('show') && (hintEl.hidden = true), 420);
     $$('.hs.nudge').forEach((h) => h.classList.remove('nudge'));
-    hintCh = -1;
+    hintCh = -1; hintKey = null;
   }
   function markUsed(key) {
     if (used[key]) return;
     used[key] = 1;
     store('bsma-used', JSON.stringify(used));
-    hideHint();
+    if (hintKey === key) hideHint();
   }
-  function showHint(ch) {
-    const h = HINTS[ch];
-    if (!h || used[h.key] || shown[ch] || openSheetEl) return;
-    shown[ch] = 1;
-    hintCh = ch;
-    hintT.textContent = h.t;
+  // o: { ch, key, sticky (stay until dismissed), go (label of a "continue" button) }
+  function showHint(text, o = {}) {
+    clearTimeout(hintTimer);
+    hintCh = o.ch ?? -1; hintKey = o.key || null;
+    hintT.textContent = text;
+    hintGo.hidden = !o.go;
+    if (o.go) hintGo.textContent = o.go;
     hintEl.hidden = false;
     requestAnimationFrame(() => requestAnimationFrame(() => hintEl.classList.add('show')));
-    if (ch === 4) { const first = $('.hs'); first && first.classList.add('nudge'); }
-    hintTimer = setTimeout(hideHint, 9000);
+    if (o.ch === 4) { const first = $('.hs'); first && first.classList.add('nudge'); }
+    if (!o.sticky) hintTimer = setTimeout(hideHint, 9000);
+  }
+  function showChapterHint(ch) {
+    const h = HINTS[ch];
+    if (!h || used[h.key] || shown[ch] || openSheetEl || AP.on) return;
+    shown[ch] = 1;
+    showHint(h.t, { ch, key: h.key });
   }
   let hintDelay = 0;
   function onChapter(ch) {
     clearTimeout(hintDelay);
     if (hintCh !== -1 && hintCh !== ch) hideHint();
-    if (HINTS[ch]) hintDelay = setTimeout(() => currentChapter() === ch && showHint(ch), 900);
+    if (HINTS[ch]) hintDelay = setTimeout(() => currentChapter() === ch && showChapterHint(ch), 900);
   }
-  $('#hint-x').addEventListener('click', () => { const h = HINTS[hintCh]; h ? markUsed(h.key) : hideHint(); });
+  $('#hint-x').addEventListener('click', () => { hintKey ? markUsed(hintKey) : hideHint(); hideHint(); });
   $$('.hs, .sign-list button').forEach((b) => b.addEventListener('click', () => markUsed('signs')));
   $$('.card').forEach((c) => c.addEventListener('click', () => markUsed('cards')));
   ['#product-stage', '#p-next', '#p-prev', '#view-toggle', '#p-dots'].forEach((sel) => $(sel).addEventListener('pointerdown', () => markUsed('products')));
+
+  /* ───────────────────────── story mode: the page plays itself like a film ─────────────────────────
+     It scrolls to each card, waits as long as the card takes to read, and moves on. Any touch, wheel or key press hands control back.
+     At the three interactive chapters it stops and asks the visitor to try things, then continues when they press "continue". */
+  const playBtn = $('#play');
+  const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, until: 0, lastY: 0, raf: 0 };
+  const STOPS = [
+    ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', 4],
+    ['#research', 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', 5],
+    ['#portfolio', 'نوبت شماست: محصولات را ببینید و بچرخانید. بعد «ادامه» را بزنید.', 6],
+  ];
+  const words = (el) => (el.textContent.match(/\S+/g) || []).length;
+  function buildWaypoints() {
+    const vh = innerHeight, wp = [];
+    const at = (el, f) => { const r = el.getBoundingClientRect(); return r.top + scrollY + f * Math.max(0, r.height - vh); };
+    STORY.forEach(({ el, ranges, list, focus }) => list.forEach((b, i) => {
+      const [s0, e0] = ranges[i];
+      const f = focus[i] != null ? focus[i] : (s0 + e0) / 2;
+      wp.push({ y: at(el, f), dwell: clamp(1800 + words(b) * 270, 4000, 12000) });
+    }));
+    STOPS.forEach(([sel, msg, ch]) => wp.push({ y: at($(sel), 0.5), stop: true, msg, ch, go: 'ادامه ▶' }));
+    const c = $('#contact');
+    wp.push({ y: c.getBoundingClientRect().top + scrollY + 40, stop: true, end: true, ch: 7, msg: 'پایان داستان. هر سؤالی دارید، از همین‌جا با ما تماس بگیرید.', go: 'از اول ▶' });
+    return wp.sort((a, b) => a.y - b.y);
+  }
+  const setPlayUI = (on) => {
+    playBtn.setAttribute('aria-pressed', String(on));
+    playBtn.setAttribute('aria-label', on ? 'توقف پخش خودکار' : 'پخش خودکار داستان');
+    root.classList.toggle('playing', on);
+  };
+  function apPause() {
+    if (!AP.on) return;
+    AP.on = false;
+    cancelAnimationFrame(AP.raf);
+    setPlayUI(false);
+  }
+  function apMoveTo(i, now) {
+    AP.i = i;
+    const w = AP.wp[i];
+    AP.y0 = scrollY; AP.y1 = w.y;
+    const dist = Math.abs(AP.y1 - AP.y0);
+    AP.dur = clamp((dist / 430) * 1000, 1600, 7000);
+    AP.t0 = now;
+    AP.phase = dist < 6 ? 'dwell' : 'move';
+    if (AP.phase === 'dwell') AP.until = now + (w.dwell || 0);
+  }
+  function apFrame(now) {
+    if (!AP.on) return;
+    AP.raf = requestAnimationFrame(apFrame);
+    if (Math.abs(scrollY - AP.lastY) > 4) { apPause(); return; } // the visitor scrolled by themselves
+    const w = AP.wp[AP.i];
+    if (AP.phase === 'move') {
+      const k = clamp((now - AP.t0) / AP.dur);
+      const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      scrollTo({ top: AP.y0 + (AP.y1 - AP.y0) * e, behavior: 'instant' });
+      AP.lastY = scrollY;
+      if (k >= 1) {
+        if (w.stop) { apPause(); showHint(w.msg, { ch: w.ch, sticky: true, go: w.go }); return; }
+        AP.phase = 'dwell'; AP.until = now + w.dwell;
+      }
+    } else if (now >= AP.until) {
+      if (AP.i + 1 >= AP.wp.length) { apPause(); return; }
+      apMoveTo(AP.i + 1, now);
+    }
+  }
+  function apPlay() {
+    if (AP.on) return;
+    AP.wp = buildWaypoints();
+    hideHint();
+    let i = AP.wp.findIndex((w) => w.y > scrollY + 30);
+    if (i < 0) { scrollTo({ top: 0, behavior: 'instant' }); i = 0; } // finished before: start again
+    AP.on = true;
+    AP.lastY = scrollY;
+    setPlayUI(true);
+    const now = performance.now();
+    apMoveTo(i, now);
+    if (AP.phase === 'dwell') AP.until = now + 600;
+    AP.raf = requestAnimationFrame(apFrame);
+  }
+  playBtn.addEventListener('click', () => (AP.on ? apPause() : apPlay()));
+  $('#play-hero').addEventListener('click', apPlay);
+  hintGo.addEventListener('click', apPlay);
+  // any real input from the visitor takes over
+  const takeOver = (e) => {
+    if (!AP.on) return;
+    if (e.target && e.target.closest && e.target.closest('#play, #play-hero, #hint-go')) return;
+    if (e.type === 'keydown' && !['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) return;
+    apPause();
+  };
+  ['wheel', 'touchstart', 'keydown'].forEach((t) => addEventListener(t, takeOver, { passive: true }));
 
   /* ───────────────────────── anchors → cinematic scroll ───────────────────────── */
   const targetFor = (hash) => { const el = $(hash); return el ? el.getBoundingClientRect().top + scrollY : 0; };
@@ -328,11 +435,11 @@
 
   /* ───────────────────────── features: the five signs ───────────────────────── */
   const SIGNS = [
-    { t: 'دود غلیظ زرد یا قهوه‌ای', d: 'نشانه‌ی احتراق ناقص است: دود پر از سوخت نسوخته و بخارات داغ می‌شود. چنین دودی فقط محصول آتش نیست؛ خودش سوخت است و در تماس با هوا می‌تواند مشتعل شود.' },
-    { t: 'دود پالسی؛ ساختمان نفس می‌کشد', d: 'دود با ضرباهنگ از شکاف‌ها بیرون می‌زند و دوباره به داخل برمی‌گردد. یعنی فشار داخل محفظه در نوسان است و آتش در مرز کمبود اکسیژن می‌سوزد؛ نام «بک‌درفت» از همین بازگشتِ دود می‌آید.' },
-    { t: 'شیشه‌ی دوده‌گرفته و داغ', d: 'از بیرون، شیشه‌ها قهوه‌ای یا سیاه دیده می‌شوند چون اکسیژنِ کافی برای اکسید شدن ذرات دوده در اتاق نیست. شیشه ممکن است بر اثر تغییر فشار کمی بلرزد یا ترک بخورد.' },
-    { t: 'شعله‌ی کم یا نامرئی با گرمای زیاد', d: 'نبودنِ شعله به معنای خاموش بودن آتش نیست. گاهی مخلوط آن‌قدر سوخت‌غنی است که شعله نمی‌گیرد، درحالی‌که در و دیوار داغ‌اند. این همان «آرامشِ پیش از طوفان» است.' },
-    { t: 'هوا به داخل مکیده می‌شود', d: 'اگر کنار در یا شکاف، صدای مکش یا سوت می‌آید، اتاق هوا می‌کشد. طبق منابع آموزشی این از قوی‌ترین نشانه‌های خطر قریب‌الوقوع است و نیروها باید فوراً تخلیه شوند.' },
+    { t: 'دودِ غلیظ زرد یا قهوه‌ای', d: 'این رنگ یعنی آتش ناقص می‌سوزد و دود پر از سوخت و بخارِ نسوخته است. چنین دودی فقط حاصل آتش نیست، خودش هم می‌تواند آتش بگیرد.' },
+    { t: 'دودی که نفس می‌کشد', d: 'دود با ریتم از شکاف‌ها بیرون می‌زند و دوباره به داخل برمی‌گردد، انگار ساختمان نفس می‌کشد. یعنی فشار داخل بالا و پایین می‌شود و آتش در مرز کمبود اکسیژن می‌سوزد.' },
+    { t: 'شیشه‌ی سیاه‌شده و داغ', d: 'از بیرون، شیشه‌ها قهوه‌ای یا سیاه دیده می‌شوند، چون در اتاق اکسیژن کافی برای سوختن دوده نیست. اگر فشار تغییر کند، شیشه ممکن است بلرزد یا ترک بخورد.' },
+    { t: 'شعله‌ی کم یا نامرئی، با گرمای زیاد', d: 'دیده نشدن شعله یعنی آتش خاموش است؟ نه. گاهی مخلوط آن‌قدر پر از سوخت است که شعله نمی‌گیرد، اما در و دیوار داغ‌اند. این همان آرامشِ پیش از طوفان است.' },
+    { t: 'هوا به داخل مکیده می‌شود', d: 'اگر کنار در یا شکاف صدای مکش یا سوت می‌آید، اتاق دارد هوا می‌کشد. طبق منابع آموزشی، این از قوی‌ترین نشانه‌های خطرِ نزدیک است و باید فوراً دور شد.' },
   ];
   const signBtns = $$('[data-sign]'), hsBtns = $$('.hs');
   const signBox = $('#sign-detail');
@@ -344,7 +451,7 @@
     hsBtns.forEach((b) => b.classList.toggle('on', +b.dataset.hs === next));
     const s = SIGNS[next];
     $('#sign-title').textContent = s ? s.t : 'یکی از نشانه‌ها را انتخاب کنید';
-    $('#sign-text').textContent = s ? s.d : 'روی شماره‌های روی پنجره بزنید یا از فهرست انتخاب کنید.';
+    $('#sign-text').textContent = s ? s.d : 'روی دایره‌های شماره‌دار در تصویر بزنید، یا از فهرست بالا انتخاب کنید.';
     signBox.classList.remove('swap'); void signBox.offsetWidth; signBox.classList.add('swap');
   }
   signBtns.forEach((b) => b.addEventListener('click', () => selectSign(+b.dataset.sign)));
@@ -363,9 +470,9 @@
   /* ───────────────────────── portfolio ───────────────────────── */
   const PRODUCTS = [
     { t: 'جعبه آتش‌نشانی بهسازان', d: 'ساخت کارخانه‌ی خودمان از ۱۳۸۵؛ مدل‌های فلزی و استیل، با تأییدیه‌ی سازمان آتش‌نشانی اصفهان.', u: 'https://bsma.ir/product-category/fire-box/' },
-    { t: 'کپسول آتش‌نشانی', d: 'پودر و گاز و CO₂؛ برای مهار اولیه، در همان دقایقی که آتش هنوز کوچک است.', u: 'https://bsma.ir/product-category/انواع-کپسول-آتش-نشانی/' },
-    { t: 'فن تخلیه دود صنعتی ARIS', d: 'فن آکسیال قابل‌حمل با بدنه‌ی آلیاژ آلومینیوم برای تهویه‌ی فضاهای بسته. تهویه در صحنه‌ی آتش فقط با نیروی آموزش‌دیده و به‌صورت هماهنگ انجام می‌شود.', u: 'https://bsma.ir/product/فن-تخلیه-دود-صنعتی-بک-درفت-قابل-حمل/' },
-    { t: 'درب دودبند', d: 'برای محدود کردن عبور دود و شعله در مسیرهای تخلیه و راه‌پله‌ها.', u: 'https://bsma.ir/product/درب-دودبند/' },
+    { t: 'کپسول آتش‌نشانی', d: 'پودر و گاز و CO₂؛ برای مهار آتش در همان دقیقه‌های اولی که هنوز کوچک است.', u: 'https://bsma.ir/product-category/انواع-کپسول-آتش-نشانی/' },
+    { t: 'فن تخلیه دود صنعتی ARIS', d: 'فن آکسیال قابل‌حمل با بدنه‌ی آلیاژ آلومینیوم برای تخلیه‌ی دود در فضاهای بسته. تهویه در صحنه‌ی آتش فقط با نیروی آموزش‌دیده و هماهنگ انجام می‌شود.', u: 'https://bsma.ir/product/فن-تخلیه-دود-صنعتی-بک-درفت-قابل-حمل/' },
+    { t: 'درب دودبند', d: 'برای جلوگیری از عبور دود و شعله در مسیرهای خروج و راه‌پله‌ها.', u: 'https://bsma.ir/product/درب-دودبند/' },
     { t: 'سیستم اعلام حریق', d: 'دتکتور، کنترل پنل و تجهیزات تست و نگهداری؛ برندهای GFE و تکنیم، متعارف و آدرس‌پذیر.', u: 'https://bsma.ir/product-category/سیستم-اعلام-حریق/' },
   ];
   let pi = 0;

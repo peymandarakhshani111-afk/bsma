@@ -436,3 +436,28 @@ td { color: var(--soft); }
   .hint { top: 62px; font-size: 0.82em; }
 }
 html.sheet-open { overflow: hidden; }
+
+/* ───────── story mode + guidance details ───────── */
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.hero-actions .btn { min-height: 48px; justify-content: center; }
+.play-btn { width: auto; min-width: 42px; padding: 0 14px; gap: 8px; display: inline-flex; font-weight: 800; }
+.play-btn em { font-style: normal; font-size: 0.82em; color: var(--soft); }
+.play-btn .i-pause { display: none; }
+.play-btn[aria-pressed="true"] .i-play { display: none; }
+.play-btn[aria-pressed="true"] .i-pause { display: block; }
+.play-btn[aria-pressed="true"] { border-color: #ff6b1f99; box-shadow: 0 0 18px #ff6b1f44; }
+.play-btn .i-play, .play-btn .i-pause { color: var(--fire); }
+.tag .step { margin-inline-start: 0.4em; padding: 0 0.7em; border: 1px solid var(--line); border-radius: 999px; font-size: 0.85em; font-weight: 600; color: var(--soft); white-space: nowrap; }
+.nextline { margin-top: 0.9em; font-size: 0.78em; font-weight: 700; color: var(--cyan); opacity: 0.9; animation: nextNudge 2.2s ease-in-out infinite; }
+@keyframes nextNudge { 0%, 100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(4px); opacity: 1; } }
+.hint .hint-go { width: auto; padding: 0 14px; background: linear-gradient(135deg, #ff8a3d, #ff4b14); color: #1a0700; font-weight: 800; font-size: 0.92em; }
+.hint .hint-go[hidden] { display: none; }
+.sub { font-size: 0.86em; color: var(--muted); margin: -0.2em 0 0.8em; }
+.hi-play::before { left: 50%; top: 50%; margin: -10px 0 0 -7px; border: 10px solid transparent; border-right: 0; border-left: 17px solid var(--fire); }
+@media (max-width: 820px) {
+  .play-btn { padding: 0; }
+  .play-btn em { display: none; }
+  .hero-actions { width: 100%; flex-wrap: nowrap; }
+  .hero-actions .btn { flex: 1 1 0; padding-inline: 0.9em; white-space: nowrap; font-size: 0.92em; }
+}
+@media (prefers-reduced-motion: reduce) { .nextline { animation: none; } }

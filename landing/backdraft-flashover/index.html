@@ -17,7 +17,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"بک‌درفت چیست و چه تفاوتی با فلش‌اور دارد؟","inLanguage":"fa","datePublished":"2025-05-03","dateModified":"2026-10-05","author":{"@type":"Person","name":"پیمان درخشانی"},"publisher":{"@type":"Organization","name":"به‌سازان سرای مهرآهنگ","url":"https://bsma.ir/"}}
 </script>
-<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#gl,.hud,.dots,.progress,.where,.tip,.hint{display:none!important}.hs,.stage{display:none!important}</style></noscript>
+<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#gl,.hud,.dots,.progress,.where,.tip,.hint,#play,#play-hero,#help,.nextline,.step{display:none!important}.hs,.stage{display:none!important}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#story">پرش به محتوا</a>
@@ -36,10 +36,10 @@
   </a>
   <nav class="nav" aria-label="بخش‌ها">
     <a href="#story" data-go="1">داستان</a>
-    <a href="#features" data-go="4">ویژگی‌ها</a>
-    <a href="#research" data-go="5">یافته‌های ۱۴۰۵</a>
+    <a href="#features" data-go="4">نشانه‌ها</a>
+    <a href="#research" data-go="5">یافته‌ها</a>
     <a href="#portfolio" data-go="6">نمونه کارها</a>
-    <a href="#contact" data-go="7">تماس با ما</a>
+    <a href="#contact" data-go="7">تماس</a>
     <a href="#article">متن مقاله</a>
     <a href="https://bsma.ir/shop/">فروشگاه</a>
   </nav>
@@ -48,6 +48,7 @@
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
   <div class="tools">
+    <button id="play" class="icon-btn play-btn" type="button" aria-pressed="false" aria-label="پخش خودکار داستان" data-sfx><svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg><svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor"/></svg><em>پخش خودکار</em></button>
     <button id="help" class="icon-btn help-btn" type="button" aria-haspopup="dialog" aria-controls="help-dlg" aria-label="راهنمای استفاده از صفحه" data-sfx><span class="q" aria-hidden="true">؟</span><em>راهنما</em></button>
     <button id="sound" class="icon-btn" type="button" aria-pressed="false" aria-label="صدا: خاموش" data-sfx>
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path class="spk" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="mute" d="M16 9l5 6m0-6l-5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -68,21 +69,21 @@
 
 <!-- room HUD (chapters 1–2) -->
 <aside class="hud" id="hud-room" aria-hidden="true">
-  <div class="hud-head"><span>تصویرسازی مفهومی</span><b id="hud-stage">رشد</b></div>
-  <div class="hud-row"><span>دمای محیط</span><b id="hud-temp">۲۰°C</b></div>
+  <div class="hud-head"><span>تصویرسازی مفهومی</span><b id="hud-stage">رشد آتش</b></div>
+  <div class="hud-row"><span>دمای اتاق</span><b id="hud-temp">۲۰°C</b></div>
   <div class="bar"><i id="hud-temp-bar"></i></div>
-  <div class="hud-row"><span>اکسیژن در دسترس</span><b id="hud-o2">بالا</b></div>
+  <div class="hud-row"><span>اکسیژن اتاق</span><b id="hud-o2">کافی</b></div>
   <div class="bar bar-cyan"><i id="hud-o2-bar"></i></div>
-  <small>اعداد نمایشی‌اند، نه اندازه‌گیری</small>
+  <small>این اعداد نمایشی‌اند، نه اندازه‌گیری واقعی</small>
 </aside>
 
 <!-- backdraft timeline HUD (chapter 3) -->
 <aside class="hud hud-steps" id="hud-bd" aria-hidden="true">
   <ol>
-    <li data-step="0">درِ بسته</li>
+    <li data-step="0">در بسته</li>
     <li data-step="1">باز شدن در</li>
     <li data-step="2">مکث</li>
-    <li data-step="3">دفلاگریشن</li>
+    <li data-step="3">انفجار</li>
     <li data-step="4">پس از آن</li>
   </ol>
 </aside>
@@ -94,14 +95,14 @@
   <div class="sheet-box">
     <div class="sheet-head"><b>بخش‌های صفحه</b><button type="button" class="icon-btn" data-close aria-label="بستن فهرست"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
     <ol class="toc">
-      <li><a href="#hero" data-go="0"><b>۰۱</b><span>شروع<small>پرونده‌ی علمی ایمنی حریق</small></span></a></li>
-      <li><a href="#story" data-go="1"><b>۰۲</b><span>رشد آتش<small>اتاقی که نفس می‌کشد</small></span></a></li>
-      <li><a href="#flashover" data-go="2"><b>۰۳</b><span>فلش‌اور<small>وقتی همه‌چیز با هم می‌گیرد</small></span></a></li>
+      <li><a href="#hero" data-go="0"><b>۰۱</b><span>شروع<small>پشت این در چه خبر است؟</small></span></a></li>
+      <li><a href="#story" data-go="1"><b>۰۲</b><span>آتش در اتاق دربسته<small>اتاقی که نفس می‌کشد</small></span></a></li>
+      <li><a href="#flashover" data-go="2"><b>۰۳</b><span>فلش‌اور<small>وقتی همه‌چیز یک‌باره آتش می‌گیرد</small></span></a></li>
       <li><a href="#backdraft" data-go="3"><b>۰۴</b><span>بک‌درفت<small>لحظه‌ی باز شدن در</small></span></a></li>
-      <li><a href="#features" data-go="4"><b>۰۵</b><span>نشانه‌ها<small>پنج علامت هشدار</small></span></a></li>
-      <li><a href="#research" data-go="5"><b>۰۶</b><span>یافته‌های ۱۴۰۵<small>آخرین پژوهش‌ها</small></span></a></li>
-      <li><a href="#portfolio" data-go="6"><b>۰۷</b><span>نمونه کارها<small>تجهیزات واقعی بهسازان</small></span></a></li>
-      <li><a href="#contact" data-go="7"><b>۰۸</b><span>تماس با ما<small>مشاوره‌ی رایگان</small></span></a></li>
+      <li><a href="#features" data-go="4"><b>۰۵</b><span>نشانه‌های خطر<small>نوبت شماست: پنج علامت هشدار</small></span></a></li>
+      <li><a href="#research" data-go="5"><b>۰۶</b><span>یافته‌های ۱۴۰۵<small>نوبت شماست: تازه‌ترین پژوهش‌ها</small></span></a></li>
+      <li><a href="#portfolio" data-go="6"><b>۰۷</b><span>نمونه کارها<small>نوبت شماست: تجهیزات بهسازان</small></span></a></li>
+      <li><a href="#contact" data-go="7"><b>۰۸</b><span>تماس با ما<small>با ما صحبت کنید</small></span></a></li>
     </ol>
     <div class="sheet-links"><a href="#article" data-close>متن کامل مقاله</a><a href="https://bsma.ir/shop/">فروشگاه</a></div>
   </div>
@@ -111,20 +112,20 @@
 <div id="help-dlg" class="sheet" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
   <div class="sheet-bg" data-close></div>
   <div class="sheet-box">
-    <div class="sheet-head"><h2 id="help-title">چطور از این صفحه استفاده کنم؟</h2><button type="button" class="icon-btn" data-close aria-label="بستن راهنما"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+    <div class="sheet-head"><h2 id="help-title">این صفحه یک داستان است؛ چطور تماشایش کنم؟</h2><button type="button" class="icon-btn" data-close aria-label="بستن راهنما"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
     <ul class="howto">
-      <li><i class="hi hi-scroll" aria-hidden="true"></i><div><b>داستان را با اسکرول جلو ببرید</b><span class="m-touch">انگشت را روی صفحه به بالا بکشید؛ دوربین وارد اتاق می‌شود و متن‌ها به‌ترتیب می‌آیند.</span><span class="m-mouse">چرخ ماوس، کلیدهای ↑ ↓ یا Space؛ دوربین وارد اتاق می‌شود و متن‌ها به‌ترتیب می‌آیند.</span></div></li>
-      <li><i class="hi hi-menu" aria-hidden="true"></i><div><b>به هر بخش بپرید</b><span class="m-touch">دکمه‌ی «فهرست» در بالای صفحه را بزنید.</span><span class="m-mouse">از نوار بالای صفحه یا نقطه‌های سمت چپ استفاده کنید.</span> متن کامل مقاله هم در انتهای صفحه است.</div></li>
-      <li><i class="hi hi-tap" aria-hidden="true"></i><div><b>روی نقطه‌ها و کارت‌ها بزنید</b>در بخش «نشانه‌ها» دایره‌های شماره‌دارِ روی پنجره را بزنید؛ در «یافته‌ها» <span class="m-touch">کارت‌ها را لمس کنید</span><span class="m-mouse">نشانگر را روی کارت‌ها ببرید</span> تا نقطه‌ی مربوط در صحنه روشن شود.</div></li>
-      <li><i class="hi hi-drag" aria-hidden="true"></i><div><b>محصولات را بچرخانید</b>در «نمونه کارها» محصول را <span class="m-touch">با انگشت</span><span class="m-mouse">با ماوس</span> بکشید یا با فلش‌ها محصول بعدی را ببینید. می‌توانید بین عکس واقعی و مدل سه‌بعدی جابه‌جا شوید.</div></li>
-      <li><i class="hi hi-sound" aria-hidden="true"></i><div><b>صدا اختیاری است</b>پیش‌فرض خاموش است. دکمه‌ی بلندگوی بالای صفحه صدای محیط و افکت‌ها را روشن می‌کند.</div></li>
+      <li><i class="hi hi-play" aria-hidden="true"></i><div><b>می‌توانید فقط تماشا کنید</b>دکمه‌ی ▶ بالای صفحه (یا «تماشای داستان» در ابتدا) را بزنید تا داستان خودش جلو برود. هر وقت خواستید، با لمس یا اسکرول متوقفش کنید و خودتان ادامه دهید.</div></li>
+      <li><i class="hi hi-scroll" aria-hidden="true"></i><div><b>یا خودتان جلو ببرید</b><span class="m-touch">انگشتتان را روی صفحه به بالا بکشید.</span><span class="m-mouse">چرخ ماوس، کلیدهای ↑ ↓ یا Space را به کار ببرید.</span> دوربین وارد اتاق می‌شود و متن‌ها یکی‌یکی از راه می‌رسند.</div></li>
+      <li><i class="hi hi-menu" aria-hidden="true"></i><div><b>هرجا خواستید بپرید</b><span class="m-touch">دکمه‌ی «فهرست» (☰) بالای صفحه همه‌ی بخش‌ها را نشان می‌دهد.</span><span class="m-mouse">از نوار بالای صفحه یا نقطه‌های سمت چپ استفاده کنید.</span> متن کامل مقاله هم آخر صفحه است.</div></li>
+      <li><i class="hi hi-tap" aria-hidden="true"></i><div><b>جاهایی که نوبت شماست</b>در سه بخش «نشانه‌ها»، «یافته‌ها» و «نمونه کارها» داستان منتظر می‌ماند: روی دایره‌ها و کارت‌ها بزنید یا محصول را بکشید و بچرخانید. بعد دوباره ▶ را بزنید.</div></li>
+      <li><i class="hi hi-sound" aria-hidden="true"></i><div><b>صدا اختیاری است</b>پیش‌فرض خاموش است. با دکمه‌ی بلندگو روشنش کنید.</div></li>
     </ul>
     <button type="button" class="btn btn-fire help-ok" data-close>متوجه شدم</button>
   </div>
 </div>
 
 <!-- contextual hint for the interactive chapters -->
-<div class="hint" id="hint" role="status" aria-live="polite" hidden><span class="hint-ico" aria-hidden="true"></span><span id="hint-t"></span><button type="button" id="hint-x" aria-label="بستن">×</button></div>
+<div class="hint" id="hint" role="status" aria-live="polite" hidden><span class="hint-ico" aria-hidden="true"></span><span id="hint-t"></span><button type="button" id="hint-go" class="hint-go" hidden>ادامه ▶</button><button type="button" id="hint-x" aria-label="بستن">×</button></div>
 
 <main>
 
@@ -137,18 +138,21 @@
     </div>
     <div class="hero-bottom">
       <div class="hero-lead">
-        <p class="lead">بک‌درفت، فلش‌اور و انفجار دود شبیه به‌نظر می‌رسند، اما هرکدام منطق فیزیکی خودشان را دارند. این صفحه آخرین یافته‌های علمی را در قالب یک سفر سینمایی روایت می‌کند؛ از رشد آتش تا لحظه‌ای که در باز می‌شود.</p>
-        <a class="btn btn-fire" href="#story" data-go="1" data-sfx>ورود به داستان <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <p class="lead">بک‌درفت و فلش‌اور شبیه هم به نظر می‌رسند، اما دو اتفاق کاملاً جدا هستند. این یک داستان سه‌بعدی است: از لحظه‌ی شروع آتش در یک اتاقِ دربسته تا لحظه‌ای که کسی در را باز می‌کند.</p>
+        <div class="hero-actions">
+          <button class="btn btn-fire" id="play-hero" type="button" data-sfx><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg> تماشای داستان</button>
+          <a class="btn btn-ghost" href="#story" data-go="1" data-sfx>خودم اسکرول می‌کنم</a>
+        </div>
       </div>
       <ul class="stats">
-        <li><b>۳ تا ۴ <small>دقیقه</small></b><span>تا فلش‌اور در اتاق با اثاث مدرن</span><em>UL FSRI</em></li>
-        <li><b>+۲۹ <small>دقیقه</small></b><span>همین مسیر با اثاث قدیمی</span><em>UL FSRI</em></li>
-        <li><b>~۶۰۰ <small>°C</small></b><span>دمای آستانه‌ی فلش‌اور</span><em>NFPA 921</em></li>
+        <li><b>۳ تا ۴ <small>دقیقه</small></b><span>تا آتش گرفتن کل اتاق، با وسایل امروزی</span><em>UL FSRI</em></li>
+        <li><b>+۲۹ <small>دقیقه</small></b><span>همین مسیر، با وسایل قدیمی</span><em>UL FSRI</em></li>
+        <li><b>~۶۰۰ <small>°C</small></b><span>دمایی که اتاق را یک‌باره شعله‌ور می‌کند</span><em>NFPA 921</em></li>
       </ul>
     </div>
-    <a class="scroll-cue" href="#story" data-go="1" aria-label="ادامه‌ی داستان؛ اسکرول کنید">
+    <a class="scroll-cue" href="#story" data-go="1" aria-label="شروع داستان؛ اسکرول کنید">
       <span class="cue-ico" aria-hidden="true"><i></i></span>
-      <span class="cue-t"><b class="m-touch">انگشت را به بالا بکشید</b><b class="m-mouse">اسکرول کنید</b><small>داستان با حرکت صفحه جلو می‌رود</small></span>
+      <span class="cue-t"><b class="m-touch">برای شروع، انگشتتان را به بالا بکشید</b><b class="m-mouse">برای شروع، اسکرول کنید</b><small>داستان همراه با اسکرول جلو می‌رود</small></span>
     </a>
   </div>
 </section>
@@ -158,19 +162,19 @@
   <div class="stick">
     <div class="beats">
       <article class="beat">
-        <p class="tag"><b>۰۱</b> رشد آتش در فضای بسته</p>
+        <p class="tag"><b>۰۱</b> آتش در اتاقِ دربسته</p>
         <h2>اتاقی که <span class="accent">نفس می‌کشد</span></h2>
-        <p>هر آتش در یک اتاقِ بسته مسیری مشخص دارد: رشد، توسعه‌یافته و افول. تا وقتی اکسیژن کافی است، شعله بزرگ‌تر می‌شود و گرمایش را به همه‌جای اتاق می‌فرستد.</p>
+        <p>تصور کنید در اتاقی دربسته آتشی روشن شده است. تا وقتی هوای کافی هست، شعله بزرگ‌تر می‌شود و گرما کم‌کم به همه‌ی اتاق می‌رسد. اتاق از هوای داخل خودش نفس می‌کشد، و همین هوا تعیین می‌کند آتش تا کجا پیش برود.</p>
       </article>
       <article class="beat">
-        <p class="tag"><b>۰۱</b> رشد آتش در فضای بسته</p>
-        <h3>دود، فقط دود نیست</h3>
-        <p>اتاق بسته هوای تازه‌ی کمی دارد و آتش «تهویه‌محور» می‌شود: سوخت هست، اکسیژن کم است. دودِ داغ پر از گازهای نسوخته است و خودش سوخت به‌حساب می‌آید. <span class="cyan">خطوط آبی</span> همان هوایی‌اند که از زیر در می‌خزند و رو به پایان‌اند.</p>
+        <p class="tag"><b>۰۱</b> آتش در اتاقِ دربسته</p>
+        <h3>دود فقط دود نیست</h3>
+        <p>کم‌کم هوای تازه‌ی اتاق تمام می‌شود. آتش هنوز سوخت دارد، اما اکسیژنش کم است و برای همین ناقص می‌سوزد. نتیجه، دودی داغ و پر از گازهای نسوخته است؛ یعنی خودِ دود هم سوخت است. خط‌های <span class="cyan">آبی</span> در صحنه، هوای تازه‌ای هستند که از زیر در به داخل می‌خزند و رفته‌رفته تمام می‌شوند.</p>
       </article>
-      <article class="beat">
-        <p class="tag"><b>۰۱</b> رشد آتش در فضای بسته</p>
+      <article class="beat" data-next="بعدی: فلش‌اور">
+        <p class="tag"><b>۰۱</b> آتش در اتاقِ دربسته</p>
         <h3>لایه‌ی داغ پایین می‌آید</h3>
-        <p>گازهای داغ زیر سقف جمع می‌شوند و لایه‌ای هر دم ضخیم‌تر می‌سازند. این لایه به همه‌ی سطوح اتاق گرما می‌تاباند و اتاق را به نقطه‌ی تصمیم می‌رساند: <b>یا فلش‌اور</b>، یا ــ اگر اتاق بسته بماند و آتش ضعیف شود ــ آماده‌ی <b>بک‌درفت</b>.</p>
+        <p>دودِ داغ بالا می‌رود و زیر سقف جمع می‌شود. این لایه هر لحظه ضخیم‌تر و داغ‌تر می‌شود و گرمایش را روی همه‌چیز می‌تاباند. حالا اتاق به یک دوراهی رسیده: یا یک‌باره همه‌جا آتش می‌گیرد، که اسمش <b>فلش‌اور</b> است؛ یا اگر در بسته بماند و آتش کم‌هوا شود، منتظر می‌ماند تا کسی در را باز کند، که می‌شود <b>بک‌درفت</b>. اول سراغ فلش‌اور می‌رویم.</p>
       </article>
     </div>
   </div>
@@ -182,25 +186,25 @@
     <div class="beats">
       <article class="beat">
         <p class="tag"><b>۰۲</b> فلش‌اور</p>
-        <h2>وقتی همه‌چیز <span class="accent">با هم می‌سوزد</span></h2>
-        <p>بر پایه‌ی تعریف <bdi>NFPA 921</bdi>، فلش‌اور گذاری سریع در رشد آتشِ یک محفظه است که در آن سطوحِ در معرض تابش حرارتی، کم‌وبیش هم‌زمان به دمای اشتعال می‌رسند و آتش به‌سرعت در تمام فضا پخش می‌شود.</p>
-        <p class="key">نکته‌ی کلیدی: فلش‌اور به ورود هوای تازه نیاز ندارد. محرکش دماست؛ دمای آستانه‌ی آن در ادبیات حدود <b>۶۰۰°C</b> (۱٬۱۱۲°F) گزارش می‌شود.</p>
+        <h2>وقتی همه‌چیز <span class="accent">با هم آتش می‌گیرد</span></h2>
+        <p>فلش‌اور لحظه‌ای است که گرمای لایه‌ی داغ آن‌قدر زیاد می‌شود که تقریباً همه‌ی چیزهای اتاق، هم‌زمان، به دمای آتش گرفتن می‌رسند. آتش از یک گوشه ناگهان به کل اتاق می‌پرد. این تعریف <bdi>NFPA 921</bdi> است.</p>
+        <p class="key">نکته‌ی مهم: فلش‌اور به هوای تازه نیاز ندارد. فقط گرما آن را راه می‌اندازد. در منابع، دمای آن حدود <b>۶۰۰ درجه‌ی سانتی‌گراد</b> (۱۱۱۲ فارنهایت) گفته می‌شود.</p>
         <a class="src" href="https://www.fireengineering.com/?p=485680" target="_blank" rel="noopener">منبع: Fire Engineering، ۲۰۲۰ ↗</a>
       </article>
       <article class="beat">
         <p class="tag"><b>۰۲</b> فلش‌اور</p>
-        <h3>اثاث مدرن، ساعت را تند کرده است</h3>
-        <p>پژوهش‌های UL FSRI نشان می‌دهد اثاث و مواد سینتتیک امروزی می‌توانند زمان رسیدن به فلش‌اور را از بیش از ۲۹ دقیقه به کمترِ ۳ تا ۴ دقیقه برسانند. پنجره‌ی فرار و پنجره‌ی عملیات، کوتاه‌تر شده است.</p>
-        <div class="bars" role="img" aria-label="مقایسه‌ی زمان رسیدن به فلش‌اور: اثاث قدیمی بیش از ۲۹ دقیقه، اثاث مدرن ۳ تا ۴ دقیقه">
-          <div class="bar-row"><span>اثاث قدیمی (طبیعی)</span><div class="track"><i class="fill fill-cyan" data-w="100"></i></div><b>+۲۹ دقیقه</b></div>
-          <div class="bar-row"><span>اثاث مدرن (سینتتیک)</span><div class="track"><i class="fill fill-fire" data-w="13"></i></div><b>۳ تا ۴ دقیقه</b></div>
+        <h3>وسایل امروزی، زمان را کوتاه کرده‌اند</h3>
+        <p>آزمایش‌های UL FSRI نشان داده وسایل و مبلمان امروزی، که بیشتر از مواد مصنوعی ساخته می‌شوند، خیلی سریع‌تر آتش می‌گیرند. رسیدن به فلش‌اور در اتاقی با وسایل قدیمی بیش از ۲۹ دقیقه طول می‌کشید؛ حالا ممکن است ۳ تا ۴ دقیقه باشد. یعنی هم وقتِ فرار و هم وقتِ عملیات بسیار کمتر شده است.</p>
+        <div class="bars" role="img" aria-label="زمان رسیدن به فلش‌اور: وسایل قدیمی بیش از ۲۹ دقیقه، وسایل امروزی ۳ تا ۴ دقیقه">
+          <div class="bar-row"><span>وسایل قدیمی (طبیعی)</span><div class="track"><i class="fill fill-cyan" data-w="100"></i></div><b>+۲۹ دقیقه</b></div>
+          <div class="bar-row"><span>وسایل امروزی (مصنوعی)</span><div class="track"><i class="fill fill-fire" data-w="13"></i></div><b>۳ تا ۴ دقیقه</b></div>
         </div>
         <a class="src" href="https://fsri.org/research/firefighter-health-safety" target="_blank" rel="noopener">منبع: UL FSRI ↗</a>
       </article>
-      <article class="beat">
+      <article class="beat" data-next="بعدی: بک‌درفت">
         <p class="tag"><b>۰۲</b> فلش‌اور</p>
-        <h3>درِ بسته، پناه است</h3>
-        <p>در پژوهش UL FSRI (کمپین <bdi>Close Your Door</bdi>، ۲۰۱۷) دمای اتاقِ با درِ باز به بیش از ۱٬۰۰۰°F (حدود ۵۴۰°C) رسید و اتاقِ با درِ بسته تا حدود ۱۰۰°F (حدود ۳۸°C) پایین ماند.</p>
+        <h3>در بسته، سپر شماست</h3>
+        <p>در پژوهش UL FSRI، که پایه‌ی کمپین «در را ببندید» (۲۰۱۷) بود، دمای اتاقِ دَرباز به بیش از ۱۰۰۰ درجه‌ی فارنهایت (حدود ۵۴۰ سانتی‌گراد) رسید؛ اما اتاقی که درش بسته بود فقط تا حدود ۱۰۰ فارنهایت (۳۸ سانتی‌گراد) گرم شد. پیام ساده است: موقع فرار، در را پشت سرتان ببندید. اما اگر در بسته آتش را کم‌هوا کند و بعد کسی آن را باز کند، چه می‌شود؟</p>
         <div class="thermo" aria-hidden="true">
           <div><i class="t-fire" data-h="100"></i><span>درِ باز<br><b>+۵۴۰°C</b></span></div>
           <div><i class="t-cyan" data-h="9"></i><span>درِ بسته<br><b>~۳۸°C</b></span></div>
@@ -218,52 +222,52 @@
       <article class="beat">
         <p class="tag"><b>۰۳</b> بک‌درفت</p>
         <h2>اکسیژنی که <span class="accent">دیر رسید</span></h2>
-        <p>بک‌درفت دفلاگریشنِ سریع (احتراق انفجاری) پس از ورود اکسیژن به محفظه‌ای است که پر از سوختِ نسوخته‌ی انباشته است؛ معمولاً در مرحله‌ی افول، وقتی شعله‌ی دیدنی ناپدید شده و گازها داغ و فشرده مانده‌اند.</p>
+        <p>فرض کنید آتشِ اتاقِ دربسته آن‌قدر اکسیژن مصرف کرده که شعله‌ها فروکش کرده‌اند. اما اتاق هنوز داغ است و پر از گازهای سوختنیِ نسوخته. اگر همین حالا هوای تازه برسد، این گازها با شدت می‌سوزند. به این اتفاق می‌گویند <b>بک‌درفت</b>: سوختنِ انفجاری، بعد از رسیدن اکسیژن به فضایی پر از سوخت نسوخته.</p>
         <a class="src" href="https://www.fireengineering.com/?p=485680" target="_blank" rel="noopener">تعریف NFPA 921 به نقل از Fire Engineering ↗</a>
       </article>
       <article class="beat">
         <p class="tag"><b>۰۳</b> بک‌درفت</p>
-        <h3>لحظه‌ی باز شدن در</h3>
-        <p>با گشوده‌شدن در، هوای سرد از پایین به داخل می‌خزد (<span class="cyan">آبی</span>) و گاز داغ و غنی از سوخت از بالا بیرون می‌زند (<span class="fire">نارنجی</span>). مخلوطِ قابل‌اشتعال در حال ساخته شدن است.</p>
+        <h3>در که باز می‌شود</h3>
+        <p>با باز شدن در، هوای سرد (<span class="cyan">آبی</span>) از پایین به داخل می‌خزد و گازِ داغ و پر از سوخت (<span class="fire">نارنجی</span>) از بالا بیرون می‌آید. در همین چند ثانیه این دو با هم مخلوط می‌شوند و مخلوطی می‌سازند که آماده‌ی آتش گرفتن است.</p>
       </article>
       <article class="beat">
         <p class="tag"><b>۰۳</b> بک‌درفت</p>
-        <h3>مکثِ پیش از انفجار</h3>
-        <p>اگر مخلوط به محدوده‌ی اشتعال برسد و یک منبع جرقه در کار باشد ــ اخگر، سطح داغ، شعله‌ی پنهان ــ چند ثانیه کافی است. هرچه این لحظه آرام‌تر به‌نظر برسد، فریبنده‌تر است.</p>
+        <h3>سکوتِ پیش از انفجار</h3>
+        <p>اگر مخلوط به غلظت مناسب برسد و یک جرقه پیدا کند، چه اخگر باشد، چه سطحی داغ یا شعله‌ای پنهان، چند ثانیه کافی است. هرچه این لحظه آرام‌تر باشد، فریبنده‌تر است.</p>
       </article>
       <article class="beat">
         <p class="tag"><b>۰۳</b> بک‌درفت</p>
-        <h3>دفلاگریشن</h3>
-        <p>گوی آتش از دهانه‌ی در بیرون می‌زند و موج فشار می‌سازد؛ برای کسی که مقابل در ایستاده، زمان واکنش وجود ندارد. UL FSRI این رویدادها را <b>«نادر، اما بالقوه کشنده»</b> می‌نامد.</p>
+        <h3>انفجار</h3>
+        <p>گوی آتش از دهانه‌ی در بیرون می‌زند و موج فشار می‌سازد. کسی که جلوی در ایستاده فرصت واکنش ندارد. UL FSRI این اتفاق‌ها را <b>«نادر، اما بالقوه کشنده»</b> می‌نامد.</p>
         <a class="src" href="https://fsri.org/research/backdraft-and-smoke-explosions" target="_blank" rel="noopener">منبع: پروژه‌ی Backdrafts and Smoke Explosions ↗</a>
       </article>
       <article class="beat beat-wide">
-        <p class="tag"><b>۰۳</b> پس از آن: پژوهش‌ها چه می‌گویند؟</p>
-        <h3>کنترل جریان، پیش از هر چیز</h3>
+        <p class="tag"><b>۰۳</b> بعد از این‌ها، پژوهش‌ها چه می‌گویند؟</p>
+        <h3>اول جریان هوا، بعد هر کار دیگر</h3>
         <ul class="ticks">
-          <li><b>کنترل در و مسیر جریان.</b> بازگذاشتن بی‌هدفِ ورودی‌ها هوا را به آتش می‌رساند.</li>
-          <li><b>خنک‌سازی پیش از تهویه.</b> کاهش دمای محیط، احتمال «رویداد محرک» مثل فلش‌اور را کم می‌کند.</li>
-          <li><b>تهویه‌ی هماهنگ.</b> بدتر شدن آتش پس از رسیدن آتش‌نشانان اغلب از حمله و تهویه‌ی ناهماهنگ یا زودهنگام است.</li>
+          <li><b>در و مسیر هوا را کنترل کنید.</b> باز گذاشتنِ بی‌هدفِ ورودی‌ها هوا را به آتش می‌رساند.</li>
+          <li><b>اول خنک کنید، بعد تهویه کنید.</b> وقتی دمای فضا پایین بیاید، احتمال اتفاق‌های ناگهانی مثل فلش‌اور کمتر می‌شود.</li>
+          <li><b>تهویه باید هماهنگ باشد.</b> بدتر شدن آتش بعد از رسیدن آتش‌نشانان، اغلب به‌خاطر حمله و تهویه‌ی ناهماهنگ یا زودهنگام است.</li>
         </ul>
-        <p class="note">این تاکتیک‌ها برای نیروهای آموزش‌دیده‌ی آتش‌نشانی است. اگر شما با چنین صحنه‌ای روبه‌رو شدید: دور شوید و با ۱۲۵ تماس بگیرید.</p>
+        <p class="note">این روش‌ها مخصوص نیروهای آموزش‌دیده‌ی آتش‌نشانی است. اگر شما با چنین صحنه‌ای روبه‌رو شدید، دور شوید و با ۱۲۵ تماس بگیرید.</p>
         <a class="src" href="https://www.fireengineering.com/?p=313741" target="_blank" rel="noopener">منبع: Fire Engineering، ۲۰۱۶ (به نقل از پژوهش‌های NIST و UL) ↗</a>
       </article>
-      <article class="beat beat-wide">
-        <p class="tag"><b>۰۳</b> تفاوت در یک نگاه</p>
-        <h3>سه پدیده، سه منطق</h3>
+      <article class="beat beat-wide" data-next="بعدی: پنج نشانه‌ی خطر، و نوبت شما">
+        <p class="tag"><b>۰۳</b> تفاوت‌ها در یک نگاه</p>
+        <h3>سه اتفاق، سه منطق</h3>
         <div class="table-wrap">
           <table>
             <thead><tr><th></th><th>فلش‌اور</th><th>بک‌درفت</th><th>انفجار دود</th></tr></thead>
             <tbody>
-              <tr><th>محرک</th><td>افزایش دما و تابش حرارتی</td><td>ورود ناگهانی اکسیژن (تغییر تهویه)</td><td>گاز نسوخته‌ای که به حفره یا اتاق مجاور نفوذ کرده و با هوا مخلوط شده</td></tr>
-              <tr><th>مرحله‌ی آتش</th><td>بین رشد و توسعه‌یافته</td><td>افول (کم‌اکسیژن)</td><td>آتش تهویه‌محور با احتراق ناقص</td></tr>
-              <tr><th>نیاز به تهویه‌ی تازه</th><td>خیر</td><td>بله، علت اصلی</td><td>نه الزاماً؛ نفوذ هوا کافی است</td></tr>
-              <tr><th>اثر</th><td>اشتعال هم‌زمان همه‌ی سطوح</td><td>گوی آتش و موج فشار</td><td>اشتعال گاز در جایی که شعله‌ای دیده نمی‌شد</td></tr>
-              <tr><th>دما</th><td>آستانه‌ی حدود ۶۰۰°C</td><td>داغ و فشرده</td><td>معمولاً پایین‌تر از ۶۰۰°C</td></tr>
+              <tr><th>چه چیزی آن را راه می‌اندازد</th><td>بالا رفتن دما و تابش گرما</td><td>رسیدن ناگهانی هوای تازه، مثلاً با باز شدن در</td><td>گازِ نسوخته‌ای که به فضای مجاور نفوذ کرده و با هوا مخلوط شده</td></tr>
+              <tr><th>آتش در چه مرحله‌ای است</th><td>بین رشد و اوج</td><td>فروکش کردن، با کمبود اکسیژن</td><td>آتشی که اکسیژنش کم است و ناقص می‌سوزد</td></tr>
+              <tr><th>به هوای تازه نیاز دارد؟</th><td>نه</td><td>بله، علت اصلی همین است</td><td>لزوماً نه؛ نفوذ کمی هوا هم کافی است</td></tr>
+              <tr><th>نتیجه</th><td>همه‌ی سطح‌ها هم‌زمان آتش می‌گیرند</td><td>گوی آتش و موج فشار</td><td>گازی آتش می‌گیرد که شعله‌ای نداشت</td></tr>
+              <tr><th>دما</th><td>حدود ۶۰۰°C</td><td>داغ و پرفشار</td><td>معمولاً کمتر از ۶۰۰°C</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="note">دانشمندان هنوز بر سر مرز دقیق «بک‌درفت» و «انفجار دود» هم‌نظر نیستند؛ جدول بالا جمع‌بندی منبع زیر است.</p>
+        <p class="note">دانشمندان هنوز درباره‌ی مرز دقیق «بک‌درفت» و «انفجار دود» هم‌نظر نیستند. این جدول جمع‌بندی منبع زیر است.</p>
         <a class="src" href="https://www.fireengineering.com/?p=485680" target="_blank" rel="noopener">منبع: Fire Engineering، ۲۰۲۰ ↗</a>
       </article>
     </div>
@@ -275,26 +279,26 @@
   <div class="stick">
     <div class="stage" aria-hidden="false">
       <button class="hs" data-hs="0" type="button" aria-label="نشانه‌ی ۱: دود قهوه‌ای" data-sfx><i></i><b>۱</b></button>
-      <button class="hs" data-hs="1" type="button" aria-label="نشانه‌ی ۲: دود پالسی" data-sfx><i></i><b>۲</b></button>
-      <button class="hs" data-hs="2" type="button" aria-label="نشانه‌ی ۳: شیشه‌ی دوده‌گرفته" data-sfx><i></i><b>۳</b></button>
+      <button class="hs" data-hs="1" type="button" aria-label="نشانه‌ی ۲: دودی که نفس می‌کشد" data-sfx><i></i><b>۲</b></button>
+      <button class="hs" data-hs="2" type="button" aria-label="نشانه‌ی ۳: شیشه‌ی سیاه‌شده" data-sfx><i></i><b>۳</b></button>
       <button class="hs" data-hs="3" type="button" aria-label="نشانه‌ی ۴: شعله‌ی نامرئی" data-sfx><i></i><b>۴</b></button>
       <button class="hs" data-hs="4" type="button" aria-label="نشانه‌ی ۵: مکش هوا" data-sfx><i></i><b>۵</b></button>
     </div>
     <div class="panel feature-panel" id="signs">
-      <p class="tag"><b>ویژگی‌ها</b> پنج نشانه که قبل از باز کردن در باید خواند</p>
+      <p class="tag"><b>نوبت شماست</b> پنج نشانه‌ی خطر پیش از باز کردن در</p>
       <h2>پنجره‌ای که <span class="accent">هشدار می‌دهد</span></h2>
       <ul class="sign-list" role="tablist" aria-label="نشانه‌های بک‌درفت">
-        <li><button type="button" role="tab" data-sign="0" data-sfx><b>۱</b> دود غلیظ زرد یا قهوه‌ای</button></li>
-        <li><button type="button" role="tab" data-sign="1" data-sfx><b>۲</b> دود پالسی؛ ساختمان نفس می‌کشد</button></li>
-        <li><button type="button" role="tab" data-sign="2" data-sfx><b>۳</b> شیشه‌ی دوده‌گرفته و داغ</button></li>
-        <li><button type="button" role="tab" data-sign="3" data-sfx><b>۴</b> شعله‌ی کم یا نامرئی با گرمای زیاد</button></li>
+        <li><button type="button" role="tab" data-sign="0" data-sfx><b>۱</b> دودِ غلیظ زرد یا قهوه‌ای</button></li>
+        <li><button type="button" role="tab" data-sign="1" data-sfx><b>۲</b> دودی که نفس می‌کشد</button></li>
+        <li><button type="button" role="tab" data-sign="2" data-sfx><b>۳</b> شیشه‌ی سیاه‌شده و داغ</button></li>
+        <li><button type="button" role="tab" data-sign="3" data-sfx><b>۴</b> شعله‌ی کم یا نامرئی، با گرمای زیاد</button></li>
         <li><button type="button" role="tab" data-sign="4" data-sfx><b>۵</b> هوا به داخل مکیده می‌شود</button></li>
       </ul>
       <div class="sign-detail" id="sign-detail" aria-live="polite">
         <h3 id="sign-title">یکی از نشانه‌ها را انتخاب کنید</h3>
-        <p id="sign-text">روی شماره‌های روی پنجره بزنید یا از فهرست انتخاب کنید.</p>
+        <p id="sign-text">روی دایره‌های شماره‌دار در تصویر بزنید، یا از فهرست بالا انتخاب کنید.</p>
       </div>
-      <p class="note">این نشانه‌ها برای آگاهی و آموزش‌اند؛ هیچ‌کدام به‌تنهایی قطعی نیستند و تشخیص نهایی با آتش‌نشانان آموزش‌دیده است. اگر چیزی از این‌ها را دیدید: در را باز نکنید، دور شوید و با <b>۱۲۵</b> تماس بگیرید.</p>
+      <p class="note">این نشانه‌ها فقط برای آگاهی و آموزش‌اند و هیچ‌کدام به‌تنهایی قطعی نیستند؛ تشخیص نهایی با آتش‌نشانان آموزش‌دیده است. اگر یکی از این‌ها را دیدید: در را باز نکنید، دور شوید و با <b>۱۲۵</b> تماس بگیرید.</p>
     </div>
   </div>
 </section>
@@ -303,31 +307,31 @@
 <section id="research" class="chapter" data-ch="5" style="--h:270vh">
   <div class="stick">
     <div class="panel research-panel">
-      <p class="tag"><b>۲۰۲۴ تا ۲۰۲۶</b> آنچه علم در این سال‌ها روشن کرد</p>
+      <p class="tag"><b>نوبت شماست</b> تازه‌ترین یافته‌های علمی، ۲۰۲۴ تا ۲۰۲۶</p>
       <h2>یافته‌هایی که <span class="accent">تصویر را عوض می‌کنند</span></h2>
       <div class="cards">
         <button class="card" type="button" data-node="0" data-sfx>
           <i class="dot" style="--c:#ff6b1f"></i>
-          <h3>اثاث مدرن، آتش سریع‌تر</h3>
-          <p>در آزمایش‌های UL FSRI زمان رسیدن به فلش‌اور می‌تواند از بیش از ۲۹ دقیقه به ۳ تا ۴ دقیقه برسد. ایمنی دیگر روی «دقایق زیاد» حساب نمی‌کند.</p>
+          <h3>وسایل امروزی، آتشِ سریع‌تر</h3>
+          <p>در آزمایش‌های UL FSRI، رسیدن به فلش‌اور از بیش از ۲۹ دقیقه به ۳ تا ۴ دقیقه رسیده است. دیگر نمی‌شود روی «دقیقه‌های زیاد» حساب کرد.</p>
           <span class="chip">UL FSRI</span>
         </button>
         <button class="card" type="button" data-node="1" data-sfx>
           <i class="dot" style="--c:#27e6ff"></i>
-          <h3>نام‌ها یکدست نیستند</h3>
-          <p>مقاله‌ی <bdi>Fleischmann, Madrzykowski &amp; Dow</bdi> (<bdi>Fire Technology</bdi>، ۲۰۲۴؛ انتخاب سردبیر): «انفجار دود» بیش از یک قرن در ادبیات ثبت شده، اما کمتر پژوهیده شده است. UL FSRI و دانشگاه کانتربری اکنون اثر اندازه و جای دریچه را می‌سنجند.</p>
+          <h3>همه یک اسم روی آن نمی‌گذارند</h3>
+          <p>طبق مقاله‌ی <bdi>Fleischmann, Madrzykowski &amp; Dow</bdi> (<bdi>Fire Technology</bdi>، ۲۰۲۴؛ انتخاب سردبیر)، «انفجار دود» بیش از یک قرن است در منابع آمده اما کم بررسی شده. UL FSRI و دانشگاه کانتربری حالا اثر اندازه و جای دریچه را می‌سنجند.</p>
           <span class="chip">Fire Technology ۲۰۲۴</span>
         </button>
         <button class="card" type="button" data-node="2" data-sfx>
           <i class="dot" style="--c:#ffb454"></i>
           <h3>ساختمان‌های چوبی</h3>
-          <p>در محفظه‌های با مرز قابل‌اشتعال (<bdi>Interflam 2025</bdi>) دریچه‌ی کوچک‌تر یعنی نرخ آزادسازی گرمای کمتر، و رویدادهای فشار-افزا در کوچک‌ترین دریچه‌ها دیده شد. به گفته‌ی Fleischmann بسیاری از مفروضات ما از محفظه‌های غیرقابل‌اشتعال می‌آید.</p>
+          <p>در فضاهایی که دیوار و سقفشان قابل‌اشتعال است (<bdi>Interflam 2025</bdi>)، دریچه‌ی کوچک‌تر یعنی گرمای کمتر؛ اما در کوچک‌ترین دریچه‌ها، بالا رفتن ناگهانیِ فشار هم دیده شد. به گفته‌ی Fleischmann، بیشتر فرض‌های ما از فضاهای نسوز آمده‌اند.</p>
           <span class="chip">FSRI · آوریل ۲۰۲۶</span>
         </button>
         <button class="card" type="button" data-node="3" data-sfx>
           <i class="dot" style="--c:#b9a6ff"></i>
-          <h3>باتری لیتیوم‌یونی؛ گاز آماده‌ی انفجار</h3>
-          <p>۲۱ آزمایش مقیاس‌کامل در گاراژ نشان داد گاز فرار حرارتی باتری اسکوتر، خودرو و ابزار برقی می‌تواند به ساختمان مسکونی آسیب بزند. در حادثه‌ی Surprise آریزونا (۱۹ آوریل ۲۰۱۹) درِ یک مخزن ۲٫۱۶ مگاوات‌ساعتی ساعت ۲۰:۰۱ باز شد و حدود ۲۰:۰۴ دفلاگریشن رخ داد؛ ۴ آتش‌نشان مصدوم شدند.</p>
+          <h3>باتری لیتیوم‌یونی: گازِ آماده‌ی انفجار</h3>
+          <p>۲۱ آزمایش در یک گاراژ نشان داد گازی که از باتری اسکوتر، خودرو یا ابزار برقی بیرون می‌زند می‌تواند به ساختمان مسکونی آسیب بزند. در حادثه‌ی Surprise آریزونا (۱۹ آوریل ۲۰۱۹) درِ مخزنی ۲٫۱۶ مگاوات‌ساعتی ساعت ۲۰:۰۱ باز شد و حدود ۲۰:۰۴ انفجار رخ داد؛ ۴ آتش‌نشان آسیب دیدند.</p>
           <span class="chip">Fuel ۲۰۲۴ · UL FSRI</span>
         </button>
       </div>
@@ -349,7 +353,7 @@
       <span class="drag-hint" id="drag-hint" aria-hidden="true" hidden>← بکشید و بچرخانید →</span>
     </div>
     <div class="panel portfolio-panel">
-      <p class="tag"><b>نمونه کارها</b> تجهیزاتی که با این داستان سروکار دارند</p>
+      <p class="tag"><b>نوبت شماست</b> تجهیزاتی که در همین داستان به کار می‌آیند</p>
       <h2>از <span class="accent">۱۳۸۵</span> می‌سازیم و نصب می‌کنیم</h2>
       <ul class="badges">
         <li>تولید جعبه و قرقره‌ی آتش‌نشانی از ۱۳۸۵</li>
@@ -374,9 +378,9 @@
 <section id="contact" class="chapter chapter-flow" data-ch="7">
   <div class="flow">
     <div class="panel contact-panel">
-      <p class="tag"><b>تماس با ما</b> در را با آگاهی باز کنید</p>
+      <p class="tag"><b>تماس با ما</b> در را آگاهانه باز کنید</p>
       <h2>برای پروژه‌تان <span class="accent">مشاوره می‌خواهید؟</span></h2>
-      <p>مشاوره، طراحی، نصب و اجرا و خدمات پس از فروش سیستم اعلام و اطفای حریق، با تأییدیه‌ی سازمان آتش‌نشانی اصفهان.</p>
+      <p>طراحی، نصب، اجرا و خدمات پس از فروش سیستم‌های اعلام و اطفای حریق، با تأییدیه‌ی سازمان آتش‌نشانی اصفهان.</p>
       <ul class="contact-list">
         <li><span>دفتر اصفهان</span><a href="tel:+983136242532" data-sfx><bdi>۰۳۱-۳۶۲۴ ۲۵۳۲</bdi></a></li>
         <li><span>تلفن دوم</span><a href="tel:+983136247584" data-sfx><bdi>۰۳۱-۳۶۲۴ ۷۵۸۴</bdi></a></li>
@@ -409,10 +413,10 @@
         <label>توضیح کوتاه<textarea name="msg" rows="3" placeholder="نوع ساختمان، متراژ، شهر…"></textarea></label>
         <button class="btn btn-fire" type="submit" data-sfx>آماده‌سازی پیام واتساپ</button>
         <a class="btn btn-ghost" id="wa-link" href="https://wa.me/989306016798" target="_blank" rel="noopener" hidden>پیام آماده است؛ باز کردن واتساپ ↗</a>
-        <small>پیام از طریق واتساپ خودتان ارسال می‌شود؛ هیچ داده‌ای در این صفحه ذخیره نمی‌شود.</small>
+        <small>پیام با واتساپ خودتان فرستاده می‌شود و هیچ اطلاعاتی در این صفحه ذخیره نمی‌شود.</small>
       </form>
 
-      <p class="emergency"><b>در آتش‌سوزی:</b> خارج شوید، درها را پشت سر ببندید و با <b>۱۲۵</b> تماس بگیرید. این صفحه آموزشی است و جایگزین آموزش رسمی آتش‌نشانی نیست.</p>
+      <p class="emergency"><b>اگر آتش‌سوزی شده است:</b> بیرون بروید، درها را پشت سرتان ببندید و با <b>۱۲۵</b> تماس بگیرید. این صفحه فقط آموزشی است و جای آموزش رسمی آتش‌نشانی را نمی‌گیرد.</p>
     </div>
 
     <p class="copy flow-copy">© ۱۳۸۵–۱۴۰۵ تمامی حقوق برای شرکت به‌سازان سرای مهرآهنگ محفوظ است.</p>
@@ -426,35 +430,35 @@
     <h2 id="article-title">بک‌درفت چیست و چه تفاوتی با فلش‌اور و انفجار دود دارد؟</h2>
     <!--ARTICLE:START-->
 <p><em>بازنگری علمی: ۱۳ مهر ۱۴۰۵ · مقاله‌ی اصلی: پیمان درخشانی، اردیبهشت ۱۴۰۴</em></p>
-<blockquote><p><strong>خلاصه:</strong> بک‌درفت (Backdraft؛ در فارسی «بک درفت» و «بک‌درافت» هم نوشته می‌شود)، فلش‌اور و انفجار دود سه پدیده‌ی متفاوت‌اند. فلش‌اور را <strong>دما</strong> راه می‌اندازد، بک‌درفت را <strong>ورود ناگهانی اکسیژن</strong> و انفجار دود را <strong>گازِ نسوخته‌ای که به فضای دیگر رسیده و با هوا مخلوط شده است</strong>. هر سه نادرند، اما بالقوه کشنده‌اند و در ساختمان‌های امروزی، با اثاث سینتتیک و درهای کم‌نشتی، زمان رسیدن به آن‌ها کوتاه‌تر شده است.</p></blockquote>
-<h2>تعریف‌ها در یک نگاه</h2>
-<ul><li><strong>فلش‌اور (Flashover):</strong> بر پایه‌ی تعریف NFPA 921، گذاری سریع در رشد آتشِ یک محفظه که در آن سطوحِ در معرض تابش حرارتی، کم‌وبیش هم‌زمان به دمای اشتعال می‌رسند و آتش به‌سرعت در تمام فضا پخش می‌شود. دمای آستانه‌ی آن در ادبیات حدود <strong>۶۰۰°C</strong> (۱٬۱۱۲°F) گزارش می‌شود. فلش‌اور به ورود هوای تازه نیاز ندارد.</li><li><strong>بک‌درفت (Backdraft):</strong> دفلاگریشنِ (احتراق انفجاری) سریع پس از ورود اکسیژن به محفظه‌ای که پر از سوختِ نسوخته‌ی انباشته است؛ معمولاً در مرحله‌ی افول، وقتی شعله‌ی دیدنی ناپدید شده و گازها داغ و فشرده مانده‌اند.</li><li><strong>انفجار دود (Smoke explosion):</strong> گازهای نسوخته به حفره، راه‌پله یا اتاق مجاور نفوذ می‌کنند، با هوا مخلوط می‌شوند و آن‌جا مشتعل می‌شوند. دمای دود معمولاً پایین‌تر از ۶۰۰°C است و برخلاف بک‌درفت، لزوماً تهویه‌ی عمدی لازم نیست.</li></ul>
-<h2>آتش در اتاق بسته چه می‌کند؟</h2>
-<p>آتش مسیری مشخص دارد: رشد، توسعه‌یافته و افول. تا وقتی اکسیژن کافی است، شعله بزرگ‌تر می‌شود. اتاقِ بسته اما هوای تازه‌ی کمی دارد و آتش «تهویه‌محور» می‌شود: سوخت هست، اکسیژن کم است. دودِ داغ پر از گازهای نسوخته است و خودش سوخت به‌حساب می‌آید. لایه‌ی داغ زیر سقف هر دم ضخیم‌تر می‌شود و به همه‌ی سطوح گرما می‌تاباند. این‌جا اتاق به نقطه‌ی تصمیم می‌رسد: <strong>فلش‌اور</strong>، یا ـ اگر اتاق بسته بماند و آتش ضعیف شود ـ آمادگی برای <strong>بک‌درفت</strong>.</p>
-<h2>فلش‌اور؛ ساعتِ تندشده</h2>
-<p>پژوهش‌های UL FSRI نشان می‌دهد اثاث و مواد سینتتیک امروزی می‌توانند زمان رسیدن به فلش‌اور را از <strong>بیش از ۲۹ دقیقه</strong> در اتاق‌های با اثاث قدیمی (طبیعی) به <strong>۳ تا ۴ دقیقه</strong> برسانند. یعنی پنجره‌ی فرار ساکنان و پنجره‌ی عملیات آتش‌نشانان بسیار کوتاه‌تر شده است.</p>
-<h3>درِ بسته، پناه است</h3>
-<p>در کمپین UL «Close Your Door» (ژانویه‌ی ۲۰۱۷) دمای اتاقِ با درِ باز به بیش از <strong>۱٬۰۰۰°F</strong> (حدود ۵۴۰°C) رسید، در حالی که اتاقِ با درِ بسته تا حدود <strong>۱۰۰°F</strong> (حدود ۳۸°C) پایین ماند. پیام کاربردی روشن است: هنگام خواب و هنگام خروج، درها را ببندید.</p>
-<h2>بک‌درفت چگونه رخ می‌دهد؟</h2>
-<ol><li>اتاق بسته، آتش ناقص و گازهای داغ و غنی از سوخت: محیط آماده است.</li><li>در یا پنجره باز می‌شود: هوای سرد از پایین وارد می‌شود و گاز داغ از بالا بیرون می‌زند.</li><li>مخلوط به محدوده‌ی اشتعال می‌رسد و یک منبع جرقه ـ اخگر، سطح داغ، شعله‌ی پنهان ـ آن را مشتعل می‌کند.</li><li>گوی آتش از دهانه بیرون می‌زند و موج فشار می‌سازد. برای کسی که مقابل در ایستاده زمان واکنش نیست.</li></ol>
-<p>UL FSRI این رویدادها را «نادر، اما بالقوه کشنده» توصیف می‌کند.</p>
-<h3>نشانه‌های آموزشی خطر</h3>
+<blockquote><p><strong>خلاصه:</strong> بک‌درفت (Backdraft؛ گاهی «بک درفت» یا «بک‌درافت» هم نوشته می‌شود)، فلش‌اور و انفجار دود سه اتفاق متفاوت‌اند. فلش‌اور را <strong>گرما</strong> راه می‌اندازد، بک‌درفت را <strong>رسیدن ناگهانی اکسیژن</strong> و انفجار دود را <strong>گازِ نسوخته‌ای که به فضای دیگری رسیده و با هوا مخلوط شده است</strong>. هر سه کم‌پیش می‌آیند، اما می‌توانند کشنده باشند. در ساختمان‌های امروزی هم، که پر از وسایل مصنوعی و درهای کم‌نشتند، زمان رسیدن به آن‌ها کوتاه‌تر شده است.</p></blockquote>
+<h2>فلش‌اور، بک‌درفت و انفجار دود؛ هرکدام یعنی چه؟</h2>
+<ul><li><strong>فلش‌اور (Flashover):</strong> لحظه‌ای که گرمای لایه‌ی داغ آن‌قدر بالا می‌رود که تقریباً همه‌ی سطح‌ها و چیزهای اتاق هم‌زمان آماده‌ی آتش گرفتن می‌شوند و آتش در چند ثانیه به کل فضا می‌رسد (تعریف NFPA 921). دمای آن در منابع حدود <strong>۶۰۰ درجه‌ی سانتی‌گراد</strong> (۱۱۱۲ فارنهایت) گزارش شده است. فلش‌اور به رسیدن هوای تازه نیاز ندارد.</li><li><strong>بک‌درفت (Backdraft):</strong> سوختنِ انفجاریِ گازهای داغ و نسوخته، درست بعد از رسیدن اکسیژن به فضایی بسته. معمولاً در مرحله‌ی فروکش آتش پیش می‌آید، یعنی وقتی شعله‌ی دیدنی از بین رفته ولی گازها هنوز داغ و فشرده‌اند.</li><li><strong>انفجار دود (Smoke explosion):</strong> گازهای نسوخته به حفره‌ی دیوار، راه‌پله یا اتاق کناری نفوذ می‌کنند، با هوا مخلوط می‌شوند و همان‌جا آتش می‌گیرند. دمای دود معمولاً کمتر از ۶۰۰ درجه است و، برخلاف بک‌درفت، لازم نیست کسی عمداً تهویه کرده باشد.</li></ul>
+<h2>وقتی آتش در اتاق بسته می‌سوزد</h2>
+<p>آتش یک مسیر مشخص دارد: اول رشد می‌کند، بعد به اوج می‌رسد و در آخر فروکش می‌کند. تا وقتی اکسیژن کافی باشد، شعله بزرگ‌تر می‌شود. اما در اتاق بسته هوای تازه کم است؛ یعنی سوخت هست ولی اکسیژن کم است و آتش ناقص می‌سوزد. دودِ داغ هم پر از گازهای نسوخته است و خودش سوخت حساب می‌شود. لایه‌ی داغ زیر سقف هر لحظه ضخیم‌تر می‌شود و گرما را به همه‌ی سطح‌ها می‌تاباند. اینجا اتاق به یک دوراهی می‌رسد: <strong>فلش‌اور</strong>، یا اگر اتاق بسته بماند و آتش ضعیف شود، آماده‌شدن برای <strong>بک‌درفت</strong>.</p>
+<h2>فلش‌اور: زمان تندتر شده است</h2>
+<p>طبق پژوهش‌های UL FSRI، وسایل و مواد مصنوعی امروزی می‌توانند زمان رسیدن به فلش‌اور را از <strong>بیش از ۲۹ دقیقه</strong> (در اتاقی با وسایل قدیمی و طبیعی) به <strong>۳ تا ۴ دقیقه</strong> برسانند. یعنی هم وقتِ فرار ساکنان و هم وقتِ عملیات آتش‌نشانان خیلی کمتر شده است.</p>
+<h3>در بسته، پناهگاه است</h3>
+<p>در کمپین «در را ببندید» (Close Your Door) از UL (ژانویه‌ی ۲۰۱۷)، دمای اتاقِ دَرباز به بیش از <strong>۱۰۰۰ درجه‌ی فارنهایت</strong> (حدود ۵۴۰ سانتی‌گراد) رسید، در حالی که اتاقِ دربسته فقط تا حدود <strong>۱۰۰ فارنهایت</strong> (حدود ۳۸ سانتی‌گراد) گرم شد. پیام ساده است: موقع خواب و موقع خروج، درها را ببندید.</p>
+<h2>بک‌درفت چطور اتفاق می‌افتد؟</h2>
+<ol><li>اتاق بسته است، آتش ناقص می‌سوزد و گازهای داغ و پر از سوخت جمع شده‌اند. زمینه آماده است.</li><li>در یا پنجره باز می‌شود. هوای سرد از پایین وارد می‌شود و گاز داغ از بالا بیرون می‌زند.</li><li>مخلوط به غلظت قابل‌اشتعال می‌رسد و یک جرقه (اخگر، سطح داغ یا شعله‌ای پنهان) آن را آتش می‌زند.</li><li>گوی آتش از دهانه‌ی در بیرون می‌زند و موج فشار می‌سازد. کسی که جلوی در ایستاده فرصت واکنش ندارد.</li></ol>
+<p>UL FSRI این اتفاق‌ها را «نادر، اما بالقوه کشنده» می‌داند.</p>
+<h3>نشانه‌های هشدار</h3>
 <p>این نشانه‌ها برای آگاهی و آموزش‌اند و هیچ‌کدام به‌تنهایی قطعی نیستند:</p>
-<ul><li>دود غلیظ زرد یا قهوه‌ای (احتراق ناقص و سوخت نسوخته)</li><li>دود پالسی: دود با ضرباهنگ از شکاف‌ها بیرون می‌زند و برمی‌گردد</li><li>شیشه‌ی دوده‌گرفته و داغ که ممکن است از تغییر فشار کمی بلرزد</li><li>شعله‌ی کم یا نامرئی همراه با گرمای زیاد</li><li>مکش هوا به داخل از شکاف در (صدای سوت)؛ طبق منابع آموزشی از قوی‌ترین نشانه‌های خطر قریب‌الوقوع است</li></ul>
+<ul><li>دودِ غلیظ زرد یا قهوه‌ای، نشانه‌ی سوختن ناقص و سوخت نسوخته</li><li>دودی که با ریتم از شکاف‌ها بیرون می‌زند و دوباره به داخل برمی‌گردد</li><li>شیشه‌ی سیاه‌شده و داغ که ممکن است با تغییر فشار کمی بلرزد</li><li>شعله‌ی کم یا نامرئی، همراه با گرمای زیاد</li><li>مکش هوا به داخل از شکاف در، همراه با صدای سوت؛ طبق منابع آموزشی از قوی‌ترین نشانه‌های خطر نزدیک است</li></ul>
 <p><strong>اگر چنین نشانه‌هایی دیدید: در را باز نکنید، دور شوید و با ۱۲۵ تماس بگیرید.</strong></p>
-<h3>تاکتیک‌ها (برای نیروهای آموزش‌دیده)</h3>
-<p>بر پایه‌ی جمع‌بندی پژوهش‌های NIST و UL در Fire Engineering:</p>
-<ul><li><strong>کنترل در و مسیر جریان</strong> هوا؛ بازگذاشتن بی‌هدفِ ورودی‌ها هوا را به آتش می‌رساند.</li><li><strong>خنک‌سازی پیش از تهویه</strong> تا احتمال «رویداد محرک» مثل فلش‌اور کم شود.</li><li><strong>تهویه‌ی هماهنگ</strong>؛ بدتر شدن آتش پس از رسیدن آتش‌نشانان اغلب از حمله و تهویه‌ی ناهماهنگ یا زودهنگام است.</li></ul>
-<blockquote><p>تهویه ابزارِ آتش‌نشانی است، نه راهِ پیشگیری برای عموم. تهویه‌ی نادرست خودش می‌تواند محرک بک‌درفت باشد.</p></blockquote>
+<h3>روش‌های آتش‌نشانان (فقط برای نیروهای آموزش‌دیده)</h3>
+<p>بر اساس جمع‌بندی پژوهش‌های NIST و UL در مجله‌ی Fire Engineering:</p>
+<ul><li><strong>جریان هوا را کنترل کنید.</strong> باز گذاشتنِ بی‌هدفِ ورودی‌ها هوا را به آتش می‌رساند.</li><li><strong>اول خنک کنید، بعد تهویه کنید.</strong> پایین آمدن دما احتمال اتفاق‌های ناگهانی مثل فلش‌اور را کم می‌کند.</li><li><strong>تهویه را هماهنگ انجام دهید.</strong> وقتی آتش بعد از رسیدن آتش‌نشانان بدتر می‌شود، معمولاً علتش حمله و تهویه‌ی ناهماهنگ یا زودهنگام است.</li></ul>
+<blockquote><p>تهویه ابزار آتش‌نشانی است، نه راه پیشگیری برای عموم مردم. تهویه‌ی نادرست خودش می‌تواند بک‌درفت را راه بیندازد.</p></blockquote>
 <h3>فن فشار مثبت (PPV) و تهویه‌ی هماهنگ</h3>
-<p>فن‌های تخلیه‌ی دود و فشار مثبت (PPV) ابزار آتش‌نشانان برای تهویه‌ی هماهنگ‌اند: وقتی محل خروج دود از پیش تعیین شده و آتش با آب خنک شده، فن مسیر جریان هوا را جهت می‌دهد. استفاده‌ی بی‌هماهنگ یا زودهنگام از همین ابزار می‌تواند هوای تازه را به آتش برساند. بنابراین فن جای آموزش و فرماندهی عملیات را نمی‌گیرد.</p>
+<p>فن‌های تخلیه‌ی دود و فشار مثبت (PPV) ابزار آتش‌نشانان برای تهویه‌ی هماهنگ‌اند. وقتی مسیر خروج دود از قبل مشخص شده و آتش با آب خنک شده باشد، فن جهت جریان هوا را تعیین می‌کند. اما اگر همین ابزار بی‌هماهنگی یا زودهنگام به کار برود، می‌تواند هوای تازه را به آتش برساند. پس فن جای آموزش و فرماندهی عملیات را نمی‌گیرد.</p>
 <h2>جدول مقایسه</h2>
-<div class="table-wrap"><table><thead><tr><th></th><th>فلش‌اور</th><th>بک‌درفت</th><th>انفجار دود</th></tr></thead><tbody><tr><th><strong>محرک</strong></th><td>افزایش دما و تابش حرارتی</td><td>ورود ناگهانی اکسیژن (تغییر تهویه)</td><td>گاز نسوخته‌ای که به حفره یا اتاق مجاور نفوذ کرده و با هوا مخلوط شده</td></tr><tr><th><strong>مرحله‌ی آتش</strong></th><td>بین رشد و توسعه‌یافته</td><td>افول (کم‌اکسیژن)</td><td>آتش تهویه‌محور با احتراق ناقص</td></tr><tr><th><strong>نیاز به هوای تازه</strong></th><td>خیر</td><td>بله، علت اصلی</td><td>نه الزاماً؛ نفوذ هوا کافی است</td></tr><tr><th><strong>اثر</strong></th><td>اشتعال هم‌زمان همه‌ی سطوح</td><td>گوی آتش و موج فشار</td><td>اشتعال گاز در جایی که شعله‌ای دیده نمی‌شد</td></tr><tr><th><strong>دما</strong></th><td>آستانه‌ی حدود ۶۰۰°C</td><td>داغ و فشرده</td><td>معمولاً پایین‌تر از ۶۰۰°C</td></tr></tbody></table></div>
-<p>دانشمندان هنوز بر سر مرز دقیق «بک‌درفت» و «انفجار دود» هم‌نظر نیستند؛ جدول بالا جمع‌بندی منبع زیر است (Salameh، ۲۰۲۰).</p>
+<div class="table-wrap"><table><thead><tr><th></th><th>فلش‌اور</th><th>بک‌درفت</th><th>انفجار دود</th></tr></thead><tbody><tr><th><strong>چه چیزی آن را راه می‌اندازد</strong></th><td>بالا رفتن دما و تابش گرما</td><td>رسیدن ناگهانی هوای تازه، مثلاً با باز شدن در</td><td>گازِ نسوخته‌ای که به فضای مجاور نفوذ کرده و با هوا مخلوط شده</td></tr><tr><th><strong>آتش در چه مرحله‌ای است</strong></th><td>بین رشد و اوج</td><td>فروکش کردن، با کمبود اکسیژن</td><td>آتشی که اکسیژنش کم است و ناقص می‌سوزد</td></tr><tr><th><strong>به هوای تازه نیاز دارد؟</strong></th><td>نه</td><td>بله، علت اصلی همین است</td><td>لزوماً نه؛ نفوذ کمی هوا هم کافی است</td></tr><tr><th><strong>نتیجه</strong></th><td>همه‌ی سطح‌ها هم‌زمان آتش می‌گیرند</td><td>گوی آتش و موج فشار</td><td>گازی آتش می‌گیرد که شعله‌ای نداشت</td></tr><tr><th><strong>دما</strong></th><td>حدود ۶۰۰°C</td><td>داغ و پرفشار</td><td>معمولاً کمتر از ۶۰۰°C</td></tr></tbody></table></div>
+<p>دانشمندان هنوز درباره‌ی مرز دقیق «بک‌درفت» و «انفجار دود» هم‌نظر نیستند. این جدول جمع‌بندی منبع زیر است (Salameh، ۲۰۲۰).</p>
 <h2>علم در ۲۰۲۴ تا ۲۰۲۶ چه چیزی را روشن کرد؟</h2>
-<ul><li><strong>واژگان یکدست نیست.</strong> مقاله‌ی Fleischmann، Madrzykowski و Dow در Fire Technology (۲۰۲۴؛ انتخاب سردبیر) یادآوری می‌کند «انفجار دود» بیش از یک قرن در ادبیات ثبت شده اما کمتر پژوهیده شده و رویدادهای فشار-افزا با نام‌های انفجار دود، بک‌درفت و پیشرفت سریع آتش خوانده می‌شوند. UL FSRI و دانشگاه کانتربری اکنون رابطه‌ی اندازه و جای دریچه با نرخ تلفات جرمی سوخت را بررسی می‌کنند.</li><li><strong>ساختمان‌های چوبی.</strong> در پژوهش Interflam 2025 (به‌روزرسانی FSRI، آوریل ۲۰۲۶) در محفظه‌های با مرزهای قابل‌اشتعال، دریچه‌ی کوچک‌تر یعنی نرخ آزادسازی گرمای کمتر به‌علت کمبود اکسیژن، و رویدادهای فشار-افزا در کوچک‌ترین دریچه‌ها دیده شد. به گفته‌ی Fleischmann بسیاری از مفروضات ما از محفظه‌های غیرقابل‌اشتعال می‌آید و ممکن است این‌جا صدق نکند.</li><li><strong>باتری لیتیوم‌یون.</strong> ۲۱ آزمایش مقیاس‌کامل در گاراژ (Sauer، Barowy و Gaudet؛ Fuel، ۲۰۲۴) نشان داد گاز فرار حرارتی باتری اسکوتر، خودرو و ابزار برقی می‌تواند به ساختمان مسکونی آسیب بزند. در حادثه‌ی Surprise آریزونا (۱۹ آوریل ۲۰۱۹) درِ یک مخزن ۲٫۱۶ مگاوات‌ساعتی ساعت ۲۰:۰۱ باز شد و حدود ۲۰:۰۴ دفلاگریشن رخ داد؛ چهار آتش‌نشان مصدوم شدند. درس مشترک با بک‌درفت: گازِ قابل‌اشتعالِ انباشته در فضای بسته به‌علاوه‌ی یک تغییر ناگهانی.</li></ul>
-<h2>برای ساکنان ساختمان‌ها: چه باید کرد؟</h2>
-<ol><li><strong>کشف زودهنگام:</strong> سیستم اعلام حریق و دتکتور، فاصله‌ی شروع آتش تا واکنش را کوتاه می‌کنند؛ مخصوصاً حالا که زمان رسیدن به فلش‌اور کوتاه‌تر شده است.</li><li><strong>مهار اولیه:</strong> کپسول مناسب در دسترس، فقط وقتی آتش هنوز کوچک است و مسیر خروج پشت سر شماست.</li><li><strong>درها را ببندید:</strong> هنگام خروج و هنگام خواب.</li><li><strong>درِ اتاق داغ یا اتاقی که دود از شکاف‌هایش بیرون می‌زند را باز نکنید.</strong></li><li><strong>خارج شوید و با ۱۲۵ تماس بگیرید.</strong></li></ol>
+<ul><li><strong>اسم‌ها یکدست نیستند.</strong> مقاله‌ی Fleischmann، Madrzykowski و Dow در Fire Technology (۲۰۲۴؛ انتخاب سردبیر) یادآوری می‌کند که «انفجار دود» بیش از یک قرن است در منابع آمده ولی کمتر بررسی شده، و اتفاق‌هایی که فشار را ناگهان بالا می‌برند گاهی انفجار دود، گاهی بک‌درفت و گاهی «پیشرفت سریع آتش» نامیده می‌شوند. UL FSRI و دانشگاه کانتربری حالا بررسی می‌کنند اندازه و جای دریچه چه اثری بر سرعتِ کم شدن جرم سوخت دارد.</li><li><strong>ساختمان‌های چوبی.</strong> در پژوهش Interflam 2025 (به‌روزرسانی FSRI، آوریل ۲۰۲۶)، در فضاهایی که دیوار و سقفشان قابل‌اشتعال است، دریچه‌ی کوچک‌تر به‌خاطر کمبود اکسیژن گرمای کمتری آزاد کرد؛ اما در کوچک‌ترین دریچه‌ها، بالا رفتن ناگهانیِ فشار هم دیده شد. Fleischmann می‌گوید بیشتر فرض‌های ما از فضاهایی آمده که دیوارشان نسوز است و ممکن است اینجا درست نباشد.</li><li><strong>باتری لیتیوم‌یون.</strong> ۲۱ آزمایش در مقیاس کامل در یک گاراژ (Sauer، Barowy و Gaudet؛ Fuel، ۲۰۲۴) نشان داد گازی که از باتری اسکوتر، خودرو و ابزار برقی بیرون می‌زند می‌تواند به ساختمان مسکونی آسیب بزند. در حادثه‌ی Surprise در آریزونا (۱۹ آوریل ۲۰۱۹)، درِ مخزنی با ظرفیت ۲٫۱۶ مگاوات‌ساعت ساعت ۲۰:۰۱ باز شد و حدود ۲۰:۰۴ انفجار رخ داد؛ چهار آتش‌نشان مصدوم شدند. درسش شبیه بک‌درفت است: گاز قابل‌اشتعالِ جمع‌شده در فضای بسته، به‌علاوه‌ی یک تغییر ناگهانی.</li></ul>
+<h2>ساکنان ساختمان چه کار کنند؟</h2>
+<ol><li><strong>زود بفهمید.</strong> سیستم اعلام حریق و دتکتور فاصله‌ی شروع آتش تا واکنش شما را کوتاه می‌کنند؛ مخصوصاً حالا که رسیدن به فلش‌اور سریع‌تر شده است.</li><li><strong>اگر آتش کوچک است، مهارش کنید.</strong> کپسول مناسب را در دسترس داشته باشید و فقط وقتی سراغش بروید که آتش هنوز کوچک است و مسیر خروج پشت سر شماست.</li><li><strong>درها را ببندید،</strong> هم موقع خروج هم موقع خواب.</li><li><strong>درِ اتاقِ داغ، یا اتاقی که دود از شکاف‌هایش بیرون می‌زند، را باز نکنید.</strong></li><li><strong>بیرون بروید و با ۱۲۵ تماس بگیرید.</strong></li></ol>
 <h2>بیشتر بخوانید</h2>
 <ul><li><a href="https://bsma.ir/%D8%A8%DA%A9-%D8%AF%D8%B1%D9%81%D8%AA-%DA%86%DB%8C%D8%B3%D8%AA%D8%9F/" target="_blank" rel="noopener">بک درفت چیست و چه تفاوتی با فلش اور دارد؟</a></li><li><a href="https://bsma.ir/product/%d9%81%d9%86-%d8%aa%d8%ae%d9%84%db%8c%d9%87-%d8%af%d9%88%d8%af-%d8%b5%d9%86%d8%b9%d8%aa%db%8c-%d8%a8%da%a9-%d8%af%d8%b1%d9%81%d8%aa-%d9%82%d8%a7%d8%a8%d9%84-%d8%ad%d9%85%d9%84/" target="_blank" rel="noopener">فن تخلیه‌ی دود صنعتی قابل‌حمل ARIS</a></li><li><a href="https://bsma.ir/product-category/fire-box/" target="_blank" rel="noopener">جعبه آتش‌نشانی</a> · <a href="https://bsma.ir/product-category/%D8%A7%D9%86%D9%88%D8%A7%D8%B9-%DA%A9%D9%BE%D8%B3%D9%88%D9%84-%D8%A2%D8%AA%D8%B4-%D9%86%D8%B4%D8%A7%D9%86%DB%8C/" target="_blank" rel="noopener">کپسول آتش‌نشانی</a> · <a href="https://bsma.ir/product-category/%D8%B3%DB%8C%D8%B3%D8%AA%D9%85-%D8%A7%D8%B9%D9%84%D8%A7%D9%85-%D8%AD%D8%B1%DB%8C%D9%82/" target="_blank" rel="noopener">سیستم اعلام حریق</a></li></ul>
 <h2>منابع</h2>
