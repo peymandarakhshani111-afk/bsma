@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>بک‌درفت و فلش‌اور؛ پشت در چه خبر است؟ | به‌سازان سرای مهرآهنگ</title>
+<meta name="description" content="بک‌درفت چیست و چه تفاوتی با فلش‌اور و انفجار دود دارد؟ روایتی سینمایی و سه‌بعدی بر پایه‌ی آخرین یافته‌های UL FSRI، NFPA و پژوهش‌های داوری‌شده — به‌روزرسانی مهر ۱۴۰۵.">
+<meta name="theme-color" content="#05060a">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:title" content="بک‌درفت و فلش‌اور؛ پشت در چه خبر است؟">
+<meta property="og:description" content="سفری سه‌بعدی در دل یک اتاق در حال سوختن، با آخرین یافته‌های علمی ایمنی حریق.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2305060a'/%3E%3Crect x='10' y='6' width='12' height='20' rx='1.5' fill='none' stroke='%23ff6b1f' stroke-width='2.2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"بک‌درفت چیست و چه تفاوتی با فلش‌اور دارد؟","inLanguage":"fa","datePublished":"2025-05-03","dateModified":"2026-10-05","author":{"@type":"Person","name":"پیمان درخشانی"},"publisher":{"@type":"Organization","name":"به‌سازان سرای مهرآهنگ","url":"https://bsma.ir/"}}
+</script>
+</head>
+<body>
+<a class="skip" href="#story">پرش به محتوا</a>
+
+<!-- ───────── loader / sound gate ───────── -->
+<div id="loader" role="dialog" aria-label="شروع تجربه">
+  <div class="loader-inner">
+    <div class="loader-door" aria-hidden="true"><i></i></div>
+    <p class="loader-brand">به‌سازان سرای مهرآهنگ</p>
+    <h2 class="loader-title">بک‌درفت و فلش‌اور</h2>
+    <div class="loader-bar" aria-hidden="true"><b id="loader-fill"></b></div>
+    <p class="loader-note" id="loader-note">در حال آماده‌سازی صحنه…</p>
+    <div class="loader-actions" id="loader-actions" hidden>
+      <button class="btn btn-fire" id="start-sound" type="button">شروع با صدا</button>
+      <button class="btn btn-ghost" id="start-silent" type="button">شروع بدون صدا</button>
+    </div>
+    <p class="loader-tip">برای بهترین تجربه از هدفون استفاده کنید. صداها ملایم‌اند و هر لحظه می‌توانید قطعشان کنید.</p>
+  </div>
+</div>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div id="flash" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ───────── top bar ───────── -->
+<header class="topbar">
+  <a class="brand" href="https://bsma.ir/" aria-label="صفحه‌ی اصلی به‌سازان سرای مهرآهنگ">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">به‌سازان سرای مهرآهنگ</span>
+  </a>
+  <nav class="nav" aria-label="بخش‌ها">
+    <a href="#story" data-go="1">داستان</a>
+    <a href="#features" data-go="4">ویژگی‌ها</a>
+    <a href="#research" data-go="5">یافته‌های ۱۴۰۵</a>
+    <a href="#portfolio" data-go="6">نمونه کارها</a>
+    <a href="#contact" data-go="7">تماس با ما</a>
+  </nav>
+  <button id="sound" class="icon-btn" type="button" aria-pressed="false" aria-label="صدا: خاموش" data-sfx>
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path class="spk" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="mute" d="M16 9l5 6m0-6l-5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+</header>
+
+<ol class="dots" aria-label="پیشرفت در صفحه">
+  <li><a href="#hero" data-go="0" title="شروع"><i></i></a></li>
+  <li><a href="#story" data-go="1" title="رشد آتش"><i></i></a></li>
+  <li><a href="#flashover" data-go="2" title="فلش‌اور"><i></i></a></li>
+  <li><a href="#backdraft" data-go="3" title="بک‌درفت"><i></i></a></li>
+  <li><a href="#features" data-go="4" title="نشانه‌ها"><i></i></a></li>
+  <li><a href="#research" data-go="5" title="یافته‌های علمی"><i></i></a></li>
+  <li><a href="#portfolio" data-go="6" title="نمونه کارها"><i></i></a></li>
+  <li><a href="#contact" data-go="7" title="تماس"><i></i></a></li>
+</ol>
+
+<!-- room HUD (chapters 1–2) -->
+<aside class="hud" id="hud-room" aria-hidden="true">
+  <div class="hud-head"><span>تصویرسازی مفهومی</span><b id="hud-stage">رشد</b></div>
+  <div class="hud-row"><span>دمای محیط</span><b id="hud-temp">۲۰°C</b></div>
+  <div class="bar"><i id="hud-temp-bar"></i></div>
+  <div class="hud-row"><span>اکسیژن در دسترس</span><b id="hud-o2">بالا</b></div>
+  <div class="bar bar-cyan"><i id="hud-o2-bar"></i></div>
+  <small>اعداد نمایشی‌اند، نه اندازه‌گیری</small>
+</aside>
+
+<!-- backdraft timeline HUD (chapter 3) -->
+<aside class="hud hud-steps" id="hud-bd" aria-hidden="true">
+  <ol>
+    <li data-step="0">درِ بسته</li>
+    <li data-step="1">باز شدن در</li>
+    <li data-step="2">مکث</li>
+    <li data-step="3">دفلاگریشن</li>
+    <li data-step="4">پس از آن</li>
+  </ol>
+</aside>
+
+<main>
+
+<!-- ═════════ HERO ═════════ -->
+<section id="hero" class="chapter" data-ch="0" style="--h:175vh">
+  <div class="stick hero-stick">
+    <div class="hero-top">
+      <p class="eyebrow"><span class="pulse"></span> پرونده‌ی علمی ایمنی حریق · به‌روزرسانی ۱۳ مهر ۱۴۰۵</p>
+      <h1 class="hero-title"><span class="mask"><span class="line">پشت این در</span></span> <span class="mask"><span class="line accent">چه خبر است؟</span></span></h1>
+    </div>
+    <div class="hero-bottom">
+      <div class="hero-lead">
+        <p class="lead">بک‌درفت، فلش‌اور و انفجار دود شبیه به‌نظر می‌رسند، اما هرکدام منطق فیزیکی خودشان را دارند. این صفحه آخرین یافته‌های علمی را در قالب یک سفر سینمایی روایت می‌کند؛ از رشد آتش تا لحظه‌ای که در باز می‌شود.</p>
+        <a class="btn btn-fire" href="#story" data-go="1" data-sfx>ورود به داستان <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <ul class="stats">
+        <li><b>۳ تا ۴ <small>دقیقه</small></b><span>تا فلش‌اور در اتاق با اثاث مدرن</span><em>UL FSRI</em></li>
+        <li><b>+۲۹ <small>دقیقه</small></b><span>همین مسیر با اثاث قدیمی</span><em>UL FSRI</em></li>
+        <li><b>~۶۰۰ <small>°C</small></b><span>دمای آستانه‌ی فلش‌اور</span><em>NFPA 921</em></li>
+      </ul>
+    </div>
+    <div class="scroll-cue" aria-hidden="true"><i></i><span>اسکرول کنید</span></div>
+  </div>
+</section>
+
+<!-- ═════════ 01 · GROWTH ═════════ -->
+<section id="story" class="chapter" data-ch="1" style="--h:400vh">
+  <div class="stick">
+    <div class="beats">
+      <article class="beat">
+        <p class="tag"><b>۰۱</b> رشد آتش در فضای بسته</p>
+        <h2>اتاقی که <span class="accent">نفس می‌کشد</span></h2>
+        <p>هر آتش در یک اتاقِ بسته مسیری مشخص دارد: رشد، توسعه‌یافته و افول. تا وقتی اکسیژن کافی است، شعله بزرگ‌تر می‌شود و گرمایش را به همه‌جای اتاق می‌فرستد.</p>
+      </article>
+      <article class="beat">
+        <p class="tag"><b>۰۱</b> رشد آتش در فضای بسته</p>
+        <h3>دود، فقط دود نیست</h3>
+        <p>اتاق بسته هوای تازه‌ی کمی دارد و آتش «تهویه‌محور» می‌شود: سوخت هست، اکسیژن کم است. دودِ داغ پر از گازهای نسوخته است و خودش سوخت به‌حساب می‌آید. <span class="cyan">خطوط آبی</span> همان هوایی‌اند که از زیر در می‌خزند و رو به پایان‌اند.</p>
+      </article>
+      <article class="beat">
+        <p class="tag"><b>۰۱</b> رشد آتش در فضای بسته</p>
+        <h3>لایه‌ی داغ پایین می‌آید</h3>
+        <p>گازهای داغ زیر سقف جمع می‌شوند و لایه‌ای هر دم ضخیم‌تر می‌سازند. این لایه به همه‌ی سطوح اتاق گرما می‌تاباند و اتاق را به نقطه‌ی تصمیم می‌رساند: <b>یا فلش‌اور</b>، یا ــ اگر اتاق بسته بماند و آتش ضعیف شود ــ آماده‌ی <b>بک‌درفت</b>.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 02 · FLASHOVER ═════════ -->
+<section id="flashover" class="chapter" data-ch="2" style="--h:400vh">
+  <div class="stick">
+    <div class="beats">
+      <article class="beat">
+        <p class="tag"><b>۰۲</b> فلش‌اور</p>
+        <h2>وقتی همه‌چیز <span class="accent">با هم می‌سوزد</span></h2>
+        <p>بر پایه‌ی تعریف <bdi>NFPA 921</bdi>، فلش‌اور گذاری سریع در رشد آتشِ یک محفظه است که در آن سطوحِ در معرض تابش حرارتی، کم‌وبیش هم‌زمان به دمای اشتعال می‌رسند و آتش به‌سرعت در تمام فضا پخش می‌شود.</p>
+        <p class="key">نکته‌ی کلیدی: فلش‌اور به ورود هوای تازه نیاز ندارد. محرکش دماست؛ دمای آستانه‌ی آن در ادبیات حدود <b>۶۰۰°C</b> (۱٬۱۱۲°F) گزارش می‌شود.</p>
+        <a class="src" href="https://www.fireengineering.com/?p=485680" target="_blank" rel="noopener">منبع: Fire Engineering، ۲۰۲۰ ↗</a>
+      </article>
+      <article class="beat">
+        <p class="tag"><b>۰۲</b> فلش‌اور</p>
+        <h3>اثاث مدرن، ساعت را تند کرده است</h3>
+        <p>پژوهش‌های UL FSRI نشان می‌دهد اثاث و مواد سینتتیک امروزی می‌توانند زمان رسیدن به فلش‌اور را از بیش از ۲۹ دقیقه به کمترِ ۳ تا ۴ دقیقه برسانند. پنجره‌ی فرار و پنجره‌ی عملیات، کوتاه‌تر شده است.</p>
+        <div class="bars" role="img" aria-label="مقایسه‌ی زمان رسیدن به فلش‌اور: اثاث قدیمی بیش از ۲۹ دقیقه، اثاث مدرن ۳ تا ۴ دقیقه">
+          <div class="bar-row"><span>اثاث قدیمی (طبیعی)</span><div class="track"><i class="fill fill-cyan" data-w="100"></i></div><b>+۲۹ دقیقه</b></div>
+          <div class="bar-row"><span>اثاث مدرن (سینتتیک)</span><div class="track"><i class="fill fill-fire" data-w="13"></i></div><b>۳ تا ۴ دقیقه</b></div>
+        </div>
+        <a class="src" href="https://fsri.org/research/firefighter-health-safety" target="_blank" rel="noopener">منبع: UL FSRI ↗</a>
+      </article>
+      <article class="beat">
+        <p class="tag"><b>۰۲</b> فلش‌اور</p>
+        <h3>درِ بسته، پناه است</h3>
+        <p>در پژوهش UL FSRI (کمپین <bdi>Close Your Door</bdi>، ۲۰۱۷) دمای اتاقِ با درِ باز به بیش از ۱٬۰۰۰°F (حدود ۵۴۰°C) رسید و اتاقِ با درِ بسته تا حدود ۱۰۰°F (حدود ۳۸°C) پایین ماند.</p>
+        <div class="thermo" aria-hidden="true">
+          <div><i class="t-fire" data-h="100"></i><span>درِ باز<br><b>+۵۴۰°C</b></span></div>
+          <div><i class="t-cyan" data-h="9"></i><span>درِ بسته<br><b>~۳۸°C</b></span></div>
+        </div>
+        <a class="src" href="https://www.ul.com/news/ul-fire-safety-research-institute-introduces-close-your-door-help-save-lives" target="_blank" rel="noopener">منبع: UL، ژانویه‌ی ۲۰۱۷ ↗</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 03 · BACKDRAFT ═════════ -->
+<section id="backdraft" class="chapter" data-ch="3" style="--h:760vh">
+  <div class="stick">
+    <div class="beats">
+      <article class="beat">
+        <p class="tag"><b>۰۳</b> بک‌درفت</p>
+        <h2>اکسیژنی که <span class="accent">دیر رسید</span></h2>
+        <p>بک‌درفت دفلاگریشنِ سریع (احتراق انفجاری) پس از ورود اکسیژن به محفظه‌ای است که پر از سوختِ نسوخته‌ی انباشته است؛ معمولاً در مرحله‌ی افول، وقتی شعله‌ی دیدنی ناپدید شده و گازها داغ و فشرده مانده‌اند.</p>
+        <a class="src" href="https://www.fireengineering.com/?p=485680" target="_blank" rel="noopener">تعریف NFPA 921 به نقل از Fire Engineering ↗</a>
+      </article>
+      <article class="beat">
+        <p class="tag"><b>۰۳</b> بک‌درفت</p>
+        <h3>لحظه‌ی باز شدن در</h3>
+        <p>با گشوده‌شدن در، هوای سرد از پایین به داخل می‌خزد (<span class="cyan">آبی</span>) و گاز داغ و غنی از سوخت از بالا بیرون می‌زند (<span class="fire">نارنجی</span>). مخلوطِ قابل‌اشتعال در حال ساخته شدن است.</p>
+      </article>
+      <article class="beat">
+        <p class="tag"><b>۰۳</b> بک‌درفت</p>
+        <h3>مکثِ پیش از انفجار</h3>
+        <p>اگر مخلوط به محدوده‌ی اشتعال برسد و یک منبع جرقه در کار باشد ــ اخگر، سطح داغ، شعله‌ی پنهان ــ چند ثانیه کافی است. هرچه این لحظه آرام‌تر به‌نظر برسد، فریبنده‌تر است.</p>
+      </article>
+      <article class="beat">
+        <p class="tag"><b>۰۳</b> بک‌درفت</p>
+        <h3>دفلاگریشن</h3>
+        <p>گوی آتش از دهانه‌ی در بیرون می‌زند و موج فشار می‌سازد؛ برای کسی که مقابل در ایستاده، زمان واکنش وجود ندارد. UL FSRI این رویدادها را <b>«نادر، اما بالقوه کشنده»</b> می‌نامد.</p>
+        <a class="src" href="https://fsri.org/research/backdraft-and-smoke-explosions" target="_blank" rel="noopener">منبع: پروژه‌ی Backdrafts and Smoke Explosions ↗</a>
+      </article>
+      <article class="beat beat-wide">
+        <p class="tag"><b>۰۳</b> پس از آن: پژوهش‌ها چه می‌گویند؟</p>
+        <h3>کنترل جریان، پیش از هر چیز</h3>
+        <ul class="ticks">
+          <li><b>کنترل در و مسیر جریان.</b> بازگذاشتن بی‌هدفِ ورودی‌ها هوا را به آتش می‌رساند.</li>
+          <li><b>خنک‌سازی پیش از تهویه.</b> کاهش دمای محیط، احتمال «رویداد محرک» مثل فلش‌اور را کم می‌کند.</li>
+          <li><b>تهویه‌ی هماهنگ.</b> بدتر شدن آتش پس از رسیدن آتش‌نشانان اغلب از حمله و تهویه‌ی ناهماهنگ یا زودهنگام است.</li>
+        </ul>
+        <p class="note">این تاکتیک‌ها برای نیروهای آموزش‌دیده‌ی آتش‌نشانی است. اگر شما با چنین صحنه‌ای روبه‌رو شدید: دور شوید و با ۱۲۵ تماس بگیرید.</p>
+        <a class="src" href="https://www.fireengineering.com/?p=313741" target="_blank" rel="noopener">منبع: Fire Engineering، ۲۰۱۶ (به نقل از پژوهش‌های NIST و UL) ↗</a>
+      </article>
+      <article class="beat beat-wide">
+        <p class="tag"><b>۰۳</b> تفاوت در یک نگاه</p>
+        <h3>سه پدیده، سه منطق</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th></th><th>فلش‌اور</th><th>بک‌درفت</th><th>انفجار دود</th></tr></thead>
+            <tbody>
+              <tr><th>محرک</th><td>افزایش دما و تابش حرارتی</td><td>ورود ناگهانی اکسیژن (تغییر تهویه)</td><td>گاز نسوخته‌ای که به حفره یا اتاق مجاور نفوذ کرده و با هوا مخلوط شده</td></tr>
+              <tr><th>مرحله‌ی آتش</th><td>بین رشد و توسعه‌یافته</td><td>افول (کم‌اکسیژن)</td><td>آتش تهویه‌محور با احتراق ناقص</td></tr>
+              <tr><th>نیاز به تهویه‌ی تازه</th><td>خیر</td><td>بله، علت اصلی</td><td>نه الزاماً؛ نفوذ هوا کافی است</td></tr>
+              <tr><th>اثر</th><td>اشتعال هم‌زمان همه‌ی سطوح</td><td>گوی آتش و موج فشار</td><td>اشتعال گاز در جایی که شعله‌ای دیده نمی‌شد</td></tr>
+              <tr><th>دما</th><td>آستانه‌ی حدود ۶۰۰°C</td><td>داغ و فشرده</td><td>معمولاً پایین‌تر از ۶۰۰°C</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">دانشمندان هنوز بر سر مرز دقیق «بک‌درفت» و «انفجار دود» هم‌نظر نیستند؛ جدول بالا جمع‌بندی منبع زیر است.</p>
+        <a class="src" href="https://www.fireengineering.com/?p=485680" target="_blank" rel="noopener">منبع: Fire Engineering، ۲۰۲۰ ↗</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ FEATURES · signs ═════════ -->
+<section id="features" class="chapter" data-ch="4" style="--h:250vh">
+  <div class="stick">
+    <div class="stage" aria-hidden="false">
+      <button class="hs" data-hs="0" type="button" aria-label="نشانه‌ی ۱: دود قهوه‌ای" data-sfx><i></i><b>۱</b></button>
+      <button class="hs" data-hs="1" type="button" aria-label="نشانه‌ی ۲: دود پالسی" data-sfx><i></i><b>۲</b></button>
+      <button class="hs" data-hs="2" type="button" aria-label="نشانه‌ی ۳: شیشه‌ی دوده‌گرفته" data-sfx><i></i><b>۳</b></button>
+      <button class="hs" data-hs="3" type="button" aria-label="نشانه‌ی ۴: شعله‌ی نامرئی" data-sfx><i></i><b>۴</b></button>
+      <button class="hs" data-hs="4" type="button" aria-label="نشانه‌ی ۵: مکش هوا" data-sfx><i></i><b>۵</b></button>
+    </div>
+    <div class="panel feature-panel" id="signs">
+      <p class="tag"><b>ویژگی‌ها</b> پنج نشانه که قبل از باز کردن در باید خواند</p>
+      <h2>پنجره‌ای که <span class="accent">هشدار می‌دهد</span></h2>
+      <ul class="sign-list" role="tablist" aria-label="نشانه‌های بک‌درفت">
+        <li><button type="button" role="tab" data-sign="0" data-sfx><b>۱</b> دود غلیظ زرد یا قهوه‌ای</button></li>
+        <li><button type="button" role="tab" data-sign="1" data-sfx><b>۲</b> دود پالسی؛ ساختمان نفس می‌کشد</button></li>
+        <li><button type="button" role="tab" data-sign="2" data-sfx><b>۳</b> شیشه‌ی دوده‌گرفته و داغ</button></li>
+        <li><button type="button" role="tab" data-sign="3" data-sfx><b>۴</b> شعله‌ی کم یا نامرئی با گرمای زیاد</button></li>
+        <li><button type="button" role="tab" data-sign="4" data-sfx><b>۵</b> هوا به داخل مکیده می‌شود</button></li>
+      </ul>
+      <div class="sign-detail" id="sign-detail" aria-live="polite">
+        <h3 id="sign-title">یکی از نشانه‌ها را انتخاب کنید</h3>
+        <p id="sign-text">روی شماره‌های روی پنجره بزنید یا از فهرست انتخاب کنید.</p>
+      </div>
+      <p class="note">این نشانه‌ها برای آگاهی و آموزش‌اند؛ هیچ‌کدام به‌تنهایی قطعی نیستند و تشخیص نهایی با آتش‌نشانان آموزش‌دیده است. اگر چیزی از این‌ها را دیدید: در را باز نکنید، دور شوید و با <b>۱۲۵</b> تماس بگیرید.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ RESEARCH ═════════ -->
+<section id="research" class="chapter" data-ch="5" style="--h:270vh">
+  <div class="stick">
+    <div class="panel research-panel">
+      <p class="tag"><b>۲۰۲۴ تا ۲۰۲۶</b> آنچه علم در این سال‌ها روشن کرد</p>
+      <h2>یافته‌هایی که <span class="accent">تصویر را عوض می‌کنند</span></h2>
+      <div class="cards">
+        <button class="card" type="button" data-node="0" data-sfx>
+          <i class="dot" style="--c:#ff6b1f"></i>
+          <h3>اثاث مدرن، آتش سریع‌تر</h3>
+          <p>در آزمایش‌های UL FSRI زمان رسیدن به فلش‌اور می‌تواند از بیش از ۲۹ دقیقه به ۳ تا ۴ دقیقه برسد. ایمنی دیگر روی «دقایق زیاد» حساب نمی‌کند.</p>
+          <span class="chip">UL FSRI</span>
+        </button>
+        <button class="card" type="button" data-node="1" data-sfx>
+          <i class="dot" style="--c:#27e6ff"></i>
+          <h3>نام‌ها یکدست نیستند</h3>
+          <p>مقاله‌ی <bdi>Fleischmann, Madrzykowski &amp; Dow</bdi> (<bdi>Fire Technology</bdi>، ۲۰۲۴؛ انتخاب سردبیر): «انفجار دود» بیش از یک قرن در ادبیات ثبت شده، اما کمتر پژوهیده شده است. UL FSRI و دانشگاه کانتربری اکنون اثر اندازه و جای دریچه را می‌سنجند.</p>
+          <span class="chip">Fire Technology ۲۰۲۴</span>
+        </button>
+        <button class="card" type="button" data-node="2" data-sfx>
+          <i class="dot" style="--c:#ffb454"></i>
+          <h3>ساختمان‌های چوبی</h3>
+          <p>در محفظه‌های با مرز قابل‌اشتعال (<bdi>Interflam 2025</bdi>) دریچه‌ی کوچک‌تر یعنی نرخ آزادسازی گرمای کمتر، و رویدادهای فشار-افزا در کوچک‌ترین دریچه‌ها دیده شد. به گفته‌ی Fleischmann بسیاری از مفروضات ما از محفظه‌های غیرقابل‌اشتعال می‌آید.</p>
+          <span class="chip">FSRI · آوریل ۲۰۲۶</span>
+        </button>
+        <button class="card" type="button" data-node="3" data-sfx>
+          <i class="dot" style="--c:#b9a6ff"></i>
+          <h3>باتری لیتیوم‌یونی؛ گاز آماده‌ی انفجار</h3>
+          <p>۲۱ آزمایش مقیاس‌کامل در گاراژ نشان داد گاز فرار حرارتی باتری اسکوتر، خودرو و ابزار برقی می‌تواند به ساختمان مسکونی آسیب بزند. در حادثه‌ی Surprise آریزونا (۱۹ آوریل ۲۰۱۹) درِ یک مخزن ۲٫۱۶ مگاوات‌ساعتی ساعت ۲۰:۰۱ باز شد و حدود ۲۰:۰۴ دفلاگریشن رخ داد؛ ۴ آتش‌نشان مصدوم شدند.</p>
+          <span class="chip">Fuel ۲۰۲۴ · UL FSRI</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ PORTFOLIO ═════════ -->
+<section id="portfolio" class="chapter" data-ch="6" style="--h:250vh">
+  <div class="stick">
+    <div class="stage product-stage" id="product-stage" role="group" aria-label="مدل سه‌بعدی محصول؛ با کشیدن بچرخانید" tabindex="0">
+      <span class="drag-hint" aria-hidden="true">← بکشید و بچرخانید →</span>
+    </div>
+    <div class="panel portfolio-panel">
+      <p class="tag"><b>نمونه کارها</b> تجهیزاتی که با این داستان سروکار دارند</p>
+      <h2>از <span class="accent">۱۳۸۵</span> می‌سازیم و نصب می‌کنیم</h2>
+      <ul class="badges">
+        <li>تولید جعبه و قرقره‌ی آتش‌نشانی از ۱۳۸۵</li>
+        <li>تأییدیه‌ی آتش‌نشانی شهرداری اصفهان · ۹۳/۳۷۳۸۶</li>
+        <li>دارای نشان استاندارد ملی ایران</li>
+      </ul>
+      <div class="product-info" id="product-info" aria-live="polite">
+        <h3 id="p-title"></h3>
+        <p id="p-text"></p>
+        <a class="btn btn-fire" id="p-link" href="#" target="_blank" rel="noopener" data-sfx>مشاهده در فروشگاه ↗</a>
+      </div>
+      <div class="p-controls">
+        <button class="icon-btn" id="p-next" type="button" aria-label="محصول بعدی" data-sfx><svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <ol class="p-dots" id="p-dots"></ol>
+        <button class="icon-btn" id="p-prev" type="button" aria-label="محصول قبلی" data-sfx><svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ CONTACT ═════════ -->
+<section id="contact" class="chapter chapter-flow" data-ch="7">
+  <div class="flow">
+    <div class="panel contact-panel">
+      <p class="tag"><b>تماس با ما</b> در را با آگاهی باز کنید</p>
+      <h2>برای پروژه‌تان <span class="accent">مشاوره می‌خواهید؟</span></h2>
+      <p>مشاوره، طراحی، نصب و اجرا و خدمات پس از فروش سیستم اعلام و اطفای حریق، با تأییدیه‌ی سازمان آتش‌نشانی اصفهان.</p>
+      <ul class="contact-list">
+        <li><span>دفتر اصفهان</span><a href="tel:+983136242532" data-sfx><bdi>۰۳۱-۳۶۲۴ ۲۵۳۲</bdi></a></li>
+        <li><span>تلفن دوم</span><a href="tel:+983136247584" data-sfx><bdi>۰۳۱-۳۶۲۴ ۷۵۸۴</bdi></a></li>
+        <li><span>همراه</span><a href="tel:+989135454643" data-sfx><bdi>۰۹۱۳ ۵۴۵ ۴۶۴۳</bdi></a></li>
+        <li><span>پیام‌رسان‌ها</span>
+          <a href="https://wa.me/989306016798" target="_blank" rel="noopener" data-sfx>واتساپ</a>
+          <a href="https://t.me/bsmacompany" target="_blank" rel="noopener" data-sfx>تلگرام</a>
+          <small>شماره‌ی <bdi>۰۹۳۰ ۶۰۱ ۶۷۹۸</bdi></small>
+        </li>
+        <li><span>نشانی</span><address>اصفهان، نبش خیابان وحید و محتشم کاشانی، مجتمع تجاری عزیزخانی، طبقه‌ی ۳، واحد ۳۳</address>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=32.629738,51.638484" target="_blank" rel="noopener" data-sfx>مسیریابی ↗</a></li>
+      </ul>
+
+      <form class="quick" id="quick" novalidate>
+        <h3>پیام سریع به کارشناس فروش</h3>
+        <div class="row">
+          <label>نام شما<input name="name" autocomplete="name" placeholder="مثلاً: مهندس رضایی"></label>
+          <label>نیاز شما
+            <select name="need">
+              <option>جعبه آتش‌نشانی</option>
+              <option>کپسول آتش‌نشانی</option>
+              <option>سیستم اعلام حریق</option>
+              <option>سیستم اطفای حریق</option>
+              <option>فن تخلیه دود</option>
+              <option>درب دودبند / ضد حریق</option>
+              <option>مشاوره و طراحی پروژه</option>
+            </select>
+          </label>
+        </div>
+        <label>توضیح کوتاه<textarea name="msg" rows="3" placeholder="نوع ساختمان، متراژ، شهر…"></textarea></label>
+        <button class="btn btn-fire" type="submit" data-sfx>آماده‌سازی پیام واتساپ</button>
+        <a class="btn btn-ghost" id="wa-link" href="https://wa.me/989306016798" target="_blank" rel="noopener" hidden>پیام آماده است؛ باز کردن واتساپ ↗</a>
+        <small>پیام از طریق واتساپ خودتان ارسال می‌شود؛ هیچ داده‌ای در این صفحه ذخیره نمی‌شود.</small>
+      </form>
+
+      <p class="emergency"><b>در آتش‌سوزی:</b> خارج شوید، درها را پشت سر ببندید و با <b>۱۲۵</b> تماس بگیرید. این صفحه آموزشی است و جایگزین آموزش رسمی آتش‌نشانی نیست.</p>
+    </div>
+
+    <footer class="sources">
+      <details>
+        <summary>منابع علمی این صفحه</summary>
+        <ol>
+          <li>UL Fire Safety Research Institute. <i>Firefighter Health &amp; Safety</i> — زمان رسیدن به فلش‌اور در اثاث مدرن و قدیمی. <a href="https://fsri.org/research/firefighter-health-safety" target="_blank" rel="noopener">fsri.org</a></li>
+          <li>UL FSRI. <i>Backdrafts and Smoke Explosions</i> (پروژه‌ی پژوهشی؛ به‌روزرسانی ۱۴ آوریل ۲۰۲۶). <a href="https://fsri.org/research/backdraft-and-smoke-explosions" target="_blank" rel="noopener">fsri.org</a></li>
+          <li>Fleischmann C., Madrzykowski D., Dow N. (2024). <i>Exploring Overpressure Events in Compartment Fires</i>. Fire Technology. <a href="https://doi.org/10.1007/s10694-024-01553-5" target="_blank" rel="noopener">doi:10.1007/s10694-024-01553-5</a></li>
+          <li>UL FSRI (آوریل ۲۰۲۶). <i>Fire Behaviour and Over-Pressure Events in Combustible Compartments</i> (Interflam 2025). <a href="https://fsri.org/research-update/paper-reports-expanding-knowledge-understanding-fire-dynamics-timber-buildings" target="_blank" rel="noopener">fsri.org</a></li>
+          <li>Sauer N., Barowy A., Gaudet B. (2024). <i>Experimental Investigation of Explosion Hazard from Lithium-Ion Battery Thermal Runaway</i>. Fuel. <a href="https://fsri.org/research-update/journal-article-investigates-explosion-hazards-lithium-ion-battery-thermal-runaway" target="_blank" rel="noopener">fsri.org</a></li>
+          <li>UL FSRI (۲۰۲۰). گزارش حادثه‌ی Surprise، آریزونا، ۱۹ آوریل ۲۰۱۹. <a href="https://fsri.org/research-update/report-four-firefighters-injured-lithium-ion-battery-energy-storage-system" target="_blank" rel="noopener">fsri.org</a></li>
+          <li>UL (ژانویه‌ی ۲۰۱۷). <i>Close Your Door</i> campaign. <a href="https://www.ul.com/news/ul-fire-safety-research-institute-introduces-close-your-door-help-save-lives" target="_blank" rel="noopener">ul.com</a></li>
+          <li>Salameh N. (۲۰۲۰). <i>Differentiating the “Fireground Phenomena”</i>. Fire Engineering — تعریف‌های NFPA 921. <a href="https://www.fireengineering.com/?p=485680" target="_blank" rel="noopener">fireengineering.com</a></li>
+          <li>Salameh N. (۲۰۱۶). <i>Tactical Changes That Can Save Firefighters’ Lives</i>. Fire Engineering. <a href="https://www.fireengineering.com/?p=313741" target="_blank" rel="noopener">fireengineering.com</a></li>
+        </ol>
+        <p>تصویرسازی‌های سه‌بعدی مفهومی‌اند و اندازه‌گیری واقعی نیستند. مقاله‌ی اصلی: پیمان درخشانی، اردیبهشت ۱۴۰۴ · بازنگری علمی: مهر ۱۴۰۵.</p>
+      </details>
+      <p class="copy">© ۱۳۸۵–۱۴۰۵ تمامی حقوق برای شرکت به‌سازان سرای مهرآهنگ محفوظ است.</p>
+    </footer>
+  </div>
+</section>
+
+</main>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/howler.min.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
