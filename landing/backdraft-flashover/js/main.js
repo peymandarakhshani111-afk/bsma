@@ -13,9 +13,10 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ───────────────────────── sound (Howler.js) ───────────────────────── */
+  const BASE = window.BSMA_BASE || ''; // set by the WordPress plugin; empty when opened standalone
   const html5 = location.protocol === 'file:'; // Web Audio cannot XHR files from file://
   if (html5) Howler.html5PoolSize = 24;
-  const mk = (name, o = {}) => new Howl(Object.assign({ src: ['audio/' + name + '.wav'], html5, preload: true }, o));
+  const mk = (name, o = {}) => new Howl(Object.assign({ src: [BASE + 'audio/' + name + '.wav'], html5, preload: true }, o));
   const SFX = {
     hover: mk('hover', { volume: 0.2 }),
     click: mk('click', { volume: 0.32 }),
@@ -76,11 +77,14 @@
   document.body.classList.add('locked');
   let loaded = 0;
   const total = 3;
-  const tick = () => { loaded++; fill.style.width = Math.round((loaded / total) * 100) + '%'; if (loaded >= total) ready(); };
+  // On the live, indexed page the start screen must never cover the content: BSMA_GATE === false starts silently by itself.
+  const gateOff = window.BSMA_GATE === false;
+  const tick = () => { loaded++; fill.style.width = Math.round((loaded / total) * 100) + '%'; if (loaded >= (gateOff ? 2 : total)) ready(); };
   let readied = false;
   function ready() {
     if (readied) return;
     readied = true;
+    if (gateOff) { begin(false); soundHint(); return; }
     fill.style.width = '100%';
     note.textContent = BS().failed ? 'مرورگر شما WebGL را پشتیبانی نمی‌کند؛ نسخه‌ی ساده نمایش داده می‌شود.' : 'صحنه آماده است.';
     actions.hidden = false;
@@ -93,6 +97,15 @@
   Object.values(SFX).forEach((h) => { const f = () => ++aLoaded === aTotal && tick(); h.once('load', f); h.once('loaderror', f); });
   setTimeout(ready, 7000); // never block the page on slow audio
 
+  function soundHint() {
+    const h = document.createElement('div');
+    h.className = 'sound-hint';
+    h.textContent = 'برای شنیدن صدا، دکمه‌ی بلندگو را بزنید';
+    document.body.appendChild(h);
+    setTimeout(() => h.classList.add('show'), 600);
+    setTimeout(() => h.remove(), 9000);
+    soundBtn.addEventListener('click', () => h.remove(), { once: true });
+  }
   function begin(withSound) {
     loader.classList.add('done');
     document.body.classList.remove('locked');
@@ -304,7 +317,7 @@
   const photoImg = $('#photo-main'), photoCap = $('#photo-cap'), photoCard = $('#photo-card'), thumbs = $('#photo-thumbs');
   let view = 'photo';
   function paint(ph) {
-    photoImg.src = ph.src; photoImg.alt = ph.alt; photoCap.textContent = ph.cap;
+    photoImg.src = BASE + ph.src; photoImg.alt = ph.alt; photoCap.textContent = ph.cap;
     photoImg.style.objectFit = ph.fit || 'cover';
     photoImg.style.objectPosition = ph.pos || '50% 50%';
     photoImg.style.background = ph.bg || '#fff';
@@ -316,7 +329,7 @@
       const b = document.createElement('button');
       b.type = 'button'; b.dataset.sfx = ''; b.setAttribute('aria-label', ph.cap); b.classList.toggle('on', k === 0);
       const im = document.createElement('img');
-      im.src = ph.src; im.alt = ''; im.width = 60; im.height = 60; im.loading = 'lazy';
+      im.src = BASE + ph.src; im.alt = ''; im.width = 60; im.height = 60; im.loading = 'lazy';
       im.style.objectFit = ph.fit || 'cover'; im.style.objectPosition = ph.pos || '50% 50%'; im.style.background = ph.bg || '#fff';
       b.appendChild(im);
       b.addEventListener('click', () => {
