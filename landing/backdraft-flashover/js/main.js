@@ -133,11 +133,13 @@
     return tl;
   }
   beats('#story', [[0, 0.34], [0.34, 0.67], [0.67, 1]], null, [null, null, 0.97]);
+  beats('#alarm', [[0, 0.24], [0.26, 0.5], [0.52, 0.76], [0.78, 1]], null, [0.18, 0.445, 0.7, 0.97]);
   beats('#flashover', [[0, 0.46], [0.52, 0.78], [0.8, 1]], (tl) => {
     $$('#flashover .fill').forEach((f, i) => tl.fromTo(f, { width: '0%' }, { width: f.dataset.w + '%', duration: 0.06 }, 0.57 + i * 0.015));
     $$('#flashover .thermo i').forEach((f, i) => tl.fromTo(f, { height: '0px' }, { height: (f.dataset.h / 100) * (innerWidth < 820 ? 100 : 130) + 'px', duration: 0.1 }, 0.84 + i * 0.03));
   }, [null, 0.7, 0.97]);
   beats('#backdraft', [[0, 0.13], [0.14, 0.26], [0.27, 0.34], [0.35, 0.52], [0.58, 0.78], [0.8, 1]], null, [null, null, null, null, null, 0.97]);
+  beats('#response', [[0, 0.2], [0.22, 0.42], [0.44, 0.64], [0.66, 0.84], [0.86, 1]], null, [0.13, 0.36, 0.585, 0.78, 0.97]);
 
   /* each card says where it is in its chapter ("2 از 3") and what comes next, so the visitor is never left wondering whether to scroll */
   STORY.forEach(({ list }) => list.forEach((b, i) => {
@@ -154,6 +156,230 @@
   });
   gsap.from('.contact-panel, .sources', { autoAlpha: 0, y: 60, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '#contact', start: 'top 70%' } });
 
+  /* ───────────────────────── acts: two illustrated scenes that play with the scroll ─────────────────────────
+     #alarm    detectors (hall + kitchen) → cable → control panel → sirens   (Teknim addressable system)
+     #response hose cabinet: cool with water first → ARIS fan: then exhaust the smoke
+     Each scene is a pure function of the section's scroll progress p (0..1), so scrubbing, jumping and the self-playing film all agree.
+     Everything that loops by itself (pulses on the cable, flashing sirens, water bursts) runs only while the section is on screen. */
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const ramp = (p, a, b) => clamp((p - a) / (b - a));
+  const ease = (t) => t * t * (3 - 2 * t);
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const mk = (name, attrs) => { const e = document.createElementNS(SVGNS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const mix = (c1, c2, t) => '#' + c1.map((v, i) => Math.round(lerp(v, c2[i], t)).toString(16).padStart(2, '0')).join('');
+
+  // a two-tone alarm tone, only when the visitor has switched sound on
+  let siren = null;
+  function sirenSound(on) {
+    const ctx = window.Howler && Howler.ctx;
+    if (on && soundOn && ctx && !siren) {
+      try {
+        if (ctx.state === 'suspended') ctx.resume();
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'triangle'; g.gain.value = 0;
+        o.connect(g); g.connect(ctx.destination); o.start();
+        g.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.3);
+        let hi = false;
+        const timer = setInterval(() => { hi = !hi; o.frequency.setValueAtTime(hi ? 960 : 770, ctx.currentTime); }, 480);
+        siren = { o, g, timer, ctx };
+      } catch (e) { siren = null; }
+    } else if (!on && siren) {
+      const { o, g, timer, ctx: c } = siren;
+      siren = null;
+      clearInterval(timer);
+      try { g.gain.linearRampToValueAtTime(0, c.currentTime + 0.15); o.stop(c.currentTime + 0.2); } catch (e) { /* already stopped */ }
+    }
+  }
+
+  function act(sel, scene) {
+    const el = $(sel);
+    if (!el) return;
+    let p = 0, live = false;
+    const set = (self) => { p = self.progress; scene.set(p); };
+    ScrollTrigger.create({ trigger: el, start: 'top top', end: 'bottom bottom', onUpdate: set, onRefresh: set });
+    const loop = () => scene.tick(performance.now() / 1000, p);
+    ScrollTrigger.create({
+      trigger: el, start: 'top bottom', end: 'bottom top',
+      onToggle: (self) => {
+        if (self.isActive && !live) { live = true; gsap.ticker.add(loop); }
+        else if (!self.isActive && live) { live = false; gsap.ticker.remove(loop); scene.idle && scene.idle(); }
+      },
+    });
+    scene.set(0);
+  }
+
+  /* — 1 · detectors → cable → panel → sirens — */
+  act('#alarm', (() => {
+    const stage = $('#alarm-stage'), plan = $('#alarm-plan');
+    if (!stage) return { set() {}, tick() {} };
+    const devs = $$('.dev[data-i]', plan);
+    const cable = $('#al-cable'), pulseG = $('.a-pulses', plan);
+    const sH = $('.a-sh', plan), hH = $('.a-hh', plan), sK = $('.a-sk', plan), hK = $('.a-hk', plan);
+    const fire = $('.a-fire', plan), flash = $('.a-flash', plan);
+    const tempEl = $('#al-temp'), tempBar = $('#al-temp-bar');
+    const lcd = $('#al-lcd'), lcdSt = $('#al-lcd-st'), lcdM = $('#al-lcd-m'), panel = $('#al-panel');
+    const steps = $$('.steps li', stage);
+    const PT = [[99, 16], [81, 16], [63, 16], [37, 16], [21, 16], [13, 34]]; // device centres on the plan
+    const TRIP = [0.15, 0.33, 0.8, 0.385, 0.43, 0.8]; // scroll progress at which each device acts
+    const LOG = [
+      [0.64, 'آدرس ۰۰۱ · دتکتور دود، سالن'],
+      [0.66, 'آدرس ۰۰۲ · دتکتور حرارتی، سالن'],
+      [0.68, 'آدرس ۰۰۴ · دتکتور دود، آشپزخانه'],
+      [0.7, 'آدرس ۰۰۵ · دتکتور حرارتی، آشپزخانه'],
+    ];
+    let len = 0, anchor = [];
+    const pulses = []; // [halo, core] for each of the six devices
+    function measure() {
+      const total = cable.getTotalLength();
+      anchor = PT.map(([x, y]) => { // where along the cable each device sits
+        let best = 0, bd = 1e9;
+        for (let i = 0; i <= 480; i++) { const q = cable.getPointAtLength((total * i) / 480), d = (q.x - x) ** 2 + (q.y - y) ** 2; if (d < bd) { bd = d; best = (total * i) / 480; } }
+        return best;
+      });
+      PT.forEach(() => {
+        const halo = mk('circle', { r: 2.6, fill: '#27e6ff', opacity: 0 }), core = mk('circle', { r: 1.1, fill: '#e8fbff', opacity: 0 });
+        pulseG.append(halo, core);
+        pulses.push([halo, core]);
+      });
+      len = total;
+    }
+    const state = { p: 0 };
+    return {
+      set(p) {
+        state.p = p;
+        if (!len) { try { measure(); } catch (e) { return; } }
+        // smoke and heat gather under the ceiling; the kitchen follows through the doorway
+        const hall = 3 + 33 * ease(ramp(p, 0, 0.42)), kit = 2 + 28 * ease(ramp(p, 0.24, 0.52));
+        sH.setAttribute('height', hall.toFixed(2)); hH.setAttribute('height', hall.toFixed(2));
+        sK.setAttribute('height', kit.toFixed(2)); hK.setAttribute('height', kit.toFixed(2));
+        hH.setAttribute('opacity', (0.9 * ramp(p, 0.14, 0.5)).toFixed(2));
+        hK.setAttribute('opacity', (0.8 * ramp(p, 0.3, 0.54)).toFixed(2));
+        fire.setAttribute('transform', 'translate(101 69) scale(' + lerp(0.35, 1.12, ease(ramp(p, 0, 0.5))).toFixed(3) + ')');
+        const T = 24 + 50 * ramp(p, 0.04, 0.46);
+        tempEl.textContent = fa(T) + '°C';
+        tempBar.style.width = (((T - 20) / 80) * 100).toFixed(1) + '%';
+        // the six devices
+        devs.forEach((d, i) => {
+          const on = p >= TRIP[i];
+          if (d.classList.contains('on') !== on) {
+            d.classList.toggle('on', on);
+            const st = $('.dev-st', d);
+            if (st) st.textContent = on ? (d.dataset.t === 'a' ? 'روشن شد' : 'فعال شد') : (d.dataset.t === 'a' ? 'آماده' : 'عادی');
+          }
+        });
+        // the cable is drawn after the detectors have gone off
+        const draw = ramp(p, 0.53, 0.61);
+        cable.style.strokeDashoffset = (1 - ease(draw)).toFixed(4);
+        cable.style.opacity = draw > 0 ? 1 : 0;
+        // the panel reads the loop
+        const arrived = p >= 0.64, alarm = arrived;
+        panel.classList.toggle('on', alarm);
+        lcd.classList.toggle('alarm', alarm);
+        let msg = 'یک لوپ، تا ۲۴۰ دستگاه آدرس‌پذیر', st = 'آماده به‌کار';
+        if (p >= 0.53 && !alarm) msg = 'لوپ ۱ · ۶ دستگاه، هرکدام یک آدرس';
+        if (alarm) {
+          const seen = LOG.filter(([t]) => p >= t);
+          st = p >= 0.8 ? 'حریق · آژیرها روشن' : 'حریق';
+          msg = p >= 0.8 ? 'آژیرِ ۰۰۳ و ۰۰۶ روشن شد' : (seen.length ? seen[seen.length - 1][1] : 'سیگنال از لوپ رسید…');
+        }
+        if (lcdSt.textContent !== st) lcdSt.textContent = st;
+        if (lcdM.textContent !== msg) lcdM.textContent = msg;
+        stage.classList.toggle('sirens', p >= 0.8);
+        sirenSound(p >= 0.8);
+        // the row of steps above the plan
+        const cur = p < 0.24 ? 0 : p < 0.5 ? 1 : p < 0.78 ? 2 : 3;
+        steps.forEach((li, i) => { li.classList.toggle('on', i === cur); li.classList.toggle('done', i < cur); });
+      },
+      tick(now) {
+        if (!len) return;
+        const p = state.p;
+        // signals travel from each tripped detector to the nearest end of the loop (the panel); later the panel answers the sirens
+        pulses.forEach(([halo, core], i) => {
+          const isSiren = i === 2 || i === 5;
+          let u = -1, from = anchor[i], to = 0;
+          if (!isSiren && p >= 0.6 && p >= TRIP[i]) { to = i < 3 ? 0 : len; u = (now * 0.5 + i * 0.37) % 1; }
+          else if (isSiren && p >= 0.74) { from = i === 2 ? 0 : len; to = anchor[i]; u = (now * 0.6 + i * 0.3) % 1; }
+          if (u < 0) { halo.setAttribute('opacity', 0); core.setAttribute('opacity', 0); return; }
+          const pt = cable.getPointAtLength(from + (to - from) * u), a = Math.sin(Math.PI * u);
+          halo.setAttribute('cx', pt.x.toFixed(2)); halo.setAttribute('cy', pt.y.toFixed(2)); halo.setAttribute('opacity', (0.3 * a).toFixed(2));
+          core.setAttribute('cx', pt.x.toFixed(2)); core.setAttribute('cy', pt.y.toFixed(2)); core.setAttribute('opacity', a.toFixed(2));
+        });
+      },
+      idle() {},
+    };
+  })());
+
+  /* — 2 · hose cabinet (water first) → ARIS fan (then the smoke goes out) — */
+  act('#response', (() => {
+    const stage = $('#response-stage'), plan = $('#resp-plan');
+    if (!stage) return { set() {}, tick() {} };
+    const sm = $('.r-sm', plan), ht = $('.r-ht', plan), gasG = $('.r-gas', plan);
+    const door = $('.r-door', plan), doorBody = $('.door-body', plan), doorGlow = $('.door-glow', plan);
+    const fire = $('.r-fire', plan), hose = $('.r-hose', plan), nozzle = $('.r-nozzle', plan), water = $('.r-water', plan);
+    const steam = $('.r-steam', plan), outG = $('.r-out', plan), smokeOut = $('.r-smoke-out', plan);
+    const cab = $('#rs-cab'), cabClosed = $('.cab-closed', cab), cabOpen = $('.cab-open', cab), cabT = $('#rs-cab-t');
+    const fan = $('#rs-fan');
+    const tempEl = $('#rs-temp'), tempBar = $('#rs-temp-bar'), gasEl = $('#rs-gas'), gasBar = $('#rs-gas-bar');
+    const steps = $$('.steps li', stage);
+    // unburnt gas in the hot layer: little amber dots that disappear as the fan clears them
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const dots = Array.from({ length: 30 }, (_, i) => {
+      const c = mk('circle', { cx: (28 + rnd() * 50).toFixed(1), cy: (10 + rnd() * 26).toFixed(1), r: (0.35 + rnd() * 0.4).toFixed(2), fill: '#ffb454', opacity: 0 });
+      gasG.append(c);
+      return { c, k: (i + 0.5) / 30 };
+    });
+    for (let i = 0; i < 7; i++) steam.append(mk('circle', { class: 'puff', cx: 85 + (i % 3) * 1.6, cy: 46 - (i % 4) * 3.2, r: 1.5, fill: '#dff6ff', style: 'animation-delay:' + (i * 0.27).toFixed(2) + 's' }));
+    for (let i = 0; i < 8; i++) smokeOut.append(mk('circle', { class: 'drift', cx: 20 + (i % 4) * 2.5, cy: 15 + (i % 3) * 4, r: 2.2 + (i % 3) * 0.5, fill: '#aeb4c2', style: 'animation-delay:' + (i * 0.4).toFixed(2) + 's' }));
+    const state = { p: 0, jet: 0 };
+    return {
+      set(p) {
+        state.p = p;
+        const cool = ease(ramp(p, 0.46, 0.62)), clear = ease(ramp(p, 0.72, 0.94));
+        const hot = 1 - 0.88 * cool - 0.04 * clear;
+        // the hot layer stays deep and orange until water arrives, turns grey, and is finally drawn out
+        const depth = lerp(lerp(34, 27, cool), 4, clear);
+        sm.setAttribute('height', depth.toFixed(2)); ht.setAttribute('height', depth.toFixed(2));
+        ht.setAttribute('opacity', clamp(hot * 1.05).toFixed(2));
+        fire.setAttribute('transform', 'translate(46 69) scale(' + (1.1 - 0.62 * cool - 0.18 * clear).toFixed(3) + ')');
+        const T = 60 + 390 * hot;
+        tempEl.textContent = fa(Math.round(T / 10) * 10) + '°C';
+        tempBar.style.width = (hot * 100).toFixed(1) + '%';
+        const g = 1 - 0.92 * clear;
+        dots.forEach((d) => d.c.setAttribute('opacity', d.k < g ? 0.85 : 0));
+        gasEl.textContent = g > 0.66 ? 'زیاد' : g > 0.3 ? 'در حال کم شدن' : 'کم';
+        gasBar.style.width = (g * 100).toFixed(1) + '%';
+        // the door: glows while hot, then opens a hand's width only after the water has done its work
+        doorBody.style.fill = mix([122, 42, 20], [26, 34, 54], 1 - hot);
+        doorGlow.style.opacity = (hot * 0.85).toFixed(2);
+        door.setAttribute('transform', 'translate(' + (2.4 * ease(ramp(p, 0.6, 0.66))).toFixed(2) + ' 0)');
+        // the cabinet on the corridor wall opens, the hose runs out
+        const open = ease(ramp(p, 0.22, 0.3));
+        cabOpen.style.opacity = open.toFixed(2); cabClosed.style.opacity = (1 - open).toFixed(2);
+        const t = p < 0.26 ? 'روی دیوار، پشتِ دربِ خودش' : 'درِ جعبه باز شد ✓';
+        if (cabT.textContent !== t) cabT.textContent = t;
+        hose.style.strokeDashoffset = (1 - ease(ramp(p, 0.28, 0.38))).toFixed(3);
+        hose.style.opacity = p > 0.27 ? 1 : 0;
+        nozzle.style.opacity = ramp(p, 0.34, 0.38).toFixed(2);
+        state.jet = ramp(p, 0.44, 0.46) * (1 - ramp(p, 0.62, 0.64));
+        steam.style.opacity = (state.jet * 0.9).toFixed(2);
+        // the fan appears at the exit opening, the smoke streams out
+        const fanOn = ease(ramp(p, 0.66, 0.72));
+        fan.style.opacity = fanOn.toFixed(2);
+        fan.style.transform = 'translate(' + ((1 - fanOn) * -8).toFixed(1) + 'px,0)';
+        outG.style.opacity = (ease(ramp(p, 0.7, 0.76)) * (1 - ramp(p, 0.95, 1))).toFixed(2);
+        smokeOut.style.opacity = (fanOn * (1 - ease(ramp(p, 0.9, 0.97)))).toFixed(2);
+        const cur = p < 0.22 ? 0 : p < 0.62 ? 1 : p < 0.7 ? 2 : 3;
+        steps.forEach((li, i) => { li.classList.toggle('on', i === cur && p < 0.97); li.classList.toggle('done', i < cur || p >= 0.97); });
+      },
+      tick(now) {
+        // water goes on in short bursts, not as one long stream
+        water.style.opacity = (state.jet * (Math.floor(now * 2.2) % 3 < 2 ? 1 : 0.18)).toFixed(2);
+      },
+      idle() { water.style.opacity = 0; },
+    };
+  })());
+
   /* ───────────────────────── per-frame UI sync (HUD, nav, dots, sounds) ───────────────────────── */
   const hudRoom = $('#hud-room'), hudBd = $('#hud-bd');
   const elStage = $('#hud-stage'), elTemp = $('#hud-temp'), elTempBar = $('#hud-temp-bar'), elO2 = $('#hud-o2'), elO2Bar = $('#hud-o2-bar');
@@ -164,7 +390,8 @@
     if (!b.s) return;
     const T = b.T || 0;
 
-    hudRoom.classList.toggle('on', T > 0.72 && T < 2.72);
+    const inAct = root.classList.contains('in-act');
+    hudRoom.classList.toggle('on', !inAct && T > 0.72 && T < 2.72);
     const rt = b.s.state.roomT || 0, heat = b.s.state.roomHeat || 0;
     const temp = 20 + 580 * heat;
     elTemp.textContent = fa(Math.round(temp / 10) * 10) + '°C';
@@ -176,7 +403,7 @@
     if (stage !== lastStage) { elStage.textContent = stage; lastStage = stage; }
 
     const P3 = clamp((b.P[3] || 0) / 0.64);
-    hudBd.classList.toggle('on', T > 2.72 && T < 3.55 && P3 > 0.01);
+    hudBd.classList.toggle('on', !inAct && T > 2.72 && T < 3.55 && P3 > 0.01);
     const step = P3 < 0.22 ? 0 : P3 < 0.44 ? 1 : P3 < 0.545 ? 2 : P3 < 0.9 ? 3 : 4;
     if (step !== lastStep) {
       lastStep = step;
@@ -189,8 +416,10 @@
 
   /* ───────────────────────── where am I: progress line, chapter chip, dots, nav ─────────────────────────
      Driven by scrolling itself (not by the 3D loop) so it keeps working even where WebGL is unavailable. */
-  const CHAPTERS = ['شروع', 'آتش در اتاق', 'فلش‌اور', 'بک‌درفت', 'نشانه‌های خطر', 'یافته‌ها', 'نمونه کارها', 'تماس با ما', 'متن مقاله'];
-  const chEls = [...$$('main > .chapter'), $('#article')].filter(Boolean);
+  const CHAPTERS = ['شروع', 'آتش در اتاق', 'دتکتور و آژیر', 'فلش‌اور', 'بک‌درفت', 'اول آب، بعد در', 'نشانه‌های خطر', 'یافته‌ها', 'نمونه کارها', 'تماس با ما', 'متن مقاله'];
+  const chEls = [...$$('main > .chapter, main > .act'), $('#article')].filter(Boolean);
+  const chIndex = (id) => chEls.findIndex((el) => el.id === id);
+  const CH = { features: chIndex('features'), research: chIndex('research'), portfolio: chIndex('portfolio'), contact: chIndex('contact') }; // the "story" chapters are everything before `features`
   const dots = $$('.dots a'), navs = $$('.nav a'), tocs = $$('.toc a');
   const progress = $('#progress'), whereN = $('#where-n'), whereT = $('#where-t');
   let tops = [], artTop = 0, lastCh = -1, ticking = false;
@@ -210,19 +439,20 @@
     const y = scrollY;
     progress.style.transform = 'scaleX(' + clamp(y / Math.max(1, artTop - innerHeight)).toFixed(4) + ')';
     paintPlayer();
-    if (!galleryOn && tops[6] && y + innerHeight * 3 > tops[6]) enableGallery();
+    if (!galleryOn && tops[CH.portfolio] && y + innerHeight * 3 > tops[CH.portfolio]) enableGallery();
     const ch = currentChapter();
     if (ch === lastCh) return;
     if (lastCh !== -1) play('section');
     lastCh = ch;
-    root.classList.toggle('has-player', ch <= 6);
+    root.classList.toggle('has-player', ch <= CH.portfolio);
+    root.classList.toggle('in-act', !!chEls[ch] && chEls[ch].classList.contains('act'));
     paintPlayer();
     whereN.textContent = fa(ch + 1);
     whereT.textContent = CHAPTERS[ch] || '';
     dots.forEach((a) => a.classList.toggle('on', +a.dataset.go === ch));
     navs.forEach((a) => {
       const g = a.dataset.go;
-      a.classList.toggle('on', g != null && (+g === ch || (+g === 1 && (ch === 2 || ch === 3))));
+      a.classList.toggle('on', g != null && (+g === ch || (+g === 1 && ch >= 1 && ch < CH.features)));
     });
     tocs.forEach((a) => a.classList.toggle('on', +a.dataset.go === ch));
     onChapter(ch);
@@ -285,9 +515,9 @@
 
   /* a short hint the first time each interactive chapter comes on screen; it stops for good once the visitor has used it */
   const HINTS = {
-    4: { key: 'signs', t: 'روی دایره‌های شماره‌دار روی پنجره بزنید' },
-    5: { key: 'cards', t: touch ? 'روی کارت بزنید تا نقطه‌اش در صحنه روشن شود؛ کارت‌ها را به چپ بکشید' : 'نشانگر را روی هر کارت ببرید تا نقطه‌ی هم‌رنگش روشن شود' },
-    6: { key: 'products', t: touch ? 'محصول را با انگشت بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' : 'محصول را بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' },
+    [CH.features]: { key: 'signs', t: 'روی دایره‌های شماره‌دار روی پنجره بزنید' },
+    [CH.research]: { key: 'cards', t: touch ? 'روی کارت بزنید تا نقطه‌اش در صحنه روشن شود؛ کارت‌ها را به چپ بکشید' : 'نشانگر را روی هر کارت ببرید تا نقطه‌ی هم‌رنگش روشن شود' },
+    [CH.portfolio]: { key: 'products', t: touch ? 'محصول را با انگشت بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' : 'محصول را بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' },
   };
   const used = (() => { try { return JSON.parse(recall('bsma-used') || '{}'); } catch (e) { return {}; } })();
   const shown = {};
@@ -320,7 +550,7 @@
     if (o.go) hintGo.textContent = o.go;
     hintEl.hidden = false;
     requestAnimationFrame(() => requestAnimationFrame(() => hintEl.classList.add('show')));
-    if (o.ch === 4) { const first = $('.hs'); first && first.classList.add('nudge'); }
+    if (o.ch === CH.features) { const first = $('.hs'); first && first.classList.add('nudge'); }
     if (!o.sticky) hintTimer = setTimeout(hideHint, 9000);
   }
   function showChapterHint(ch) {
@@ -349,9 +579,9 @@
   const SPEEDS = [0.75, 1, 1.5, 2];
   { const sv = parseFloat(recall('bsma-speed')); if (SPEEDS.includes(sv)) AP.speed = sv; }
   const STOPS = [
-    ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', 4, ['#signs .sign-list']],
-    ['#research', touch ? 'نوبت شماست: کارت‌ها را به چپ بکشید و روی هر کدام بزنید تا نقطه‌اش در صحنه روشن شود. بعد «ادامه» را بزنید.' : 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', 5, ['.research-panel .cards']],
-    ['#portfolio', 'نوبت شماست: محصولات را ببینید و بچرخانید. بعد «ادامه» را بزنید.', 6, ['#photo-card', '.p-controls']],
+    ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', CH.features, ['#signs .sign-list']],
+    ['#research', touch ? 'نوبت شماست: کارت‌ها را به چپ بکشید و روی هر کدام بزنید تا نقطه‌اش در صحنه روشن شود. بعد «ادامه» را بزنید.' : 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', CH.research, ['.research-panel .cards']],
+    ['#portfolio', 'نوبت شماست: محصولات را ببینید و بچرخانید. بعد «ادامه» را بزنید.', CH.portfolio, ['#photo-card', '.p-controls']],
   ];
   const words = (el) => (el.textContent.match(/\S+/g) || []).length;
   function buildWaypoints() {
@@ -364,7 +594,7 @@
       wp.push({ at: at(el, f), beat: b, dwell: clamp(2500 + words(b) * 540, 6000, 30000) }); // ≈ 110 words a minute: a relaxed screen-reading pace
     }));
     STOPS.forEach(([sel, msg, ch, frame]) => wp.push({ at: at($(sel), 0.5), stop: true, msg, ch, frame, go: 'ادامه ▶' }));
-    wp.push({ at: at($('#contact'), 0, 40), stop: true, end: true, ch: 7, msg: 'پایان داستان. هر سؤالی دارید، از همین‌جا با ما تماس بگیرید.', go: 'از اول ▶' });
+    wp.push({ at: at($('#contact'), 0, 40), stop: true, end: true, ch: CH.contact, msg: 'پایان داستان. هر سؤالی دارید، از همین‌جا با ما تماس بگیرید.', go: 'از اول ▶' });
     wp.forEach((w) => { w._v = -1; });
     return wp.sort((a, b) => a.at() - b.at());
   }
@@ -576,7 +806,7 @@
     const wp = ensureWp(), narrative = wp.filter((w) => w.beat).length;
     let k = -1;
     wp.forEach((w, i) => { if (yOf(w) <= scrollY + 40) k = i; });
-    plText.textContent = CHAPTERS[ch] + (k >= 0 && wp[k].beat && ch >= 1 && ch <= 3 ? ' · کارت ' + fnum(k + 1) + ' از ' + fnum(narrative) : '');
+    plText.textContent = CHAPTERS[ch] + (k >= 0 && wp[k].beat && ch >= 1 && ch < CH.features ? ' · کارت ' + fnum(k + 1) + ' از ' + fnum(narrative) : '');
   }
   function arrived(w) { if (w && w.stop) showHint(w.msg, { ch: w.ch, sticky: true, go: w.go, frame: w.frame }); }
   function seekCard(dir) {

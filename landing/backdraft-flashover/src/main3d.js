@@ -143,6 +143,7 @@ async function start() {
   /* layout metrics (sections are tall; their sticky child holds the viewport) */
   let L = [];
   let artTop = Infinity; // the opaque article section covers the canvas from here down: stop drawing
+  let ACTS = []; // the opaque full-screen "act" sections (detectors, hose cabinet): while one fills the window the canvas is not drawn
   let vh = innerHeight;
   BSMA.measure = () => {
     const y = scrollY;
@@ -153,6 +154,10 @@ async function start() {
     });
     const art = document.getElementById('article');
     artTop = art ? art.getBoundingClientRect().top + y : Infinity;
+    ACTS = [...document.querySelectorAll('main > .act')].map((el) => {
+      const r = el.getBoundingClientRect();
+      return { top: r.top + y, bottom: r.bottom + y };
+    });
   };
 
   /* quality */
@@ -235,7 +240,8 @@ async function start() {
     S.T = T;
     S.ch = Math.round(T);
     BSMA.T = T;
-    if (sy > artTop + 4 && !(S.fx.flash > 0.01)) { BSMA.onFrame && BSMA.onFrame(S); return; }
+    const covered = BSMA.shown && ACTS.some((a) => sy >= a.top - 2 && sy + vh <= a.bottom + 2);
+    if ((sy > artTop + 4 || covered) && !(S.fx.flash > 0.01)) { BSMA.onFrame && BSMA.onFrame(S); return; }
 
     /* pointer easing */
     S.mouse.x += (mTarget.x - S.mouse.x) * 0.05;

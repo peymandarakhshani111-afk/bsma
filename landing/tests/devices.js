@@ -12,8 +12,9 @@ const list = [
   ['Desktop 1920x1080', null, { width: 1920, height: 1080 }], ['Desktop 2560x1440', null, { width: 2560, height: 1440 }],
 ].filter(([n]) => !only.length || only.some((o) => n.includes(o)));
 const SECTIONS = [
-  ['hero', 0.02], ['story', 0.17], ['story', 0.5], ['story', 0.87], ['flashover', 0.17], ['flashover', 0.75], ['flashover', 0.95],
+  ['hero', 0.02], ['story', 0.17], ['story', 0.5], ['story', 0.87], ['alarm', 0.18], ['alarm', 0.445], ['alarm', 0.7], ['alarm', 0.97], ['flashover', 0.17], ['flashover', 0.75], ['flashover', 0.95],
   ['backdraft', 0.065], ['backdraft', 0.2], ['backdraft', 0.435], ['backdraft', 0.68], ['backdraft', 0.95],
+  ['response', 0.13], ['response', 0.36], ['response', 0.585], ['response', 0.78], ['response', 0.97],
   ['features', 0.5], ['research', 0.5], ['portfolio', 0.5], ['contact', 0.3],
 ];
 const MEASURE = () => {
@@ -49,6 +50,20 @@ const MEASURE = () => {
   // small tap targets (visible buttons / links that are not inline text)
   const small = [...document.querySelectorAll('button:not(.p-dots button), .btn, .icon-btn, .hs, .card, .toc a, .nav a')].filter((e) => e.offsetParent !== null && vis(e) && R(e).top > -50 && R(e).top < vh).filter((e) => { const r = R(e); return r.width > 0 && Math.min(r.width, r.height) < 30; }).map((e) => (e.tagName.toLowerCase() + '#' + e.id + '.' + e.className.toString().slice(0, 30)) + ' ' + Math.round(R(e).width) + '×' + Math.round(R(e).height));
   if (small.length) out.problems.push('small tap targets: ' + [...new Set(small)].slice(0, 5).join(', '));
+  // the two illustrated acts: the scene must be big enough, clear of the bars and of the text card
+  document.querySelectorAll('.act-stage').forEach((st) => {
+    const sr = R(st); if (sr.bottom < 0 || sr.top > vh) return;
+    const pl = st.querySelector('.plan'), stp = st.querySelector('.steps'); if (!pl) return;
+    const r = R(pl), tag = st.id;
+    const minW = vh < 620 ? 190 : 240, minH = vh < 620 ? 160 : 190;
+    if (r.width < minW || r.height < minH) out.problems.push('scene too small ' + tag + ' ' + Math.round(r.width) + '×' + Math.round(r.height));
+    if (stp && R(stp).top < tb.bottom - 4) out.problems.push('scene steps under top bar ' + tag);
+    if (pr && r.bottom > pr.top + 2) out.problems.push('scene under player ' + tag);
+    if (r.left < -1 || r.right > vw + 1) out.problems.push('scene outside viewport ' + tag);
+    cards.forEach((c) => { if (c.closest('.act') && inter(r, R(c)) > 600) out.problems.push('scene overlaps card ' + tag + ' by ' + Math.round(inter(r, R(c))) + 'px²'); });
+    const bad = [...pl.querySelectorAll('.dev, .cab, .fan, .gauge, .lcd')].filter((e) => { const b = R(e); return b.width > 0 && getComputedStyle(e).opacity !== '0' && (b.left < r.left - 6 || b.right > r.right + 6 || b.top < r.top - 6 || b.bottom > r.bottom + 6); });
+    if (bad.length) out.problems.push('scene item outside the plan: ' + bad.map((e) => e.className.toString().slice(0, 14)).join(','));
+  });
   const h1 = document.querySelector('.hero-title'); if (h1 && vis(h1) && R(h1).bottom > vh) out.problems.push('hero title cut off');
   // the things a visitor must be able to reach without hunting
   const within = (el, box, tol = 2) => { const r = R(el), b = R(box); return r.top >= b.top - tol && r.bottom <= b.bottom + tol; };
@@ -86,7 +101,7 @@ const MEASURE = () => {
       await page.waitForTimeout(1900);
       const m = await page.evaluate(MEASURE);
       res.samples[id + '@' + f] = m;
-      if (process.env.SHOTS && ['hero@0.02', 'backdraft@0.68', 'features@0.5', 'portfolio@0.5'].includes(id + '@' + f)) await page.screenshot({ path: SP + `dev-${name.replace(/[^\w]+/g, '_')}-${id}-${f}.png` });
+      if (process.env.SHOTS && ['hero@0.02', 'backdraft@0.68', 'alarm@0.7', 'response@0.585', 'features@0.5', 'portfolio@0.5'].includes(id + '@' + f)) await page.screenshot({ path: SP + `dev-${name.replace(/[^\w]+/g, '_')}-${id}-${f}.png` });
     }
     report[name] = res;
     const probs = Object.entries(res.samples).flatMap(([k, v]) => v.problems.map((p) => k + ': ' + p));
