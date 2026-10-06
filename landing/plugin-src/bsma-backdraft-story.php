@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BSMA Backdraft Story
  * Description: Shows the cinematic 3D "backdraft vs flashover" page on ONE post (ID 23430) instead of its normal template. Deactivate this plugin to bring the original post template back instantly. Add ?bsma_orig=1 to the URL to preview the original template without deactivating.
- * Version: 1.0.9
+ * Version: 1.0.10
  * Author: BSMA
  * License: GPL-2.0-or-later
  */
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('BSMA_STORY_VER', '1.0.9');
+define('BSMA_STORY_VER', '1.0.10');
 define('BSMA_STORY_POST_ID', 23430);
 define('BSMA_STORY_DIR', plugin_dir_path(__FILE__));
 define('BSMA_STORY_URL', plugin_dir_url(__FILE__));
