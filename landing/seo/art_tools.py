@@ -103,12 +103,34 @@ def fix_artifacts(s):
         f'<p{m.group(1)}{m.group(3)}>{m.group(4)}</p>' if len(_strip_tags(m.group(4)).strip()) > 140 and '<img' not in m.group(4) else m.group(0)), s, flags=re.S)
     return s
 
+# ───────────────────────── D6: no pictures hot-linked from other websites
+OWN_HOSTS = ('bsma.ir', 'www.bsma.ir')
+
+def _external(url):
+    m = re.match(r'(?:https?:)?//([^/\s"\']+)', url.strip())
+    return bool(m) and m.group(1).lower() not in OWN_HOSTS
+
+def remove_external_images(s):
+    """drop every <img> whose src/srcset/data-src points to another site (and the link or empty paragraph that only wrapped it)"""
+    def is_ext(tag):
+        for attr in ('src', 'data-src', 'data-lazy-src', 'srcset', 'data-srcset'):
+            for m in re.finditer(rf'\s{attr}="([^"]*)"', tag):
+                for u in re.findall(r'(?:https?:)?//[^\s,]+', m.group(1)):
+                    if _external(u):
+                        return True
+        return False
+    s = re.sub(r'<a\b[^>]*>\s*(<img\b[^>]*?/?>)\s*</a>', lambda m: '' if is_ext(m.group(1)) else m.group(0), s)
+    s = re.sub(r'<img\b[^>]*?/?>', lambda m: '' if is_ext(m.group(0)) else m.group(0), s)
+    s = re.sub(r'\[caption\b[^\]]*\]\s*\[/caption\]', '', s)
+    return s
+
 def normalize(s, headings=True):
     out = dedupe_styles(s)
     stats = {}
     if headings:
         out, ch = fix_headings(out); stats['headings'] = ch
     out = fix_typography(out)
+    out = remove_external_images(out)
     out = fix_artifacts(out)
     return out
 
