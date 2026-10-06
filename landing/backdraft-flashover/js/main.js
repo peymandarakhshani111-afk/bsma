@@ -50,6 +50,7 @@
   }
   function setSound(on) {
     soundOn = on;
+    try { updateSiren(); } catch (e) { /* the scenes are not set up yet */ }
     soundBtn.setAttribute('aria-pressed', String(on));
     soundBtn.setAttribute('aria-label', on ? 'صدا: روشن' : 'صدا: خاموش');
     store('bsma-sound', on ? '1' : '0');
@@ -172,7 +173,8 @@
   let siren = null;
   function sirenSound(on) {
     const ctx = window.Howler && Howler.ctx;
-    if (on && soundOn && ctx && !siren) {
+    on = on && soundOn;
+    if (on && ctx && !siren) {
       try {
         if (ctx.state === 'suspended') ctx.resume();
         const o = ctx.createOscillator(), g = ctx.createGain();
@@ -187,9 +189,14 @@
       const { o, g, timer, ctx: c } = siren;
       siren = null;
       clearInterval(timer);
-      try { g.gain.linearRampToValueAtTime(0, c.currentTime + 0.15); o.stop(c.currentTime + 0.2); } catch (e) { /* already stopped */ }
+      try { g.gain.linearRampToValueAtTime(0, c.currentTime + 0.5); o.stop(c.currentTime + 0.55); } catch (e) { /* already stopped */ }
     }
+    BSMA0.ui.siren = !!siren;
   }
+  /* the siren starts when the sirens go off in the early-warning scene and is cut at card 10 ("the closed door is your shield"), or earlier if the visitor goes back, or switches the sound off */
+  const SIREN_CUT = 0.8; // progress of the flashover chapter at which card 10 begins
+  let sirenA = false, sirenF = 0;
+  const updateSiren = () => sirenSound(sirenA && sirenF < SIREN_CUT);
 
   /* flames: soft tongues of different height that sway at their own pace, a glow behind them and a few rising embers (the group is scaled by the scene) */
   function buildFlames(g, uid) {
@@ -217,6 +224,8 @@
     });
     for (let i = 0; i < 7; i++) g.append(mk('circle', { class: 'ember', cx: -7 + i * 2.3, cy: -8 - (i % 3) * 3, r: 0.42 + (i % 2) * 0.2, fill: '#ffd27a', style: '--dx:' + ((i % 2 ? 1 : -1) * (2 + (i % 3))) + 'px;animation-delay:' + (i * 0.37).toFixed(2) + 's;animation-duration:' + (1.8 + (i % 3) * 0.5) + 's' }));
   }
+
+  { const fo = $('#flashover'); fo && ScrollTrigger.create({ trigger: fo, start: 'top top', end: 'bottom bottom', onUpdate: (s) => { sirenF = s.progress; updateSiren(); }, onRefresh: (s) => { sirenF = s.progress; updateSiren(); } }); }
 
   function act(sel, scene) {
     const el = $(sel);
@@ -314,7 +323,8 @@
         if (lcdSt.textContent !== st) lcdSt.textContent = st;
         if (lcdM.textContent !== msg) lcdM.textContent = msg;
         stage.classList.toggle('sirens', p >= 0.8);
-        sirenSound(p >= 0.8);
+        sirenA = p >= 0.8;
+        updateSiren();
         // the row of steps above the plan
         const cur = p < 0.24 ? 0 : p < 0.5 ? 1 : p < 0.78 ? 2 : 3;
         steps.forEach((li, i) => { li.classList.toggle('on', i === cur); li.classList.toggle('done', i < cur); });
