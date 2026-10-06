@@ -1,0 +1,120 @@
+/* BSMA Article UI — shared look for blog articles (bsma.ir). Scope: the theme's article body, .cpa-content.
+   Colours/typography follow the theme itself (Vazirmatn, navy #0f172a, blue #3b82f6, brand red #c0392b).
+   Standard widths: text and tables = full column; media (images, videos, product ads) = up to 750px, centred. */
+
+.cpa-content{--bx-navy:#0f172a;--bx-text:#475569;--bx-blue:#3b82f6;--bx-red:#c0392b;--bx-line:#e2e8f0;--bx-soft:#f8fafc;--bx-media:750px;overflow-wrap:break-word}
+
+/* ── headings: every h2/h3/h4 gets the look the theme already gives to .wp-block-heading ── */
+.cpa-content h2{font-size:22px;font-weight:700;line-height:1.55;color:var(--bx-navy);margin:38px 0 16px;padding:0 12px 0 0;border-right:4px solid var(--bx-blue);text-align:start!important}
+.cpa-content h3{font-size:18px;font-weight:700;line-height:1.6;color:var(--bx-navy);margin:30px 0 12px;padding:0;text-align:start!important}
+.cpa-content h4{font-size:16px;font-weight:700;line-height:1.6;color:var(--bx-navy);margin:24px 0 10px;padding:0;text-align:start!important}
+.cpa-content h5,.cpa-content h6{font-size:15px;font-weight:700;color:var(--bx-navy);margin:20px 0 8px;text-align:start!important}
+.cpa-content :is(h2,h3,h4)+:is(ul,ol){margin-top:4px}
+.cpa-content :is(h2,h3,h4,h5) :is(span,font,strong,b){color:inherit!important}
+.cpa-content :is(p,ul,ol)+:is(h2,h3,h4){margin-top:34px}
+
+/* ── lists & paragraphs ── */
+.cpa-content ul,.cpa-content ol{margin-block:6px 20px}
+.cpa-content li{line-height:1.95;margin-bottom:8px}
+.cpa-content li>ul,.cpa-content li>ol{margin-top:8px;margin-bottom:4px}
+
+/* ── images: centred, never wider than the column, never stretched beyond their own pixels ── */
+.cpa-content img{max-width:100%;height:auto}
+.cpa-content img.aligncenter,.cpa-content img.size-full,.cpa-content img.size-large,.cpa-content img.size-medium{display:block;margin:22px auto;max-width:min(100%,var(--bx-media));border-radius:10px}
+.cpa-content img.alignleft,.cpa-content img.alignright{max-width:min(46%,380px);border-radius:10px}
+.cpa-content figure{margin:22px auto;max-width:min(100%,var(--bx-media))}
+.cpa-content figure img{display:block;margin:0 auto!important;max-width:100%;border-radius:10px}
+.cpa-content figcaption,.cpa-content .wp-caption-text{margin-top:8px;font-size:13px;line-height:1.8;color:#64748b;text-align:center}
+.cpa-content .wp-caption{max-width:100%!important}
+.cpa-content figure.wp-block-table,.cpa-content figure.wp-block-embed{max-width:100%}
+.cpa-content .bsma-ad-box img,.cpa-content .bsma-x img{border-radius:0}
+
+/* ── tables ── */
+.cpa-content table{width:100%;max-width:100%;border-collapse:collapse;margin:24px 0;font-size:14.5px;line-height:1.85}
+.cpa-content table :is(th,td){border:1px solid var(--bx-line)!important;padding:9px 12px!important;vertical-align:top;text-align:start}
+.cpa-content table thead :is(th,td),.cpa-content table th{background:#f1f5f9;color:var(--bx-navy);font-weight:700}
+.cpa-content table tbody tr:nth-child(even) td{background:var(--bx-soft)}
+@media (max-width:700px){.cpa-content table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:13.5px}}
+
+/* ── embeds & video ── */
+.cpa-content iframe,.cpa-content video,.cpa-content embed,.cpa-content object{max-width:100%!important}
+.cpa-content iframe[src*="youtube"],.cpa-content iframe[src*="youtu.be"],.cpa-content iframe[src*="aparat"],.cpa-content iframe[src*="vimeo"],.cpa-content video{display:block;width:100%;max-width:var(--bx-media)!important;aspect-ratio:16/9;height:auto!important;margin:24px auto;border:0;border-radius:10px}
+.cpa-content blockquote{margin:24px 0;padding:14px 18px;border-right:4px solid #cbd5e1;background:var(--bx-soft);border-radius:8px;color:#334155;line-height:2}
+.cpa-content blockquote>:last-child{margin-bottom:0}
+.cpa-content hr{border:0;height:1px;background:linear-gradient(to left,transparent,var(--bx-line),transparent);margin:34px 0}
+
+/* ── callouts: <div class="bsma-note|bsma-tip|bsma-warn|bsma-key"> ── */
+.cpa-content :is(.bsma-note,.bsma-tip,.bsma-warn,.bsma-key){position:relative;margin:24px 0;padding:14px 50px 14px 18px;border:1px solid;border-right-width:4px;border-radius:10px;font-size:15px;line-height:2;color:#1e293b;background-repeat:no-repeat;background-position:right 14px top 16px;background-size:22px 22px}
+.cpa-content :is(.bsma-note,.bsma-tip,.bsma-warn,.bsma-key)>:last-child{margin-bottom:0}
+.cpa-content :is(.bsma-note,.bsma-tip,.bsma-warn,.bsma-key)>:first-child{margin-top:0}
+.cpa-content :is(.bsma-note,.bsma-tip,.bsma-warn,.bsma-key) strong:first-child{color:var(--bx-navy)}
+.cpa-content .bsma-note{background-color:#eff6ff;border-color:#bfdbfe;border-right-color:#3b82f6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E")}
+.cpa-content .bsma-tip{background-color:#f0fdf4;border-color:#bbf7d0;border-right-color:#22c55e;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2316a34a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z'/%3E%3C/svg%3E")}
+.cpa-content .bsma-warn{background-color:#fff7ed;border-color:#fed7aa;border-right-color:#f97316;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ea580c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01'/%3E%3C/svg%3E")}
+.cpa-content .bsma-key{background-color:#fef2f2;border-color:#fecaca;border-right-color:#c0392b;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c0392b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E")}
+.cpa-content mark.bsma-hl{background:linear-gradient(transparent 55%,rgba(250,204,21,.45) 55%);color:inherit;padding:0 2px}
+
+/* ── product ad cards: the long-standing .bsma-ad-box and the newer .bsma-x share one width ── */
+.cpa-content .bsma-ad-box,.cpa-content .bsma-x{max-width:var(--bx-media)!important;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box}
+.cpa-content .bsma-related-label{max-width:var(--bx-media)!important}
+.cpa-content .bsma-ad-box,.cpa-content .bsma-x{transition:box-shadow .3s ease,transform .3s ease}
+.cpa-content .bsma-ad-box:hover,.cpa-content .bsma-x:hover{box-shadow:0 10px 30px rgba(15,23,42,.38)!important}
+.cpa-content .bsma-ad-box a img,.cpa-content .bsma-x-tile img{transition:transform .4s ease}
+.cpa-content .bsma-ad-box a:hover img,.cpa-content .bsma-x-tile:hover img{transform:scale(1.045)}
+.cpa-content .bsma-ad-btn,.cpa-content .bsma-x-btn{transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+.cpa-content .bsma-ad-btn:hover,.cpa-content .bsma-x-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(192,57,43,.35);filter:brightness(1.08)}
+
+
+/* ── product ad card (.bsma-x): head, row / grid of tiles, buttons ── */
+.cpa-content .bsma-related-label{margin:26px auto -6px;padding:0 4px;font-family:inherit;direction:rtl;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#c0392b;letter-spacing:.2px}
+.cpa-content .bsma-related-label::before{content:"";flex:1;height:1px;background:linear-gradient(to left,rgba(192,57,43,.45),transparent)}
+.cpa-content .bsma-related-label::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(192,57,43,.45),transparent)}
+.cpa-content .bsma-related-label .bsma-related-icon{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);padding:3px 12px;border-radius:20px;font-size:12px;white-space:nowrap}
+.cpa-content .bsma-x{margin:12px auto 26px;padding:14px 14px 16px;border-radius:12px;background:#0f172a;box-shadow:0 6px 24px rgba(0,0,0,.3);direction:rtl;line-height:1.5;color:#fff}
+.cpa-content .bsma-x *{box-sizing:border-box}
+.cpa-content .bsma-x-head{margin-bottom:12px}
+.cpa-content .bsma-x-ttl{color:#fff!important;font-size:17px;font-weight:800;margin:0;line-height:1.5}
+.cpa-content .bsma-x-sub{color:#aebcd6!important;font-size:12.5px;margin:4px 0 0;line-height:1.9}
+.cpa-content .bsma-x-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.cpa-content .bsma-x-grid.g2{grid-template-columns:repeat(2,1fr)}
+.cpa-content .bsma-x-grid.g4{grid-template-columns:repeat(4,1fr)}
+.cpa-content .bsma-x-tile{display:block;text-decoration:none!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:8px;overflow:hidden;background:#fff}
+.cpa-content .bsma-x-tile img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;background:#fff;margin:0;padding:6px;border-radius:0;max-width:none}
+.cpa-content .bsma-x-tile span{display:block;color:#fff!important;background:rgba(15,23,42,.94);font-size:11.5px;padding:7px 8px;text-align:center;line-height:1.7;min-height:3.9em}
+.cpa-content .bsma-x-row{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.cpa-content .bsma-x-row .bsma-x-tile{width:170px;flex:0 0 170px}
+.cpa-content .bsma-x-txt{flex:1;min-width:0;color:#dbe4f3!important;font-size:13px;line-height:2;margin:0}
+.cpa-content .bsma-x-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cpa-content .bsma-x-tags{display:flex;gap:6px;flex-wrap:wrap}
+.cpa-content .bsma-x-tags span{background:rgba(241,196,15,.12);color:#f1c40f!important;padding:3px 10px;border-radius:12px;font-size:11px;border:1px solid rgba(241,196,15,.4);white-space:nowrap}
+.cpa-content .bsma-x-btns{display:flex;gap:8px;flex-wrap:wrap}
+.cpa-content .bsma-x-btn{display:inline-block;border-bottom:1px solid #c0392b!important}
+.cpa-content .bsma-x-btn.alt{background:transparent!important;border-color:rgba(255,255,255,.5)!important}
+@media (max-width:600px){
+  .cpa-content .bsma-related-label{font-size:12px;margin:20px auto -4px}
+  .cpa-content .bsma-x{padding:10px 10px 14px}
+  .cpa-content .bsma-x-ttl{font-size:15.5px}
+  .cpa-content .bsma-x-grid,.cpa-content .bsma-x-grid.g4,.cpa-content .bsma-x-grid.g3{grid-template-columns:repeat(2,1fr)}
+  .cpa-content .bsma-x-row{flex-direction:column;align-items:stretch}
+  .cpa-content .bsma-x-row .bsma-x-tile{width:62%;flex:none;margin:0 auto}
+  .cpa-content .bsma-x-foot{flex-direction:column;align-items:stretch}
+  .cpa-content .bsma-x-tags,.cpa-content .bsma-x-btns{justify-content:center}
+}
+
+/* ── soft fade-in as an element scrolls into view (progressive enhancement, off for reduced motion) ── */
+@keyframes bsmaRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@supports (animation-timeline:view()){
+  .cpa-content :is(.bsma-x,.bsma-ad-box,.bsma-note,.bsma-tip,.bsma-warn,.bsma-key,img.aligncenter,img.size-full,figure,table){animation:bsmaRise linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
+}
+@media (prefers-reduced-motion:reduce){
+  .cpa-content *{animation:none!important;transition:none!important}
+}
+
+/* ── phones ── */
+@media (max-width:600px){
+  .cpa-content h2{font-size:19px;margin:30px 0 12px;padding-right:10px}
+  .cpa-content h3{font-size:17px;margin:24px 0 10px}
+  .cpa-content img.alignleft,.cpa-content img.alignright{float:none;display:block;margin:18px auto;max-width:100%}
+  .cpa-content :is(.bsma-note,.bsma-tip,.bsma-warn,.bsma-key){padding:12px 44px 12px 14px;font-size:14.5px;background-position:right 12px top 14px;background-size:20px 20px}
+  .cpa-content blockquote{padding:12px 14px}
+}
