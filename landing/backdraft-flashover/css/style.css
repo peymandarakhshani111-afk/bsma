@@ -454,10 +454,10 @@ html.sheet-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .nextline { animation: none; } }
 
 /* ───────── story mode: the card that is being "read" lights up word by word ───────── */
-.beat.reading p .w, .beat.reading li .w { opacity: 0.38; transition: opacity 0.35s ease, color 0.35s ease, text-shadow 0.35s ease; }
+.beat.reading p .w, .beat.reading li .w { opacity: 0.5; transition: opacity 0.35s ease, color 0.35s ease, text-shadow 0.35s ease; }
 .beat.reading .w.r { opacity: 1; }
 .beat.reading .w.cur { color: var(--amber); text-shadow: 0 0 16px #ffb45488; }
-.beat.reading tbody tr { opacity: 0.38; transition: opacity 0.4s ease, background 0.4s ease; }
+.beat.reading tbody tr { opacity: 0.5; transition: opacity 0.4s ease, background 0.4s ease; }
 .beat.reading tbody tr.r { opacity: 1; }
 .beat.reading tbody tr.cur { background: #ffb4541c; }
 .beat.reading .step { border-color: var(--fire); color: #fff; animation: livePulse 1.6s ease-in-out infinite; }
@@ -520,7 +520,7 @@ html.has-player .player { opacity: 1; visibility: visible; transform: translate(
 .beat::before, .panel::before { top: 0; }
 /* portrait phones and tablets: the card is a sheet at the bottom, above the player bar */
 @media (max-width: 820px) and (max-aspect-ratio: 23/20) {
-  .beat, .panel, .beat-wide, .research-panel { top: auto; bottom: calc(var(--pl) + 4px + env(safe-area-inset-bottom)); max-height: calc(58dvh - 52px); margin-block: 0; }
+  .beat, .panel, .beat-wide, .research-panel { top: auto; bottom: calc(var(--pl) + 4px + env(safe-area-inset-bottom)); max-height: calc(62dvh - 52px); margin-block: 0; }
 }
 .contact-panel { top: auto; max-height: none; overflow: visible; }
 .p-dots button { position: relative; }
@@ -659,3 +659,6 @@ html.loading { overflow: hidden; }
 .ld-tip { margin-top: 8px; color: var(--muted); font-size: 0.8em; line-height: 1.9; max-width: 30ch; }
 @media (max-height: 520px) { .ld-ring { width: 96px; height: 96px; } .ld-plate { width: 72px; height: 72px; } .ld-logo { width: 52px; } .ld-pct { font-size: 2rem; margin-top: 0; } .ld-tip { display: none; } .ld-box { gap: 4px; } }
 @media (prefers-reduced-motion: reduce) { .ld-plate { animation: none; } #loader { transition: none; } }
+
+/* text cards on a bright scene (the flashover room glows white): a little more solid glass so the words never wash out */
+@media (min-width: 821px) { .beat { background: rgba(8, 10, 18, 0.78); } }

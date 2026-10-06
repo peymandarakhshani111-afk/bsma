@@ -123,12 +123,10 @@
     STORY.push({ el, ranges, list, focus: focus || [] });
     const tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: el, start: 'top top', end: 'bottom bottom', scrub: 0.5 } });
     const f = 0.035;
-    const fl = touch || phone() ? {} : { filter: 'blur(10px)' };
-    const fl0 = touch || phone() ? {} : { filter: 'blur(0px)' };
     list.forEach((b, i) => {
       const [s, e] = ranges[i];
-      tl.fromTo(b, { autoAlpha: 0, y: 46, ...fl }, { autoAlpha: 1, y: 0, ...fl0, duration: f }, s);
-      if (i < list.length - 1) tl.to(b, { autoAlpha: 0, y: -46, ...fl, duration: f }, e - f);
+      tl.fromTo(b, { autoAlpha: 0, y: 46 }, { autoAlpha: 1, y: 0, duration: f }, s);
+      if (i < list.length - 1) tl.to(b, { autoAlpha: 0, y: -46, duration: f }, e - f);
     });
     extra && extra(tl);
     tl.set({}, {}, 1); // pin the timeline length to exactly 1 so positions are scroll fractions
@@ -136,9 +134,9 @@
   }
   beats('#story', [[0, 0.34], [0.34, 0.67], [0.67, 1]], null, [null, null, 0.97]);
   beats('#flashover', [[0, 0.46], [0.52, 0.78], [0.8, 1]], (tl) => {
-    $$('#flashover .fill').forEach((f, i) => tl.fromTo(f, { width: '0%' }, { width: f.dataset.w + '%', duration: 0.1 }, 0.58 + i * 0.03));
+    $$('#flashover .fill').forEach((f, i) => tl.fromTo(f, { width: '0%' }, { width: f.dataset.w + '%', duration: 0.06 }, 0.57 + i * 0.015));
     $$('#flashover .thermo i').forEach((f, i) => tl.fromTo(f, { height: '0px' }, { height: (f.dataset.h / 100) * (innerWidth < 820 ? 100 : 130) + 'px', duration: 0.1 }, 0.84 + i * 0.03));
-  }, [null, 0.75, 0.97]);
+  }, [null, 0.7, 0.97]);
   beats('#backdraft', [[0, 0.13], [0.14, 0.26], [0.27, 0.34], [0.35, 0.52], [0.58, 0.78], [0.8, 1]], null, [null, null, null, null, null, 0.97]);
 
   /* each card says where it is in its chapter ("2 از 3") and what comes next, so the visitor is never left wondering whether to scroll */
@@ -361,7 +359,8 @@
     const at = (el, f, extra = 0) => () => { const r = el.getBoundingClientRect(); return r.top + scrollY + f * Math.max(0, r.height - innerHeight) + extra; };
     STORY.forEach(({ el, ranges, list, focus }) => list.forEach((b, i) => {
       const [s0, e0] = ranges[i];
-      const f = focus[i] != null ? focus[i] : (s0 + e0) / 2;
+      let f = focus[i] != null ? focus[i] : (s0 + e0) / 2;
+      if (e0 - s0 >= 0.12 && i < list.length - 1) f = clamp(f, s0 + 0.055, e0 - 0.055); // inside the fully visible stretch (the fades take 0.035 at each end)
       wp.push({ at: at(el, f), beat: b, dwell: clamp(2500 + words(b) * 540, 6000, 30000) }); // ≈ 110 words a minute: a relaxed screen-reading pace
     }));
     STOPS.forEach(([sel, msg, ch, frame]) => wp.push({ at: at($(sel), 0.5), stop: true, msg, ch, frame, go: 'ادامه ▶' }));
@@ -476,7 +475,7 @@
     AP.dur = clamp((dist / (340 * AP.speed)) * 1000, 1400, 9000);
     AP.t0 = now;
     apUnfocus();
-    if (dist < 6) apArrive(now, w, 600);
+    if (dist < 6) apArrive(now, w, w.stop ? 600 : null); // already there: read the card from its start
     else AP.phase = 'move';
   }
   function apArrive(now, w, dwell) {
@@ -512,8 +511,10 @@
     ensureWp();
     AP.ver++;
     hideHint();
-    let i = AP.wp.findIndex((w) => yOf(w) > scrollY + 30);
-    if (i < 0) { scrollTo(0, 0); i = 0; } // finished before: start again
+    // start with the card the visitor is looking at (not the next one); a "your turn" stop that was just handled is skipped
+    let i = AP.wp.findIndex((w) => yOf(w) >= scrollY - 40);
+    if (i >= 0 && AP.wp[i].stop && Math.abs(yOf(AP.wp[i]) - scrollY) < 80) i++;
+    if (i < 0 || i >= AP.wp.length) { scrollTo(0, 0); i = 0; } // finished before: start again
     AP.on = true;
     setPlayUI(true);
     const now = performance.now();
