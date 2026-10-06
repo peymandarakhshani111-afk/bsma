@@ -74,6 +74,16 @@ def apply_callouts(s, callouts, rep):
     return s
 
 # ───────────────────────── ads
+def short_title(t, n=58):
+    t = t.strip()
+    for sep in (' (', ' | ', ' – ', ' - ', ' ؛ ', ' ، '):
+        k = t.find(sep)
+        if k >= 14:
+            t = t[:k]
+    if len(t) > n:
+        t = t[:n].rsplit(' ', 1)[0] + '…'
+    return t
+
 def render_ad(prods, title, text, cta, catalog, label='محصول مرتبط'):
     items = [catalog[p] for p in prods if p in catalog and catalog[p].get('img')]
     if not items:
@@ -81,7 +91,7 @@ def render_ad(prods, title, text, cta, catalog, label='محصول مرتبط'):
     esc = lambda x: H.escape(x, quote=True)
     def tile(it):
         return (f'<a class="bsma-x-tile" href="{it["link"]}" target="_blank" rel="noopener">'
-                f'<img src="{it["img"]}" alt="{esc(it["t"])}" loading="lazy" decoding="async"><span>{esc(it["t"][:70])}</span></a>')
+                f'<img src="{it["img"]}" alt="{esc(it["t"])}" loading="lazy" decoding="async"><span>{esc(short_title(it["t"]))}</span></a>')
     btn = lambda it, c: f'<a class="bsma-x-btn" href="{it["link"]}" target="_blank" rel="noopener" style="{BTN}">{esc(c)}</a>'
     lab = f'<div class="bsma-related-label"><span class="bsma-related-icon">📌 {"محصولات مرتبط" if len(items) > 1 else label}</span></div>'
     cta = cta if cta in CTA_OK else 'مشاهده محصول'

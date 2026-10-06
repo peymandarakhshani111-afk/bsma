@@ -80,7 +80,7 @@
 .cpa-content .bsma-x-grid.g4{grid-template-columns:repeat(4,1fr)}
 .cpa-content .bsma-x-tile{display:block;text-decoration:none!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:8px;overflow:hidden;background:#fff}
 .cpa-content .bsma-x-tile img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;background:#fff;margin:0;padding:6px;border-radius:0;max-width:none}
-.cpa-content .bsma-x-tile span{display:block;color:#fff!important;background:rgba(15,23,42,.94);font-size:11.5px;padding:7px 8px;text-align:center;line-height:1.7;min-height:3.9em}
+.cpa-content .bsma-x-tile span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;color:#fff!important;background:rgba(15,23,42,.94);font-size:11.5px;padding:7px 8px;text-align:center;line-height:1.7;min-height:5.2em}
 .cpa-content .bsma-x-row{display:flex;gap:14px;align-items:center;margin-bottom:12px}
 .cpa-content .bsma-x-row .bsma-x-tile{width:170px;flex:0 0 170px}
 .cpa-content .bsma-x-txt{flex:1;min-width:0;color:#dbe4f3!important;font-size:13px;line-height:2;margin:0}
