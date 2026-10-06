@@ -637,6 +637,8 @@
   const playBtn = $('#play');
   const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, from: 0, until: 0, raf: 0, ver: 0, cur: null, speed: 1 };
   const SPEEDS = [0.75, 1, 1.5, 2];
+  const PACE = 1.15; // the whole film runs 15 % faster than the first release; the speed button is relative to this
+  const rate = () => AP.speed * PACE;
   { const sv = parseFloat(recall('bsma-speed')); if (SPEEDS.includes(sv)) AP.speed = sv; }
   const STOPS = [
     ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', CH.features, ['#signs .sign-list']],
@@ -762,7 +764,7 @@
     const w = AP.wp[i];
     AP.y0 = scrollY; AP.y1 = yOf(w);
     const dist = Math.abs(AP.y1 - AP.y0);
-    AP.dur = clamp((dist / (340 * AP.speed)) * 1000, 1400, 9000);
+    AP.dur = clamp((dist / (340 * rate())) * 1000, 1400 / PACE, 9000 / PACE);
     AP.t0 = now;
     apUnfocus();
     if (dist < 6) apArrive(now, w, w.stop ? 600 : null); // already there: read the card from its start
@@ -771,7 +773,7 @@
   function apArrive(now, w, dwell) {
     AP.phase = 'dwell';
     AP.from = now;
-    AP.until = now + (dwell != null ? dwell : w.dwell / AP.speed);
+    AP.until = now + (dwell != null ? dwell : w.dwell / rate());
     if (w.beat) apFocus(w.beat);
   }
   function apFrame(now) {
@@ -910,7 +912,7 @@
     AP.speed = SPEEDS[(SPEEDS.indexOf(old) + 1) % SPEEDS.length];
     store('bsma-speed', String(AP.speed));
     if (AP.on && AP.phase === 'dwell') { // keep the same share of the card already read
-      const now = performance.now(), w = AP.wp[AP.i], total = w.dwell / AP.speed;
+      const now = performance.now(), w = AP.wp[AP.i], total = w.dwell / rate();
       const done = clamp((now - AP.from) / Math.max(1, AP.until - AP.from));
       AP.from = now - total * done; AP.until = AP.from + total;
     }
