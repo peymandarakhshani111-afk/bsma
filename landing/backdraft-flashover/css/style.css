@@ -475,3 +475,11 @@ html.sheet-open { overflow: hidden; }
 .playing .play-btn { animation: playGlow 2.4s ease-in-out infinite; }
 @keyframes playGlow { 0%, 100% { box-shadow: 0 0 0 0 #ff6b1f00; } 50% { box-shadow: 0 0 0 7px #ff6b1f2e, 0 0 22px #ff6b1f66; } }
 @media (prefers-reduced-motion: reduce) { .beat.reading .step, .playing .play-btn { animation: none; } }
+
+/* ───────── frames: where to read right now, and where it is the visitor's turn ───────── */
+.read-frame { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 2; pointer-events: none; border: 1.5px solid #ffb454d9; border-radius: 9px; background: #ffb4541a; box-shadow: 0 0 18px #ffb45466; opacity: 0; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.4s ease, height 0.4s ease, opacity 0.3s ease; }
+.beat.reading .read-frame { opacity: 1; }
+.beat.reading { border-color: #ffb454aa; box-shadow: 0 0 0 1px #ffb45466, 0 30px 80px #000a, 0 0 38px #ffb4543d; }
+.focus-frame { outline: 2px solid #27e6ffd9; outline-offset: 8px; border-radius: 16px; animation: framePulse 1.8s ease-in-out infinite; }
+@keyframes framePulse { 0%, 100% { outline-color: #27e6ff55; box-shadow: 0 0 0 0 #27e6ff00; } 50% { outline-color: #27e6ffee; box-shadow: 0 0 26px #27e6ff55; } }
+@media (prefers-reduced-motion: reduce) { .focus-frame { animation: none; } .read-frame { transition: none; } }

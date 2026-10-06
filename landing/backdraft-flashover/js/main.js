@@ -296,18 +296,23 @@
     hintEl.classList.remove('show');
     setTimeout(() => !hintEl.classList.contains('show') && (hintEl.hidden = true), 420);
     $$('.hs.nudge').forEach((h) => h.classList.remove('nudge'));
+    unframe();
     hintCh = -1; hintKey = null;
   }
+  function unframe() { $$('.focus-frame').forEach((el) => el.classList.remove('focus-frame')); }
   function markUsed(key) {
     if (used[key]) return;
     used[key] = 1;
     store('bsma-used', JSON.stringify(used));
     if (hintKey === key) hideHint();
   }
+  const tried = () => unframe();
   // o: { ch, key, sticky (stay until dismissed), go (label of a "continue" button) }
   function showHint(text, o = {}) {
     clearTimeout(hintTimer);
     hintCh = o.ch ?? -1; hintKey = o.key || null;
+    unframe();
+    (o.frame || []).forEach((sel) => $$(sel).forEach((el) => el.classList.add('focus-frame')));
     hintT.textContent = text;
     hintGo.hidden = !o.go;
     if (o.go) hintGo.textContent = o.go;
@@ -329,9 +334,9 @@
     if (HINTS[ch]) hintDelay = setTimeout(() => currentChapter() === ch && showChapterHint(ch), 900);
   }
   $('#hint-x').addEventListener('click', () => { hintKey ? markUsed(hintKey) : hideHint(); hideHint(); });
-  $$('.hs, .sign-list button').forEach((b) => b.addEventListener('click', () => markUsed('signs')));
-  $$('.card').forEach((c) => c.addEventListener('click', () => markUsed('cards')));
-  ['#product-stage', '#p-next', '#p-prev', '#view-toggle', '#p-dots'].forEach((sel) => $(sel).addEventListener('pointerdown', () => markUsed('products')));
+  $$('.hs, .sign-list button').forEach((b) => b.addEventListener('click', () => { markUsed('signs'); tried(); }));
+  $$('.card').forEach((c) => c.addEventListener('click', () => { markUsed('cards'); tried(); }));
+  ['#product-stage', '#p-next', '#p-prev', '#view-toggle', '#p-dots'].forEach((sel) => $(sel).addEventListener('pointerdown', () => { markUsed('products'); tried(); }));
 
   /* ───────────────────────── story mode: the page plays itself like a film ─────────────────────────
      It scrolls to each card, then lights up the words one by one at reading pace (like karaoke) so the visitor can see where to look
@@ -340,9 +345,9 @@
   const playBtn = $('#play');
   const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, from: 0, until: 0, raf: 0, ver: 0, cur: null };
   const STOPS = [
-    ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', 4],
-    ['#research', 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', 5],
-    ['#portfolio', 'نوبت شماست: محصولات را ببینید و بچرخانید. بعد «ادامه» را بزنید.', 6],
+    ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', 4, ['#signs .sign-list']],
+    ['#research', 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', 5, ['.research-panel .cards']],
+    ['#portfolio', 'نوبت شماست: محصولات را ببینید و بچرخانید. بعد «ادامه» را بزنید.', 6, ['#photo-card', '.p-controls']],
   ];
   const words = (el) => (el.textContent.match(/\S+/g) || []).length;
   function buildWaypoints() {
@@ -353,7 +358,7 @@
       const f = focus[i] != null ? focus[i] : (s0 + e0) / 2;
       wp.push({ at: at(el, f), beat: b, dwell: clamp(1800 + words(b) * 270, 4000, 12000) });
     }));
-    STOPS.forEach(([sel, msg, ch]) => wp.push({ at: at($(sel), 0.5), stop: true, msg, ch, go: 'ادامه ▶' }));
+    STOPS.forEach(([sel, msg, ch, frame]) => wp.push({ at: at($(sel), 0.5), stop: true, msg, ch, frame, go: 'ادامه ▶' }));
     wp.push({ at: at($('#contact'), 0, 40), stop: true, end: true, ch: 7, msg: 'پایان داستان. هر سؤالی دارید، از همین‌جا با ما تماس بگیرید.', go: 'از اول ▶' });
     wp.forEach((w) => { w._v = -1; });
     return wp.sort((a, b) => a.at() - b.at());
@@ -390,8 +395,33 @@
     if (!card) return;
     if (AP.cur && AP.cur.card === card) return;
     apUnfocus();
-    AP.cur = { card, units: wrapWords(card), shown: -1 };
+    if (!card._frame) {
+      card._frame = document.createElement('i');
+      card._frame.className = 'read-frame';
+      card._frame.setAttribute('aria-hidden', 'true');
+      card.append(card._frame);
+    }
+    AP.cur = { card, units: wrapWords(card), shown: -1, frame: card._frame, lineTop: -1e9 };
     card.classList.add('reading');
+  }
+  /* the frame hugs the line that is being read (or the table row) and glides to the next one */
+  function moveFrame(c, idx) {
+    const u = c.units[idx];
+    if (!u) return;
+    const first = u.getBoundingClientRect();
+    if (Math.abs(first.top - c.lineTop) < 3) return; // still on the same line
+    c.lineTop = first.top;
+    let l = first.left, r = first.right;
+    if (u.tagName !== 'TR') {
+      const same = (q) => Math.abs(q.top - first.top) < Math.max(6, first.height * 0.45);
+      for (let k = idx - 1; k >= 0; k--) { const q = c.units[k].getBoundingClientRect(); if (!same(q)) break; l = Math.min(l, q.left); r = Math.max(r, q.right); }
+      for (let k = idx + 1; k < c.units.length; k++) { const q = c.units[k].getBoundingClientRect(); if (!same(q)) break; l = Math.min(l, q.left); r = Math.max(r, q.right); }
+    }
+    const base = c.card.getBoundingClientRect(), px = 8, py = 3;
+    const f = c.frame;
+    f.style.transform = 'translate(' + (l - base.left - c.card.clientLeft + c.card.scrollLeft - px) + 'px,' + (first.top - base.top - c.card.clientTop + c.card.scrollTop - py) + 'px)';
+    f.style.width = (r - l + px * 2) + 'px';
+    f.style.height = (first.height + py * 2) + 'px';
   }
   function apUnfocus() {
     if (!AP.cur) return;
@@ -399,6 +429,7 @@
     card.classList.remove('reading');
     units.forEach((u) => u.classList.remove('r', 'cur'));
     card.scrollTop = 0;
+    if (card._frame) { card._frame.style.width = card._frame.style.height = '0px'; }
     AP.cur = null;
   }
   function apRead(frac) {
@@ -411,9 +442,10 @@
       if (c.shown >= 0) c.units[c.shown].classList.remove('cur');
       c.units[idx].classList.add('cur');
       c.shown = idx;
+      moveFrame(c, idx);
     }
     const over = c.card.scrollHeight - c.card.clientHeight; // a tall card on a small screen scrolls along with the reading
-    if (over > 4) c.card.scrollTop = over * clamp((frac - 0.08) / 0.84);
+    if (over > 4) c.card.scrollTop = over * clamp((frac - 0.08) / 0.84); // (the frame lives inside the card, so it scrolls with the text)
   }
 
   const setPlayUI = (on) => {
@@ -456,7 +488,7 @@
       AP.y1 = yOf(w);
       scrollTo(0, AP.y0 + (AP.y1 - AP.y0) * e);
       if (k >= 1) {
-        if (w.stop) { apPause(); showHint(w.msg, { ch: w.ch, sticky: true, go: w.go }); return; }
+        if (w.stop) { apPause(); showHint(w.msg, { ch: w.ch, sticky: true, go: w.go, frame: w.frame }); return; }
         apArrive(now, w);
       }
     } else if (now >= AP.until) {
