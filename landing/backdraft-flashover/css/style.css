@@ -833,3 +833,18 @@ html.in-act .hud { opacity: 0 !important; visibility: hidden !important; }
   .tg, .fglow, .ember, .cpuff, .r-duct-flow, .dev-led, .dev.on .dev-ring, .dev-siren.on img, .alarm-stage.sirens .a-flash, .r-water .jet, .r-out path, .puff, .drift, .panel-led, .lcd.alarm #al-lcd-st { animation: none; }
   .alarm-stage.sirens .a-flash { opacity: 0.12; }
 }
+
+/* ───────── the room gauge on wide screens: a thin, long strip under the picture instead of a box lying on it ───────── */
+@media (min-width: 821px) and (min-height: 521px) and (min-aspect-ratio: 1/1) {
+  #hud-room { top: auto; left: var(--pad); bottom: calc(var(--pl) + 12px); width: min(660px, max(320px, calc(100vw - var(--pad) * 2 - 570px))); padding: 7px 16px; border-radius: 14px; display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto; column-gap: 18px; row-gap: 0; align-items: center; font-size: 0.78em; line-height: 1.5; }
+  #hud-room .hud-head { grid-column: 1; grid-row: 1 / span 2; display: grid; margin: 0; padding: 0 0 0 16px; border-bottom: 0; border-inline-end: 1px solid var(--line); justify-items: start; align-content: center; }
+  #hud-room .hud-head span { font-size: 0.82em; }
+  #hud-room .hud-head b { font-size: 1.12em; white-space: nowrap; }
+  #hud-room > :nth-child(2) { grid-column: 2; grid-row: 1; }
+  #hud-room > :nth-child(3) { grid-column: 2; grid-row: 2; margin: 3px 0 0; }
+  #hud-room > :nth-child(4) { grid-column: 3; grid-row: 1; }
+  #hud-room > :nth-child(5) { grid-column: 3; grid-row: 2; margin: 3px 0 0; }
+  #hud-room small { grid-column: 4; grid-row: 1 / span 2; max-width: 9.5em; font-size: 0.78em; line-height: 1.45; }
+}
+@media (min-width: 821px) and (min-height: 521px) and (min-aspect-ratio: 1/1) { #hud-room .hud-row { gap: 0.6em; white-space: nowrap; } }
+@media (min-width: 821px) and (max-width: 1180px) and (min-aspect-ratio: 1/1) { #hud-room small { display: none; } #hud-room { grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); column-gap: 12px; padding: 6px 12px; font-size: 0.72em; } #hud-room .hud-head { padding-inline-end: 12px; } }
