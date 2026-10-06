@@ -191,6 +191,33 @@
     }
   }
 
+  /* flames: soft tongues of different height that sway at their own pace, a glow behind them and a few rising embers (the group is scaled by the scene) */
+  function buildFlames(g, uid) {
+    const svg = g.ownerSVGElement, defs = $('defs', svg);
+    const grad = (id, tag, stops) => {
+      const e = mk(tag, tag === 'linearGradient' ? { id: uid + '-' + id, x1: 0, y1: 1, x2: 0, y2: 0 } : { id: uid + '-' + id });
+      stops.forEach(([o, c, a]) => e.append(mk('stop', { offset: o, 'stop-color': c, 'stop-opacity': a })));
+      defs.append(e);
+    };
+    grad('gF', 'linearGradient', [[0, '#ffe7a0', 1], [0.28, '#ffb12f', 1], [0.62, '#ff6a1a', 0.95], [1, '#d4300c', 0.25]]);
+    grad('gC', 'linearGradient', [[0, '#fffbe9', 1], [0.55, '#ffe488', 0.95], [1, '#ffb42f', 0]]);
+    grad('gG', 'radialGradient', [[0, '#ff9a3a', 0.55], [1, '#ff6b1f', 0]]);
+    g.append(mk('ellipse', { class: 'fglow', cx: 0, cy: -9, rx: 17, ry: 14, fill: 'url(#' + uid + '-gG)' }));
+    const f = (n) => n.toFixed(2);
+    const tongue = (w, h, l) => 'M' + f(-w / 2) + ' 0C' + f(-w * 0.62) + ' ' + f(-h * 0.28) + ' ' + f(-w * 0.3 + l * 0.2) + ' ' + f(-h * 0.5) + ' ' + f(l * 0.55) + ' ' + f(-h * 0.74)
+      + 'C' + f(l * 0.8) + ' ' + f(-h * 0.86) + ' ' + f(l * 0.98) + ' ' + f(-h * 0.93) + ' ' + f(l) + ' ' + f(-h)
+      + 'C' + f(l + w * 0.12) + ' ' + f(-h * 0.78) + ' ' + f(w * 0.62) + ' ' + f(-h * 0.5) + ' ' + f(w * 0.5) + ' ' + f(-h * 0.2)
+      + 'C' + f(w * 0.46) + ' ' + f(-h * 0.08) + ' ' + f(w * 0.3) + ' 0 0 0C' + f(-w * 0.2) + ' 0 ' + f(-w * 0.4) + ' 0 ' + f(-w / 2) + ' 0Z';
+    // [width, height, lean, x, seconds, delay, fill]
+    [[6, 13, -2, -9.5, 0.7, -0.2, 'gF'], [6, 14, 2.5, 10, 0.75, -0.4, 'gF'], [9, 19, -3, -6, 0.8, -0.3, 'gF'], [9, 21, 3.5, 6.5, 0.9, -0.55, 'gF'], [13, 27, 1.5, 0, 1.0, 0, 'gF'],
+      [7, 15, 1, 0, 0.85, -0.15, 'gC'], [5, 10, -2, -6, 0.65, -0.5, 'gC'], [5, 11, 2, 6.5, 0.72, -0.1, 'gC']].forEach(([w, h, l, x, d, dl, fl]) => {
+      const wrap = mk('g', { transform: 'translate(' + x + ' 0)' });
+      wrap.append(mk('path', { class: 'tg', d: tongue(w, h, l), fill: 'url(#' + uid + '-' + fl + ')', style: 'animation-duration:' + d + 's;animation-delay:' + dl + 's' }));
+      g.append(wrap);
+    });
+    for (let i = 0; i < 7; i++) g.append(mk('circle', { class: 'ember', cx: -7 + i * 2.3, cy: -8 - (i % 3) * 3, r: 0.42 + (i % 2) * 0.2, fill: '#ffd27a', style: '--dx:' + ((i % 2 ? 1 : -1) * (2 + (i % 3))) + 'px;animation-delay:' + (i * 0.37).toFixed(2) + 's;animation-duration:' + (1.8 + (i % 3) * 0.5) + 's' }));
+  }
+
   function act(sel, scene) {
     const el = $(sel);
     if (!el) return;
@@ -201,6 +228,7 @@
     ScrollTrigger.create({
       trigger: el, start: 'top bottom', end: 'bottom top',
       onToggle: (self) => {
+        el.classList.toggle('live', self.isActive);
         if (self.isActive && !live) { live = true; gsap.ticker.add(loop); }
         else if (!self.isActive && live) { live = false; gsap.ticker.remove(loop); scene.idle && scene.idle(); }
       },
@@ -216,6 +244,7 @@
     const cable = $('#al-cable'), pulseG = $('.a-pulses', plan);
     const sH = $('.a-sh', plan), hH = $('.a-hh', plan), sK = $('.a-sk', plan), hK = $('.a-hk', plan);
     const fire = $('.a-fire', plan), flash = $('.a-flash', plan);
+    buildFlames(fire, 'al');
     const tempEl = $('#al-temp'), tempBar = $('#al-temp-bar');
     const lcd = $('#al-lcd'), lcdSt = $('#al-lcd-st'), lcdM = $('#al-lcd-m'), panel = $('#al-panel');
     const steps = $$('.steps li', stage);
@@ -309,64 +338,77 @@
     };
   })());
 
-  /* — 2 · hose cabinet (water first) → ARIS fan (then the smoke goes out) — */
+  /* — 2 · hose cabinet (water first) → ARIS fan (then the common area is cleared of smoke) — */
   act('#response', (() => {
     const stage = $('#response-stage'), plan = $('#resp-plan');
     if (!stage) return { set() {}, tick() {} };
-    const sm = $('.r-sm', plan), ht = $('.r-ht', plan), gasG = $('.r-gas', plan);
+    const sm = $('.r-sm', plan), ht = $('.r-ht', plan), gasG = $('.r-gas', plan), cs = $('.r-cs', plan);
     const door = $('.r-door', plan), doorBody = $('.door-body', plan), doorGlow = $('.door-glow', plan);
-    const fire = $('.r-fire', plan), hose = $('.r-hose', plan), nozzle = $('.r-nozzle', plan), water = $('.r-water', plan);
+    const fire = $('.r-fire', plan), hoses = $$('.r-hose-edge, .r-hose, .r-hose-hl', plan), nozzle = $('.r-nozzle', plan), water = $('.r-water', plan);
     const steam = $('.r-steam', plan), outG = $('.r-out', plan), smokeOut = $('.r-smoke-out', plan);
     const cab = $('#rs-cab'), cabClosed = $('.cab-closed', cab), cabOpen = $('.cab-open', cab), cabT = $('#rs-cab-t');
     const fan = $('#rs-fan');
     const tempEl = $('#rs-temp'), tempBar = $('#rs-temp-bar'), gasEl = $('#rs-gas'), gasBar = $('#rs-gas-bar');
     const steps = $$('.steps li', stage);
-    // unburnt gas in the hot layer: little amber dots that disappear as the fan clears them
+    buildFlames(fire, 'rs');
+    // unburnt gas in the hot layer of the room: little amber dots
     let seed = 7;
     const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    const dots = Array.from({ length: 30 }, (_, i) => {
-      const c = mk('circle', { cx: (28 + rnd() * 50).toFixed(1), cy: (10 + rnd() * 26).toFixed(1), r: (0.35 + rnd() * 0.4).toFixed(2), fill: '#ffb454', opacity: 0 });
+    const dots = Array.from({ length: 26 }, (_, i) => {
+      const c = mk('circle', { cx: (5 + rnd() * 43).toFixed(1), cy: (10 + rnd() * 24).toFixed(1), r: (0.35 + rnd() * 0.4).toFixed(2), fill: '#ffb454', opacity: 0 });
       gasG.append(c);
-      return { c, k: (i + 0.5) / 30 };
+      return { c, k: (i + 0.5) / 26 };
     });
-    for (let i = 0; i < 7; i++) steam.append(mk('circle', { class: 'puff', cx: 85 + (i % 3) * 1.6, cy: 46 - (i % 4) * 3.2, r: 1.5, fill: '#dff6ff', style: 'animation-delay:' + (i * 0.27).toFixed(2) + 's' }));
-    for (let i = 0; i < 8; i++) smokeOut.append(mk('circle', { class: 'drift', cx: 20 + (i % 4) * 2.5, cy: 15 + (i % 3) * 4, r: 2.2 + (i % 3) * 0.5, fill: '#aeb4c2', style: 'animation-delay:' + (i * 0.4).toFixed(2) + 's' }));
+    for (let i = 0; i < 7; i++) steam.append(mk('circle', { class: 'puff', cx: 56 + (i % 3) * 1.6, cy: 46 - (i % 4) * 3.2, r: 1.5, fill: '#dff6ff', style: 'animation-delay:' + (i * 0.27).toFixed(2) + 's' }));
+    for (let i = 0; i < 8; i++) smokeOut.append(mk('circle', { class: 'drift', cx: 118 + (i % 4) * 1.6, cy: 13 + (i % 3) * 3.6, r: 1.8 + (i % 3) * 0.5, fill: '#aeb4c2', style: 'animation-delay:' + (i * 0.4).toFixed(2) + 's' }));
+    // smoke in the common area: soft grey puffs that drift, and stream toward the fan once it runs
+    const cp = $('.r-cp', plan);
+    const puffs = Array.from({ length: 16 }, (_, i) => {
+      const c = mk('circle', { class: 'cpuff', cx: (57 + rnd() * 44).toFixed(1), cy: (10 + rnd() * 15).toFixed(1), r: (3 + rnd() * 3).toFixed(1), fill: '#b9bfcc', opacity: 0, style: 'animation-delay:' + (-rnd() * 4).toFixed(2) + 's' });
+      cp.append(c);
+      return { c, k: (i + 0.5) / 16 };
+    });
     const state = { p: 0, jet: 0 };
     return {
       set(p) {
         state.p = p;
         const cool = ease(ramp(p, 0.46, 0.62)), clear = ease(ramp(p, 0.72, 0.94));
         const hot = 1 - 0.88 * cool - 0.04 * clear;
-        // the hot layer stays deep and orange until water arrives, turns grey, and is finally drawn out
-        const depth = lerp(lerp(34, 27, cool), 4, clear);
+        // the room's hot layer stays deep and orange until water arrives, then turns grey and thins once a flow path to the outside exists
+        const depth = lerp(lerp(34, 27, cool), 15, clear);
         sm.setAttribute('height', depth.toFixed(2)); ht.setAttribute('height', depth.toFixed(2));
         ht.setAttribute('opacity', clamp(hot * 1.05).toFixed(2));
-        fire.setAttribute('transform', 'translate(46 69) scale(' + (1.1 - 0.62 * cool - 0.18 * clear).toFixed(3) + ')');
+        fire.setAttribute('transform', 'translate(23 69) scale(' + (1.1 - 0.62 * cool - 0.14 * clear).toFixed(3) + ')');
         const T = 60 + 390 * hot;
         tempEl.textContent = fa(Math.round(T / 10) * 10) + '°C';
         tempBar.style.width = (hot * 100).toFixed(1) + '%';
-        const g = 1 - 0.92 * clear;
-        dots.forEach((d) => d.c.setAttribute('opacity', d.k < g ? 0.85 : 0));
-        gasEl.textContent = g > 0.66 ? 'زیاد' : g > 0.3 ? 'در حال کم شدن' : 'کم';
-        gasBar.style.width = (g * 100).toFixed(1) + '%';
-        // the door: glows while hot, then opens a hand's width only after the water has done its work
+        dots.forEach((d) => d.c.setAttribute('opacity', d.k < 1 - 0.5 * clear ? 0.85 : 0));
+        // the common area: a little smoke seeps around the door, a lot when it is opened a hand's width; the fan then clears it
+        const leak = 3 + 5 * ramp(p, 0, 0.4) + 17 * ease(ramp(p, 0.6, 0.72));
+        const cdepth = lerp(leak, 2, clear);
+        cs.setAttribute('height', cdepth.toFixed(2));
+        const sf = clamp((cdepth - 2) / 22);
+        gasEl.textContent = sf > 0.62 ? 'زیاد' : sf > 0.22 ? 'متوسط' : 'کم';
+        gasBar.style.width = (sf * 100).toFixed(1) + '%';
+        puffs.forEach((q) => q.c.setAttribute('opacity', q.k < sf ? 0.34 : 0));
+        stage.classList.toggle('fan-run', p >= 0.69 && p < 0.96);
         doorBody.style.fill = mix([122, 42, 20], [26, 34, 54], 1 - hot);
         doorGlow.style.opacity = (hot * 0.85).toFixed(2);
         door.setAttribute('transform', 'translate(' + (2.4 * ease(ramp(p, 0.6, 0.66))).toFixed(2) + ' 0)');
-        // the cabinet on the corridor wall opens, the hose runs out
+        // the cabinet on the corridor wall opens; the hose is pulled off the reel
         const open = ease(ramp(p, 0.22, 0.3));
         cabOpen.style.opacity = open.toFixed(2); cabClosed.style.opacity = (1 - open).toFixed(2);
         const t = p < 0.26 ? 'روی دیوار، پشتِ دربِ خودش' : 'درِ جعبه باز شد ✓';
         if (cabT.textContent !== t) cabT.textContent = t;
-        hose.style.strokeDashoffset = (1 - ease(ramp(p, 0.28, 0.38))).toFixed(3);
-        hose.style.opacity = p > 0.27 ? 1 : 0;
+        const pull = (1 - ease(ramp(p, 0.28, 0.38))).toFixed(3);
+        hoses.forEach((h) => { h.style.strokeDashoffset = pull; h.style.opacity = p > 0.27 ? 1 : 0; });
         nozzle.style.opacity = ramp(p, 0.34, 0.38).toFixed(2);
         state.jet = ramp(p, 0.44, 0.46) * (1 - ramp(p, 0.62, 0.64));
         steam.style.opacity = (state.jet * 0.9).toFixed(2);
-        // the fan appears at the exit opening, the smoke streams out
+        // the fan at the end of the corridor pulls the smoke out through the opening
         const fanOn = ease(ramp(p, 0.66, 0.72));
         fan.style.opacity = fanOn.toFixed(2);
-        fan.style.transform = 'translate(' + ((1 - fanOn) * -8).toFixed(1) + 'px,0)';
+        fan.style.transform = 'translate(' + ((1 - fanOn) * 10).toFixed(1) + 'px,0)';
         outG.style.opacity = (ease(ramp(p, 0.7, 0.76)) * (1 - ramp(p, 0.95, 1))).toFixed(2);
         smokeOut.style.opacity = (fanOn * (1 - ease(ramp(p, 0.9, 0.97)))).toFixed(2);
         const cur = p < 0.22 ? 0 : p < 0.62 ? 1 : p < 0.7 ? 2 : 3;

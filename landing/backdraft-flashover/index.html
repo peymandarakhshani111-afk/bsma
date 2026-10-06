@@ -288,11 +288,7 @@
               <rect x="55" y="63" width="14" height="9" rx="1"/><path d="M59 72V78M65 72V78"/>
               <path d="M7 78V64H37V78M7 64H37M18 64H26M19 64V60H25V64"/>
             </g>
-            <g class="a-fire" transform="translate(101 69)">
-              <path class="fl f1" d="M-7 0C-9 -6 -4 -9 -5 -16 -2 -12 0 -10 -1 -5 1 -8 3 -10 2 -15 6 -10 8 -4 5 0Z"/>
-              <path class="fl f2" d="M0 0C-2 -5 2 -8 1 -13 4 -9 5 -5 3 0Z" />
-              <path class="fl f3" d="M5 0C4 -4 7 -6 6 -10 9 -6 10 -3 9 0Z" />
-            </g>
+            <g class="a-fire" transform="translate(101 69)"></g>
             <text class="a-room" x="79" y="75.6" text-anchor="middle">سالن</text>
             <text class="a-room" x="22" y="57" text-anchor="middle">آشپزخانه</text>
             <text class="a-room" x="109" y="91.2" text-anchor="middle">اتاق کنترل</text>
@@ -478,10 +474,10 @@
   </div>
 </section>
 
-<!-- ═════════ 04 · BEFORE YOU OPEN THE DOOR: cool with water first (hose cabinet), then exhaust the smoke (ARIS fan) ═════════ -->
-<section id="response" class="act" data-ch="5" style="--h:640vh" aria-label="پیش از باز کردن در: اول خنک‌کردن با آب (جعبه‌ی آتش‌نشانی)، بعد تخلیه‌ی دود (فن ARIS)">
+<!-- ═════════ 04 · BEFORE YOU OPEN THE DOOR: cool with water first (hose cabinet), then clear the common area of smoke (ARIS fan) ═════════ -->
+<section id="response" class="act" style="--h:640vh" aria-label="پیش از باز کردن در: اول خنک‌کردن با آب (جعبه‌ی آتش‌نشانی)، بعد تخلیه‌ی دود از راهرو و مشاعات (فن ARIS)">
   <div class="stick">
-    <div class="act-stage response-stage" id="response-stage" role="group" aria-label="مقطع یک اتاق دربسته که آتش دارد: جعبه‌ی آتش‌نشانی روی دیوار راهرو، آب‌پاشی برای کاهش دما و سپس فن تخلیه‌ی دود">
+    <div class="act-stage response-stage" id="response-stage" role="group" aria-label="مقطع یک اتاق دربسته که آتش دارد و راهروی کنارش: جعبه‌ی آتش‌نشانی روی دیوار راهرو، آب‌پاشی برای کاهش دما، و سپس فن تخلیه‌ی دود که راهرو را از دود پاک می‌کند">
       <ol class="steps" aria-hidden="true">
         <li>در بسته می‌ماند</li><li>شیلنگ و آب</li><li>دما پایین آمد؟</li><li>تخلیه‌ی دود</li>
       </ol>
@@ -491,65 +487,81 @@
             <defs>
               <linearGradient id="rs-gS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a4a9b6" stop-opacity=".95"/><stop offset=".6" stop-color="#5d6270" stop-opacity=".6"/><stop offset="1" stop-color="#3a3d48" stop-opacity="0"/></linearGradient>
               <linearGradient id="rs-gH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b1f" stop-opacity=".75"/><stop offset="1" stop-color="#ff6b1f" stop-opacity="0"/></linearGradient>
-              <linearGradient id="rs-gW" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#27e6ff" stop-opacity=".95"/><stop offset="1" stop-color="#bff6ff" stop-opacity=".4"/></linearGradient>
-              <clipPath id="rs-cR"><rect x="26" y="8" width="54" height="70"/></clipPath>
+              <clipPath id="rs-cR"><rect x="3" y="8" width="47" height="70"/></clipPath>
+              <clipPath id="rs-cC"><rect x="53.6" y="8" width="52.4" height="70"/></clipPath>
             </defs>
             <g clip-path="url(#rs-cR)">
-              <rect class="r-sm" x="26" y="8" width="54" height="8" fill="url(#rs-gS)"/>
-              <rect class="r-ht" x="26" y="8" width="54" height="8" fill="url(#rs-gH)"/>
+              <rect class="r-sm" x="3" y="8" width="47" height="8" fill="url(#rs-gS)"/>
+              <rect class="r-ht" x="3" y="8" width="47" height="8" fill="url(#rs-gH)"/>
               <g class="r-gas"></g>
             </g>
+            <g clip-path="url(#rs-cC)">
+              <rect class="r-cs" x="53.6" y="8" width="52.4" height="3" fill="url(#rs-gS)"/>
+              <g class="r-cp"></g>
+            </g>
             <g class="r-walls" fill="none" stroke="#27e6ff" stroke-opacity=".55" stroke-width=".9" stroke-linejoin="round" stroke-linecap="round">
-              <path d="M26 30V78H80V8H26V12"/>
-              <path d="M23 12H26M23 30H26" stroke-opacity=".8"/>
-              <path d="M0 78H26M83.6 78H125M83.6 8H125" stroke-opacity=".45"/>
-              <path d="M26 78H80" stroke-width="1.4"/>
+              <path d="M50 28V8H3V78H50"/>
+              <path d="M53.6 28V8H106V12M106 30V78H53.6"/>
+              <path d="M106 12H110M106 30H110" stroke-opacity=".8"/>
+              <path d="M106 78H125" stroke-opacity=".45"/>
+              <path d="M3 78H50M53.6 78H106" stroke-width="1.4"/>
             </g>
             <g class="r-furn" fill="none" stroke="#9fb4d8" stroke-opacity=".45" stroke-width=".8" stroke-linejoin="round">
-              <path d="M34 78V68H58V78M36 68V60H56V68"/>
+              <path d="M12 78V68H34V78M14 68V60H32V68"/>
             </g>
-            <g class="r-fire" transform="translate(46 69)">
-              <path class="fl f1" d="M-7 0C-9 -6 -4 -9 -5 -16 -2 -12 0 -10 -1 -5 1 -8 3 -10 2 -15 6 -10 8 -4 5 0Z"/>
-              <path class="fl f2" d="M0 0C-2 -5 2 -8 1 -13 4 -9 5 -5 3 0Z"/>
-              <path class="fl f3" d="M5 0C4 -4 7 -6 6 -10 9 -6 10 -3 9 0Z"/>
-            </g>
-            <text class="a-room" x="68" y="75.4" text-anchor="middle">اتاقِ آتش</text>
-            <text class="a-room" x="13" y="75.4" text-anchor="middle">بیرونِ ساختمان</text>
-            <text class="a-room" x="104" y="75.4" text-anchor="middle">راهرو</text>
+            <g class="r-fire" transform="translate(23 69)"></g>
+            <text class="a-room" x="26.5" y="75.4" text-anchor="middle">اتاقِ آتش</text>
+            <text class="a-room" x="92" y="75.4" text-anchor="middle">راهرو و مشاعات</text>
+            <text class="a-room" x="116" y="75.4" text-anchor="middle">بیرون</text>
             <g class="r-door">
-              <rect class="door-glow" x="79.2" y="27.4" width="5.2" height="51" rx=".6" fill="#ff6b1f"/>
-              <rect class="door-body" x="80" y="28" width="3.6" height="50" rx=".4"/>
+              <rect class="door-glow" x="49.2" y="27.4" width="5.2" height="51" rx=".6" fill="#ff6b1f"/>
+              <rect class="door-body" x="50" y="28" width="3.6" height="50" rx=".4"/>
             </g>
-            <path class="r-hose" d="M99 41C99 62 100 76 94 75.4C88 74.8 89 66 91.2 60.4" pathLength="1" fill="none" stroke="#e8edf7" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
-            <g class="r-nozzle"><rect x="89.6" y="57.4" width="3.2" height="3.8" rx=".6" fill="#ffb454"/><path d="M90.1 57.4L91.2 55L92.3 57.4Z" fill="#ffb454"/></g>
-            <g class="r-water">
-              <path class="jet" d="M91.2 54.8C88 47 85 43 82 40.5" fill="none" stroke="url(#rs-gW)" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2.6 1.8"/>
-              <path class="cone" d="M91.2 54.8L83 35L86.8 48Z" fill="#27e6ff" opacity=".17"/>
+            <g class="r-out" fill="none" stroke="#c4cbdb" stroke-width=".9" stroke-linecap="round" stroke-dasharray="2.2 2">
+              <path d="M58 16C76 14 94 18 110 21"/><path d="M58 25C76 24 94 25 108 24.5" opacity=".7"/>
             </g>
             <g class="r-steam"></g>
-            <g class="r-out" fill="none" stroke="#c4cbdb" stroke-width=".9" stroke-linecap="round" stroke-dasharray="2.2 2">
-              <path d="M70 17C56 15 40 19 28 22"/><path d="M70 25C58 24 44 25 28 25.5" opacity=".7"/>
-            </g>
             <g class="r-smoke-out"></g>
           </svg>
 
           <div class="gauge gauge-r" id="rs-gauge" aria-hidden="true">
             <div class="g-row"><span data-s="دما">دمای لایه‌ی داغ</span><b id="rs-temp">۴۵۰°C</b></div>
             <div class="g-bar"><i id="rs-temp-bar"></i></div>
-            <div class="g-row g-row2"><span data-s="گاز">گازِ نسوخته</span><b id="rs-gas">زیاد</b></div>
+            <div class="g-row g-row2"><span data-s="دود">دود در راهرو</span><b id="rs-gas">کم</b></div>
             <div class="g-bar g-bar-amber"><i id="rs-gas-bar"></i></div>
             <small>عددها نمایشی‌اند و فقط روند را نشان می‌دهند</small>
           </div>
 
-          <a class="cab" id="rs-cab" href="https://bsma.ir/product/جعبه-آتش-نشانی-استاندارد/" target="_blank" rel="noopener" aria-label="جعبه‌ی آتش‌نشانی دو کابین قاب‌دار به‌سازان، نصب‌شده روی دیوار">
+          <a class="cab" id="rs-cab" href="https://bsma.ir/product/جعبه-آتش-نشانی-استاندارد/" target="_blank" rel="noopener" aria-label="جعبه‌ی آتش‌نشانی دو کابین قاب‌دار به‌سازان، نصب‌شده روی دیوار راهرو">
             <img class="cab-closed" src="img/firebox-white.webp" alt="جعبه‌ی آتش‌نشانی دو کابین قاب‌دار سفید، با درِ بسته" width="346" height="280" loading="lazy" decoding="async">
             <img class="cab-open" src="img/firebox-white-open.webp" alt="همان جعبه با درِ باز: قرقره‌ی شیلنگ با نازل، و جای کپسول" width="560" height="550" loading="lazy" decoding="async">
             <span class="cab-lbl"><em id="rs-cab-t">روی دیوار، پشتِ دربِ خودش</em></span>
           </a>
 
+          <svg class="plan-svg plan-svg-top" viewBox="0 0 125 90" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="rs-gW" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#27e6ff" stop-opacity=".95"/><stop offset="1" stop-color="#bff6ff" stop-opacity=".45"/></linearGradient>
+              <linearGradient id="rs-gHose" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a2f3b"/><stop offset=".5" stop-color="#4b5266"/><stop offset="1" stop-color="#232733"/></linearGradient>
+            </defs>
+            <path class="r-hose-edge" d="M71.5 31.4C70.6 34 70.2 36 70 40C69.7 49 72.4 58 70.5 66C69 73 64 77 61.5 73.2C59.8 70 65 67 69.3 62.3" fill="none" stroke="#10131b" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+            <path class="r-hose" d="M71.5 31.4C70.6 34 70.2 36 70 40C69.7 49 72.4 58 70.5 66C69 73 64 77 61.5 73.2C59.8 70 65 67 69.3 62.3" fill="none" stroke="#454c5e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+            <path class="r-hose-hl" d="M71.5 31.4C70.6 34 70.2 36 70 40C69.7 49 72.4 58 70.5 66C69 73 64 77 61.5 73.2C59.8 70 65 67 69.3 62.3" fill="none" stroke="#8a93a8" stroke-opacity=".55" stroke-width=".45" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="translate(-.35 -.3)"/>
+            <g class="r-nozzle" transform="translate(66 60) rotate(215)">
+              <rect x="-4.4" y="-.9" width="4.6" height="1.8" rx=".5" fill="#2a2f3b"/>
+              <path d="M0 -1.5H4.2L5.2 -1.1V1.1L4.2 1.5H0Z" fill="#e0371d"/>
+              <path d="M0 -1.5H4.2L5.2 -1.1H0Z" fill="#fff" opacity=".22"/>
+              <rect x="5" y="-1.25" width="1.7" height="2.5" rx=".4" fill="#9aa3b5"/>
+              <rect x="1" y="-2.5" width="1.3" height="1.2" rx=".3" fill="#2a2f3b"/>
+            </g>
+            <g class="r-water">
+              <path class="jet" d="M60.7 56.3C58 50 55.8 45 54.2 41.5" fill="none" stroke="url(#rs-gW)" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2.6 1.8"/>
+              <path class="cone" d="M60.7 56.3L54.4 35L57.4 49Z" fill="#27e6ff" opacity=".17"/>
+            </g>
+          </svg>
+
           <a class="fan" id="rs-fan" href="https://bsma.ir/product/فن-تخلیه-دود-صنعتی-بک-درفت-قابل-حمل/" target="_blank" rel="noopener" aria-label="فن تخلیه‌ی دود صنعتی قابل‌حمل ARIS">
             <img src="img/fan-aris-cut.webp" alt="فن تخلیه‌ی دود صنعتی قابل‌حمل ARIS" width="300" height="258" loading="lazy" decoding="async">
-            <span class="fan-lbl"><em>فن تخلیه‌ی دود ARIS</em>در دهانه‌ی خروجی</span>
+            <span class="fan-lbl"><em>فن تخلیه‌ی دود ARIS</em>در دهانه‌ی راهرو</span>
           </a>
         </div>
       </div>
@@ -564,7 +576,7 @@
       <article class="beat">
         <p class="tag"><b>۰۴</b> پیش از باز کردن در</p>
         <h3>جعبه‌ی آتش‌نشانی، پشتِ دربِ خودش</h3>
-        <p>روی دیوار راهرو جعبه‌ی آتش‌نشانی نصب است. در همین جعبه را باز می‌کنیم، نه در اتاقِ آتش. شیلنگ و نازل داخلش آماده‌اند؛ شیلنگ را باز می‌کنیم و نازل را رو به در می‌گیریم.</p>
+        <p>روی دیوار راهرو جعبه‌ی آتش‌نشانی نصب است. در همین جعبه را باز می‌کنیم، نه در اتاقِ آتش. قرقره‌ی شیلنگ با نازلش داخل آن آماده است؛ شیلنگ را از قرقره بیرون می‌کشیم و نازل را رو به در می‌گیریم.</p>
         <div class="chips"><a class="chip" href="https://bsma.ir/product/جعبه-آتش-نشانی-استاندارد/" target="_blank" rel="noopener">جعبه‌ی آتش‌نشانی دو کابین قاب‌دار ↗</a><a class="chip chip-soft" href="https://bsma.ir/product-category/fire-box/" target="_blank" rel="noopener">همه‌ی جعبه‌های آتش‌نشانی ↗</a></div>
       </article>
       <article class="beat">
@@ -575,19 +587,20 @@
       </article>
       <article class="beat">
         <p class="tag"><b>۰۴</b> پیش از باز کردن در</p>
-        <h3>بعد از خنک شدن، دود را بیرون ببریم</h3>
-        <p>وقتی دما افتاد، نوبتِ تخلیه است. فن تخلیه‌ی دود دود و گازهای نسوخته را از دهانه‌ی خروجی بیرون می‌کشد تا غلظتشان بالا نماند. UL FSRI نشان داده فنی که با آب‌پاشی هماهنگ باشد، دید و شرایط قابل‌تحمل را بهتر می‌کند؛ و اندازه‌ی دهانه‌ی خروجی از اندازه‌ی فن هم مهم‌تر است.</p>
+        <h3>بعد از خنک شدن، راهرو را از دود پاک کنیم</h3>
+        <p>کاربرد اصلیِ فن تخلیه‌ی دود در مشاعات است: راهرو و راه‌پله. دودی که از در بیرون زده، دید را می‌بندد و راهِ آتش‌نشان را تا محل حریق می‌گیرد؛ فن آن را از دهانه‌ی راهرو بیرون می‌کشد تا مسیر باز و روشن شود و راه فرار هم پر از دود نماند. در آزمایش‌های NIST، فن‌های سیار دود و گرما را از راهرو و راه‌پله بیرون راندند و کار آتش‌نشان و جانِ ساکنان را بهتر کردند.</p>
         <div class="chips"><a class="chip" href="https://bsma.ir/product/فن-تخلیه-دود-صنعتی-بک-درفت-قابل-حمل/" target="_blank" rel="noopener">فن تخلیه‌ی دود صنعتی ARIS ↗</a></div>
-        <a class="src" href="https://fsri.org/research/effectiveness-fire-service-positive-pressure-ventilation" target="_blank" rel="noopener">منبع: UL FSRI، اثربخشی تهویه‌ی فشار مثبت ↗</a>
+        <a class="src" href="https://www.nist.gov/news-events/news/2008/06/high-rise-fire-fighting-effective-use-positive-pressure-ventilation" target="_blank" rel="noopener">منبع: NIST، تهویه‌ی فشار مثبت در آتش‌سوزی ساختمان‌های بلند ↗</a>
+        <a class="src" href="https://fsri.org/research/effectiveness-fire-service-positive-pressure-ventilation" target="_blank" rel="noopener">منبع: UL FSRI، دید و شرایط قابل‌تحمل برای آتش‌نشان و ساکنان ↗</a>
       </article>
       <article class="beat" data-next="بعدی: پنج نشانه‌ی خطر (نوبت شماست)">
         <p class="tag"><b>۰۴</b> ترتیب درست</p>
         <h3>چهار گام، به همین ترتیب</h3>
         <ul class="ticks">
           <li><b>در را باز نکنید.</b> دور شوید و با ۱۲۵ تماس بگیرید.</li>
-          <li><b>اول آب.</b> شیلنگ را آماده کنید و با پاشش‌های کوتاه دما را پایین بیاورید.</li>
-          <li><b>دما که افتاد،</b> در و دهانه‌ی خروجی را باز کنید.</li>
-          <li><b>بعد تخلیه.</b> با فن، دود و گاز نسوخته را بیرون بدهید.</li>
+          <li><b>اول آب.</b> شیلنگ را از قرقره بکشید و با پاشش‌های کوتاه دما را پایین بیاورید.</li>
+          <li><b>دما که افتاد،</b> در را کمی باز کنید.</li>
+          <li><b>بعد تخلیه.</b> با فن، دود و گاز داغ را از راهرو و راه‌پله بیرون بدهید تا راه آتش‌نشان و راه فرار باز شود.</li>
         </ul>
         <p class="note">این گام‌ها مخصوص نیروهای آموزش‌دیده و تیم ایمنی ساختمان است. فن خطر را کم می‌کند، نه صفر؛ و اگر پیش از آب‌پاشی روشن شود، هوا را به آتش می‌رساند. اگر خطری حس کردید، دور شوید و ۱۲۵ را بگیرید.</p>
         <a class="src" href="https://www.fireengineering.com/?p=313741" target="_blank" rel="noopener">منبع: Fire Engineering، ۲۰۱۶ (تهویه‌ی زودهنگام آتش را بدتر می‌کند) ↗</a>
