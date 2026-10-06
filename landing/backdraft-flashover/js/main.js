@@ -637,7 +637,7 @@
   const playBtn = $('#play');
   const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, from: 0, until: 0, raf: 0, ver: 0, cur: null, speed: 1 };
   const SPEEDS = [0.75, 1, 1.5, 2];
-  const PACE = 1.15; // the whole film runs 15 % faster than the first release; the speed button is relative to this
+  const PACE = 1.15 * 1.35; // the whole film runs 15 %, then another 35 %, faster than the first release; the speed button is relative to this
   const rate = () => AP.speed * PACE;
   { const sv = parseFloat(recall('bsma-speed')); if (SPEEDS.includes(sv)) AP.speed = sv; }
   const STOPS = [
