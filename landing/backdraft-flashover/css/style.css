@@ -461,3 +461,17 @@ html.sheet-open { overflow: hidden; }
   .hero-actions .btn { flex: 1 1 0; padding-inline: 0.9em; white-space: nowrap; font-size: 0.92em; }
 }
 @media (prefers-reduced-motion: reduce) { .nextline { animation: none; } }
+
+/* ───────── story mode: the card that is being "read" lights up word by word ───────── */
+.beat.reading p .w, .beat.reading li .w { opacity: 0.38; transition: opacity 0.35s ease, color 0.35s ease, text-shadow 0.35s ease; }
+.beat.reading .w.r { opacity: 1; }
+.beat.reading .w.cur { color: var(--amber); text-shadow: 0 0 16px #ffb45488; }
+.beat.reading tbody tr { opacity: 0.38; transition: opacity 0.4s ease, background 0.4s ease; }
+.beat.reading tbody tr.r { opacity: 1; }
+.beat.reading tbody tr.cur { background: #ffb4541c; }
+.beat.reading .step { border-color: var(--fire); color: #fff; animation: livePulse 1.6s ease-in-out infinite; }
+.beat.reading .step::before { content: "▶ "; color: var(--fire); font-size: 0.8em; }
+@keyframes livePulse { 0%, 100% { box-shadow: 0 0 0 0 #ff6b1f00; } 50% { box-shadow: 0 0 0 5px #ff6b1f33; } }
+.playing .play-btn { animation: playGlow 2.4s ease-in-out infinite; }
+@keyframes playGlow { 0%, 100% { box-shadow: 0 0 0 0 #ff6b1f00; } 50% { box-shadow: 0 0 0 7px #ff6b1f2e, 0 0 22px #ff6b1f66; } }
+@media (prefers-reduced-motion: reduce) { .beat.reading .step, .playing .play-btn { animation: none; } }

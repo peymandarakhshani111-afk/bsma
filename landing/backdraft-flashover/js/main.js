@@ -235,6 +235,7 @@
   let openSheetEl = null, sheetOpener = null;
   const focusable = (el) => [...el.querySelectorAll('a[href], button:not([disabled])')].filter((x) => !x.closest('[hidden]'));
   function openSheet(el, opener) {
+    apPause();
     closeSheet(true);
     sheetOpener = opener || document.activeElement;
     openSheetEl = el;
@@ -333,10 +334,11 @@
   ['#product-stage', '#p-next', '#p-prev', '#view-toggle', '#p-dots'].forEach((sel) => $(sel).addEventListener('pointerdown', () => markUsed('products')));
 
   /* ───────────────────────── story mode: the page plays itself like a film ─────────────────────────
-     It scrolls to each card, waits as long as the card takes to read, and moves on. Any touch, wheel or key press hands control back.
+     It scrolls to each card, then lights up the words one by one at reading pace (like karaoke) so the visitor can see where to look
+     and that the film is running; when the card is done it moves on. A swipe, the wheel or a scroll key hands control back.
      At the three interactive chapters it stops and asks the visitor to try things, then continues when they press "continue". */
   const playBtn = $('#play');
-  const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, until: 0, lastY: 0, raf: 0 };
+  const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, from: 0, until: 0, raf: 0, ver: 0, cur: null };
   const STOPS = [
     ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', 4],
     ['#research', 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', 5],
@@ -344,18 +346,76 @@
   ];
   const words = (el) => (el.textContent.match(/\S+/g) || []).length;
   function buildWaypoints() {
-    const vh = innerHeight, wp = [];
-    const at = (el, f) => { const r = el.getBoundingClientRect(); return r.top + scrollY + f * Math.max(0, r.height - vh); };
+    const wp = [];
+    const at = (el, f, extra = 0) => () => { const r = el.getBoundingClientRect(); return r.top + scrollY + f * Math.max(0, r.height - innerHeight) + extra; };
     STORY.forEach(({ el, ranges, list, focus }) => list.forEach((b, i) => {
       const [s0, e0] = ranges[i];
       const f = focus[i] != null ? focus[i] : (s0 + e0) / 2;
-      wp.push({ y: at(el, f), dwell: clamp(1800 + words(b) * 270, 4000, 12000) });
+      wp.push({ at: at(el, f), beat: b, dwell: clamp(1800 + words(b) * 270, 4000, 12000) });
     }));
-    STOPS.forEach(([sel, msg, ch]) => wp.push({ y: at($(sel), 0.5), stop: true, msg, ch, go: 'ادامه ▶' }));
-    const c = $('#contact');
-    wp.push({ y: c.getBoundingClientRect().top + scrollY + 40, stop: true, end: true, ch: 7, msg: 'پایان داستان. هر سؤالی دارید، از همین‌جا با ما تماس بگیرید.', go: 'از اول ▶' });
-    return wp.sort((a, b) => a.y - b.y);
+    STOPS.forEach(([sel, msg, ch]) => wp.push({ at: at($(sel), 0.5), stop: true, msg, ch, go: 'ادامه ▶' }));
+    wp.push({ at: at($('#contact'), 0, 40), stop: true, end: true, ch: 7, msg: 'پایان داستان. هر سؤالی دارید، از همین‌جا با ما تماس بگیرید.', go: 'از اول ▶' });
+    wp.forEach((w) => { w._v = -1; });
+    return wp.sort((a, b) => a.at() - b.at());
   }
+  // positions are measured lazily and re-measured after any resize (phones resize whenever their toolbars slide in or out)
+  const yOf = (w) => { if (w._v !== AP.ver) { w._y = w.at(); w._v = AP.ver; } return w._y; };
+  addEventListener('resize', () => { AP.ver++; });
+
+  /* reading highlight: every word of the card is wrapped once (a table card is lit row by row) */
+  function wrapWords(card) {
+    if (card._units) return card._units;
+    const units = [];
+    const walk = (node) => [...node.childNodes].forEach((c) => {
+      if (c.nodeType === 3) {
+        if (!c.nodeValue.trim()) return;
+        const frag = document.createDocumentFragment();
+        c.nodeValue.split(/(\s+)/).forEach((t) => {
+          if (!t) return;
+          if (/^\s+$/.test(t)) { frag.append(t); return; }
+          const sp = document.createElement('span');
+          sp.className = 'w'; sp.textContent = t;
+          frag.append(sp); units.push(sp);
+        });
+        c.replaceWith(frag);
+      } else if (c.nodeType === 1 && !c.matches('svg, script, style, .src, .nextline, .step')) walk(c);
+    });
+    const rows = $$('tbody tr', card);
+    if (rows.length) units.push(...rows);
+    else $$('p:not(.tag):not(.nextline):not(.src), li', card).forEach(walk);
+    card._units = units;
+    return units;
+  }
+  function apFocus(card) {
+    if (!card) return;
+    if (AP.cur && AP.cur.card === card) return;
+    apUnfocus();
+    AP.cur = { card, units: wrapWords(card), shown: -1 };
+    card.classList.add('reading');
+  }
+  function apUnfocus() {
+    if (!AP.cur) return;
+    const { card, units } = AP.cur;
+    card.classList.remove('reading');
+    units.forEach((u) => u.classList.remove('r', 'cur'));
+    card.scrollTop = 0;
+    AP.cur = null;
+  }
+  function apRead(frac) {
+    const c = AP.cur;
+    if (!c || !c.units.length) return;
+    const n = c.units.length;
+    const idx = Math.min(n - 1, Math.floor(clamp(frac / 0.9) * n));
+    if (idx !== c.shown) {
+      for (let k = c.shown + 1; k <= idx; k++) c.units[k].classList.add('r');
+      if (c.shown >= 0) c.units[c.shown].classList.remove('cur');
+      c.units[idx].classList.add('cur');
+      c.shown = idx;
+    }
+    const over = c.card.scrollHeight - c.card.clientHeight; // a tall card on a small screen scrolls along with the reading
+    if (over > 4) c.card.scrollTop = over * clamp((frac - 0.08) / 0.84);
+  }
+
   const setPlayUI = (on) => {
     playBtn.setAttribute('aria-pressed', String(on));
     playBtn.setAttribute('aria-label', on ? 'توقف پخش خودکار' : 'پخش خودکار داستان');
@@ -365,62 +425,78 @@
     if (!AP.on) return;
     AP.on = false;
     cancelAnimationFrame(AP.raf);
+    apUnfocus();
     setPlayUI(false);
   }
   function apMoveTo(i, now) {
     AP.i = i;
     const w = AP.wp[i];
-    AP.y0 = scrollY; AP.y1 = w.y;
+    AP.y0 = scrollY; AP.y1 = yOf(w);
     const dist = Math.abs(AP.y1 - AP.y0);
     AP.dur = clamp((dist / 430) * 1000, 1600, 7000);
     AP.t0 = now;
-    AP.phase = dist < 6 ? 'dwell' : 'move';
-    if (AP.phase === 'dwell') AP.until = now + (w.dwell || 0);
+    apUnfocus();
+    if (dist < 6) apArrive(now, w, 600);
+    else AP.phase = 'move';
+  }
+  function apArrive(now, w, dwell) {
+    AP.phase = 'dwell';
+    AP.from = now;
+    AP.until = now + (dwell != null ? dwell : w.dwell);
+    if (w.beat) apFocus(w.beat);
   }
   function apFrame(now) {
     if (!AP.on) return;
     AP.raf = requestAnimationFrame(apFrame);
-    if (Math.abs(scrollY - AP.lastY) > 4) { apPause(); return; } // the visitor scrolled by themselves
     const w = AP.wp[AP.i];
     if (AP.phase === 'move') {
       const k = clamp((now - AP.t0) / AP.dur);
       const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
-      scrollTo({ top: AP.y0 + (AP.y1 - AP.y0) * e, behavior: 'instant' });
-      AP.lastY = scrollY;
+      // the target is re-read every frame: if the layout moved (a phone's toolbar, a font arriving) the film simply follows it
+      AP.y1 = yOf(w);
+      scrollTo(0, AP.y0 + (AP.y1 - AP.y0) * e);
       if (k >= 1) {
         if (w.stop) { apPause(); showHint(w.msg, { ch: w.ch, sticky: true, go: w.go }); return; }
-        AP.phase = 'dwell'; AP.until = now + w.dwell;
+        apArrive(now, w);
       }
     } else if (now >= AP.until) {
       if (AP.i + 1 >= AP.wp.length) { apPause(); return; }
       apMoveTo(AP.i + 1, now);
+    } else {
+      apRead((now - AP.from) / (AP.until - AP.from));
     }
   }
   function apPlay() {
     if (AP.on) return;
     AP.wp = buildWaypoints();
+    AP.ver++;
     hideHint();
-    let i = AP.wp.findIndex((w) => w.y > scrollY + 30);
-    if (i < 0) { scrollTo({ top: 0, behavior: 'instant' }); i = 0; } // finished before: start again
+    let i = AP.wp.findIndex((w) => yOf(w) > scrollY + 30);
+    if (i < 0) { scrollTo(0, 0); i = 0; } // finished before: start again
     AP.on = true;
-    AP.lastY = scrollY;
     setPlayUI(true);
     const now = performance.now();
     apMoveTo(i, now);
-    if (AP.phase === 'dwell') AP.until = now + 600;
     AP.raf = requestAnimationFrame(apFrame);
   }
   playBtn.addEventListener('click', () => (AP.on ? apPause() : apPlay()));
   $('#play-hero').addEventListener('click', apPlay);
   hintGo.addEventListener('click', apPlay);
-  // any real input from the visitor takes over
-  const takeOver = (e) => {
-    if (!AP.on) return;
-    if (e.target && e.target.closest && e.target.closest('#play, #play-hero, #hint-go')) return;
-    if (e.type === 'keydown' && !['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) return;
-    apPause();
+
+  /* The visitor takes over by scrolling (wheel, a swipe of more than a few pixels, a scroll key, the scrollbar) or by opening a menu.
+     A plain tap does not stop the film, and the page's own position is never used as a signal: a phone can nudge it by itself. */
+  let touchY = 0;
+  const onTouchStart = (e) => { touchY = e.touches && e.touches[0] ? e.touches[0].clientY : 0; };
+  const onTouchMove = (e) => {
+    if (!AP.on || !e.touches || !e.touches[0]) return;
+    if (Math.abs(e.touches[0].clientY - touchY) > 14) apPause();
   };
-  ['wheel', 'touchstart', 'keydown'].forEach((t) => addEventListener(t, takeOver, { passive: true }));
+  addEventListener('touchstart', onTouchStart, { passive: true });
+  addEventListener('touchmove', onTouchMove, { passive: true });
+  addEventListener('wheel', () => AP.on && apPause(), { passive: true });
+  addEventListener('keydown', (e) => { if (AP.on && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) apPause(); });
+  addEventListener('mousedown', (e) => { if (AP.on && e.target === document.documentElement) apPause(); }); // the scrollbar itself
+  document.addEventListener('click', (e) => { if (AP.on && e.target.closest && e.target.closest('a[href^="#"]:not(#play-hero)')) apPause(); });
 
   /* ───────────────────────── anchors → cinematic scroll ───────────────────────── */
   const targetFor = (hash) => { const el = $(hash); return el ? el.getBoundingClientRect().top + scrollY : 0; };
