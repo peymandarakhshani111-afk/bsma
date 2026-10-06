@@ -477,7 +477,7 @@
 <!-- ═════════ 04 · BEFORE YOU OPEN THE DOOR: cool with water first (hose cabinet), then clear the common area of smoke (ARIS fan) ═════════ -->
 <section id="response" class="act" style="--h:640vh" aria-label="پیش از باز کردن در: اول خنک‌کردن با آب (جعبه‌ی آتش‌نشانی)، بعد تخلیه‌ی دود از راهرو و مشاعات (فن ARIS)">
   <div class="stick">
-    <div class="act-stage response-stage" id="response-stage" role="group" aria-label="مقطع یک اتاق دربسته که آتش دارد و راهروی کنارش: جعبه‌ی آتش‌نشانی روی دیوار راهرو، آب‌پاشی برای کاهش دما، و سپس فن تخلیه‌ی دود که راهرو را از دود پاک می‌کند">
+    <div class="act-stage response-stage" id="response-stage" role="group" aria-label="مقطع یک اتاق دربسته که آتش دارد و راهروی کنارش: جعبه‌ی آتش‌نشانی روی دیوار راهرو، آب‌پاشی برای کاهش دما، و سپس فنِ بیرونِ ساختمان که با کانال به سقف راهرو وصل است و دود را بیرون می‌کشد">
       <ol class="steps" aria-hidden="true">
         <li>در بسته می‌ماند</li><li>شیلنگ و آب</li><li>دما پایین آمد؟</li><li>تخلیه‌ی دود</li>
       </ol>
@@ -502,7 +502,7 @@
             <g class="r-walls" fill="none" stroke="#27e6ff" stroke-opacity=".55" stroke-width=".9" stroke-linejoin="round" stroke-linecap="round">
               <path d="M50 28V8H3V78H50"/>
               <path d="M53.6 28V8H106V12M106 30V78H53.6"/>
-              <path d="M106 12H110M106 30H110" stroke-opacity=".8"/>
+              <path d="M106 12H108M106 30H108" stroke-opacity=".8"/>
               <path d="M106 78H125" stroke-opacity=".45"/>
               <path d="M3 78H50M53.6 78H106" stroke-width="1.4"/>
             </g>
@@ -518,7 +518,7 @@
               <rect class="door-body" x="50" y="28" width="3.6" height="50" rx=".4"/>
             </g>
             <g class="r-out" fill="none" stroke="#c4cbdb" stroke-width=".9" stroke-linecap="round" stroke-dasharray="2.2 2">
-              <path d="M58 16C76 14 94 18 110 21"/><path d="M58 25C76 24 94 25 108 24.5" opacity=".7"/>
+              <path d="M54.6 30C54 22 57 15.8 60.8 12.6"/><path d="M100 22C88 20 74 15 64.6 12.8" opacity=".8"/><path d="M98 15.5C86 14.4 74 12.8 65 12.2" opacity=".65"/>
             </g>
             <g class="r-steam"></g>
             <g class="r-smoke-out"></g>
@@ -535,33 +535,54 @@
           <a class="cab" id="rs-cab" href="https://bsma.ir/product/جعبه-آتش-نشانی-استاندارد/" target="_blank" rel="noopener" aria-label="جعبه‌ی آتش‌نشانی دو کابین قاب‌دار به‌سازان، نصب‌شده روی دیوار راهرو">
             <img class="cab-closed" src="img/firebox-white.webp" alt="جعبه‌ی آتش‌نشانی دو کابین قاب‌دار سفید، با درِ بسته" width="800" height="626" loading="lazy" decoding="async">
             <img class="cab-open" src="img/firebox-white-open.webp" alt="همان جعبه با درِ باز: قرقره‌ی شیلنگ با نازل، و جای کپسول" width="800" height="787" loading="lazy" decoding="async">
+            <img class="reel" src="img/firebox-white-reel.webp" alt="" aria-hidden="true" width="320" height="320" loading="lazy" decoding="async">
             <span class="cab-lbl"><em id="rs-cab-t">روی دیوار، پشتِ دربِ خودش</em></span>
           </a>
 
           <svg class="plan-svg plan-svg-top" viewBox="0 0 125 90" aria-hidden="true" focusable="false">
             <defs>
               <linearGradient id="rs-gW" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#27e6ff" stop-opacity=".95"/><stop offset="1" stop-color="#bff6ff" stop-opacity=".45"/></linearGradient>
-              <linearGradient id="rs-gHose" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a2f3b"/><stop offset=".5" stop-color="#4b5266"/><stop offset="1" stop-color="#232733"/></linearGradient>
+              <clipPath id="rs-cD"><rect class="r-dclip" x="110" y="4" width="0" height="30"/></clipPath>
             </defs>
-            <path class="r-hose-edge" d="M70.4 30.4C70.5 34 70.2 36 70 40C69.7 49 72.4 58 70.5 66C69 73 64 77 61.5 73.2C59.8 70 65 67 69.3 62.3" fill="none" stroke="#10131b" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
-            <path class="r-hose" d="M70.4 30.4C70.5 34 70.2 36 70 40C69.7 49 72.4 58 70.5 66C69 73 64 77 61.5 73.2C59.8 70 65 67 69.3 62.3" fill="none" stroke="#454c5e" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
-            <path class="r-hose-hl" d="M70.4 30.4C70.5 34 70.2 36 70 40C69.7 49 72.4 58 70.5 66C69 73 64 77 61.5 73.2C59.8 70 65 67 69.3 62.3" fill="none" stroke="#8a93a8" stroke-opacity=".55" stroke-width=".45" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="translate(-.35 -.3)"/>
-            <g class="r-nozzle" transform="translate(66 60) rotate(215)">
-              <rect x="-4.4" y="-.9" width="4.6" height="1.8" rx=".5" fill="#2a2f3b"/>
-              <path d="M0 -1.5H4.2L5.2 -1.1V1.1L4.2 1.5H0Z" fill="#e0371d"/>
-              <path d="M0 -1.5H4.2L5.2 -1.1H0Z" fill="#fff" opacity=".22"/>
-              <rect x="5" y="-1.25" width="1.7" height="2.5" rx=".4" fill="#9aa3b5"/>
-              <rect x="1" y="-2.5" width="1.3" height="1.2" rx=".3" fill="#2a2f3b"/>
+            <g class="r-duct" clip-path="url(#rs-cD)">
+              <path d="M109.8 19.7L104 19.7C97 19.7 96 11.5 88 11.5L63.5 11.5" fill="none" stroke="#161a23" stroke-width="7.4" stroke-linejoin="round"/>
+              <path d="M109.8 19.7L104 19.7C97 19.7 96 11.5 88 11.5L63.5 11.5" fill="none" stroke="#7f889c" stroke-width="6.3" stroke-linejoin="round"/>
+              <path d="M109.8 19.7L104 19.7C97 19.7 96 11.5 88 11.5L63.5 11.5" fill="none" stroke="#d3d9e6" stroke-width="6.3" stroke-linejoin="round" stroke-dasharray=".6 1.5" opacity=".6"/>
+              <path d="M109.8 19.7L104 19.7C97 19.7 96 11.5 88 11.5L63.5 11.5" fill="none" stroke="#ffffff" stroke-width="1.1" stroke-linejoin="round" opacity=".22" transform="translate(0 -2)"/>
+              <path d="M109.8 19.7L104 19.7C97 19.7 96 11.5 88 11.5L63.5 11.5" fill="none" stroke="#000" stroke-width="1.4" stroke-linejoin="round" opacity=".22" transform="translate(0 2.2)"/>
+              <path class="r-duct-flow" d="M63.5 11.5L88 11.5C96 11.5 97 19.7 104 19.7L110 19.7" fill="none" stroke="#eaf7ff" stroke-width=".7" stroke-linecap="round" stroke-dasharray="1.6 2.4"/>
+              <rect x="108.2" y="16" width="1.9" height="7.4" rx=".35" fill="#4a5368"/><path d="M108.9 16.3V23.1M109.5 16.3V23.1" stroke="#9aa3b5" stroke-width=".25"/>
+              <path d="M63.5 8.2L59.6 6.5V16.6L63.5 14.9Z" fill="#aeb6c6" stroke="#161a23" stroke-width=".45" stroke-linejoin="round"/>
+              <path d="M60.8 7.3V15.8M62.1 7.7V15.4" stroke="#3a4152" stroke-width=".4"/>
+            </g>
+            <path class="r-hose-edge" d="M80.3 34.1C78 35.9 77.5 39.3 77.5 45C77.5 48.5 77.5 52 77.5 56.4C77.5 60.76 73.96 64.3 69.6 64.3C65.24 64.3 61.7 60.76 61.7 56.4" fill="none" stroke="#0f1218" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+            <path class="r-hose" d="M80.3 34.1C78 35.9 77.5 39.3 77.5 45C77.5 48.5 77.5 52 77.5 56.4C77.5 60.76 73.96 64.3 69.6 64.3C65.24 64.3 61.7 60.76 61.7 56.4" fill="none" stroke="#4a5164" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+            <path class="r-hose-hl" d="M80.3 34.1C78 35.9 77.5 39.3 77.5 45C77.5 48.5 77.5 52 77.5 56.4C77.5 60.76 73.96 64.3 69.6 64.3C65.24 64.3 61.7 60.76 61.7 56.4" fill="none" stroke="#a9b2c6" stroke-opacity=".6" stroke-width=".28" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="translate(-.25 -.2)"/>
+            <g class="r-nozzle" transform="translate(60.2 50.7) rotate(255)">
+              <rect x="-5.9" y="-.7" width=".7" height="1.4" rx=".2" fill="#6f788d"/>
+              <rect x="-5.3" y="-1.1" width="2.1" height="2.2" rx=".3" fill="#9aa3b5"/>
+              <path d="M-4.7 -1.1V1.1M-4.1 -1.1V1.1M-3.5 -1.1V1.1" stroke="#59627a" stroke-width=".22"/>
+              <path d="M-3.2 -1.4H.4L1 -1.15V1.15L.4 1.4H-3.2Z" fill="#d93a1f"/>
+              <path d="M-3.2 -1.4H.4L1 -1.15H-3.2Z" fill="#fff" opacity=".28"/>
+              <path d="M-3.2 1.4H.4L1 1.15H-3.2Z" fill="#000" opacity=".25"/>
+              <path d="M-2.7 -1.4L-2 -3.3L.1 -3L0 -1.4" fill="none" stroke="#232733" stroke-width=".55" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="-1.3" cy="-1.4" r=".38" fill="#b7bfd0"/>
+              <path d="M1 -1.15H4.4L5 -.9V.9L4.4 1.15H1Z" fill="#c8331a"/>
+              <path d="M1 -1.15H4.4L5 -.9H1Z" fill="#fff" opacity=".25"/>
+              <path d="M1.9 -1.15V1.15M2.6 -1.15V1.15M3.3 -1.15V1.15" stroke="#1b1f29" stroke-width=".3" opacity=".75"/>
+              <rect x="5" y="-1.35" width="1.5" height="2.7" rx=".35" fill="#2a2f3b"/>
+              <path d="M5.35 -1.35V1.35M5.75 -1.35V1.35M6.15 -1.35V1.35" stroke="#737c92" stroke-width=".2"/>
+              <rect x="6.5" y="-1.05" width=".55" height="2.1" rx=".22" fill="#aeb6c8"/>
             </g>
             <g class="r-water">
-              <path class="jet" d="M60.7 56.3C58 50 55.8 45 54.2 41.5" fill="none" stroke="url(#rs-gW)" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2.6 1.8"/>
-              <path class="cone" d="M60.7 56.3L54.4 35L57.4 49Z" fill="#27e6ff" opacity=".17"/>
+              <path class="jet" d="M58.4 43.9C57.6 39 56 33.5 53.9 29.5" fill="none" stroke="url(#rs-gW)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="2.6 1.8"/>
+              <path class="cone" d="M58.4 43.9L52.8 27.5L57.6 29.4Z" fill="#27e6ff" opacity=".17"/>
             </g>
           </svg>
 
           <a class="fan" id="rs-fan" href="https://bsma.ir/product/فن-تخلیه-دود-صنعتی-بک-درفت-قابل-حمل/" target="_blank" rel="noopener" aria-label="فن تخلیه‌ی دود صنعتی قابل‌حمل ARIS">
             <img src="img/fan-aris-cut.webp" alt="فن تخلیه‌ی دود صنعتی قابل‌حمل ARIS" width="300" height="258" loading="lazy" decoding="async">
-            <span class="fan-lbl"><em>فن تخلیه‌ی دود ARIS</em>در دهانه‌ی راهرو</span>
+            <span class="fan-lbl"><em>فن تخلیه‌ی دود ARIS</em>بیرون ساختمان، با کانال به راهرو</span>
           </a>
         </div>
       </div>
@@ -576,7 +597,7 @@
       <article class="beat">
         <p class="tag"><b>۰۴</b> پیش از باز کردن در</p>
         <h3>جعبه‌ی آتش‌نشانی، پشتِ دربِ خودش</h3>
-        <p>روی دیوار راهرو جعبه‌ی آتش‌نشانی نصب است. در همین جعبه را باز می‌کنیم، نه در اتاقِ آتش. قرقره‌ی شیلنگ با نازلش داخل آن آماده است؛ شیلنگ را از قرقره بیرون می‌کشیم و نازل را رو به در می‌گیریم.</p>
+        <p>روی دیوار راهرو جعبه‌ی آتش‌نشانی نصب است. در همین جعبه را باز می‌کنیم، نه در اتاقِ آتش. قرقره‌ی شیلنگ با نازلش داخل آن آماده است؛ شیلنگ را به‌سمت آتش می‌کشیم، قرقره می‌چرخد و باز می‌شود، و نازل را رو به در می‌گیریم.</p>
         <div class="chips"><a class="chip" href="https://bsma.ir/product/جعبه-آتش-نشانی-استاندارد/" target="_blank" rel="noopener">جعبه‌ی آتش‌نشانی دو کابین قاب‌دار ↗</a><a class="chip chip-soft" href="https://bsma.ir/product-category/fire-box/" target="_blank" rel="noopener">همه‌ی جعبه‌های آتش‌نشانی ↗</a></div>
       </article>
       <article class="beat">
@@ -588,7 +609,7 @@
       <article class="beat">
         <p class="tag"><b>۰۴</b> پیش از باز کردن در</p>
         <h3>بعد از خنک شدن، راهرو را از دود پاک کنیم</h3>
-        <p>کاربرد اصلیِ فن تخلیه‌ی دود در مشاعات است: راهرو و راه‌پله. دودی که از در بیرون زده، دید را می‌بندد و راهِ آتش‌نشان را تا محل حریق می‌گیرد؛ فن آن را از دهانه‌ی راهرو بیرون می‌کشد تا مسیر باز و روشن شود و راه فرار هم پر از دود نماند. در آزمایش‌های NIST، فن‌های سیار دود و گرما را از راهرو و راه‌پله بیرون راندند و کار آتش‌نشان و جانِ ساکنان را بهتر کردند.</p>
+        <p>کاربرد اصلیِ فن تخلیه‌ی دود در مشاعات است: راهرو و راه‌پله. دودی که از در بیرون زده، دید را می‌بندد و راهِ آتش‌نشان را تا محل حریق می‌گیرد. فن بیرونِ ساختمان می‌ماند و با یک کانال انعطاف‌پذیر به سقفِ راهرو، جایی که دود جمع شده، وصل می‌شود و آن را بیرون می‌کشد تا مسیر باز و روشن شود و راه فرار هم پر از دود نماند. در آزمایش‌های NIST، فن‌های سیار دود و گرما را از راهرو و راه‌پله بیرون راندند و کار آتش‌نشان و جانِ ساکنان را بهتر کردند.</p>
         <div class="chips"><a class="chip" href="https://bsma.ir/product/فن-تخلیه-دود-صنعتی-بک-درفت-قابل-حمل/" target="_blank" rel="noopener">فن تخلیه‌ی دود صنعتی ARIS ↗</a></div>
         <a class="src" href="https://www.nist.gov/news-events/news/2008/06/high-rise-fire-fighting-effective-use-positive-pressure-ventilation" target="_blank" rel="noopener">منبع: NIST، تهویه‌ی فشار مثبت در آتش‌سوزی ساختمان‌های بلند ↗</a>
         <a class="src" href="https://fsri.org/research/effectiveness-fire-service-positive-pressure-ventilation" target="_blank" rel="noopener">منبع: UL FSRI، دید و شرایط قابل‌تحمل برای آتش‌نشان و ساکنان ↗</a>

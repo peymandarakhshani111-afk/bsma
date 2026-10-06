@@ -345,6 +345,7 @@
     const sm = $('.r-sm', plan), ht = $('.r-ht', plan), gasG = $('.r-gas', plan), cs = $('.r-cs', plan);
     const door = $('.r-door', plan), doorBody = $('.door-body', plan), doorGlow = $('.door-glow', plan);
     const fire = $('.r-fire', plan), hoses = $$('.r-hose-edge, .r-hose, .r-hose-hl', plan), nozzle = $('.r-nozzle', plan), water = $('.r-water', plan);
+    const reel = $('.reel', plan), duct = $('.r-duct', plan), dclip = $('.r-dclip', plan);
     const steam = $('.r-steam', plan), outG = $('.r-out', plan), smokeOut = $('.r-smoke-out', plan);
     const cab = $('#rs-cab'), cabClosed = $('.cab-closed', cab), cabOpen = $('.cab-open', cab), cabT = $('#rs-cab-t');
     const fan = $('#rs-fan');
@@ -359,8 +360,8 @@
       gasG.append(c);
       return { c, k: (i + 0.5) / 26 };
     });
-    for (let i = 0; i < 7; i++) steam.append(mk('circle', { class: 'puff', cx: 56 + (i % 3) * 1.6, cy: 46 - (i % 4) * 3.2, r: 1.5, fill: '#dff6ff', style: 'animation-delay:' + (i * 0.27).toFixed(2) + 's' }));
-    for (let i = 0; i < 8; i++) smokeOut.append(mk('circle', { class: 'drift', cx: 118 + (i % 4) * 1.6, cy: 13 + (i % 3) * 3.6, r: 1.8 + (i % 3) * 0.5, fill: '#aeb4c2', style: 'animation-delay:' + (i * 0.4).toFixed(2) + 's' }));
+    for (let i = 0; i < 7; i++) steam.append(mk('circle', { class: 'puff', cx: 56 + (i % 3) * 1.6, cy: 44 - (i % 4) * 3.2, r: 1.5, fill: '#dff6ff', style: 'animation-delay:' + (i * 0.27).toFixed(2) + 's' }));
+    for (let i = 0; i < 8; i++) smokeOut.append(mk('circle', { class: 'drift', cx: 121.5 + (i % 4) * 1.5, cy: 14 + (i % 3) * 3.6, r: 1.8 + (i % 3) * 0.5, fill: '#aeb4c2', style: 'animation-delay:' + (i * 0.4).toFixed(2) + 's' }));
     // smoke in the common area: soft grey puffs that drift, and stream toward the fan once it runs
     const cp = $('.r-cp', plan);
     const puffs = Array.from({ length: 16 }, (_, i) => {
@@ -398,9 +399,13 @@
         // the cabinet on the corridor wall opens; the hose is pulled off the reel
         const open = ease(ramp(p, 0.22, 0.3));
         cabOpen.style.opacity = open.toFixed(2); cabClosed.style.opacity = (1 - open).toFixed(2);
+        // the reel turns twice while the hose is pulled off it toward the fire
+        const pulled = ease(ramp(p, 0.28, 0.38));
+        reel.style.opacity = open.toFixed(2);
+        reel.style.transform = 'rotate(' + (720 * pulled).toFixed(1) + 'deg)';
         const t = p < 0.26 ? 'روی دیوار، پشتِ دربِ خودش' : 'درِ جعبه باز شد ✓';
         if (cabT.textContent !== t) cabT.textContent = t;
-        const pull = (1 - ease(ramp(p, 0.28, 0.38))).toFixed(3);
+        const pull = (1 - pulled).toFixed(3);
         hoses.forEach((h) => { h.style.strokeDashoffset = pull; h.style.opacity = p > 0.27 ? 1 : 0; });
         nozzle.style.opacity = ramp(p, 0.34, 0.38).toFixed(2);
         state.jet = ramp(p, 0.44, 0.46) * (1 - ramp(p, 0.62, 0.64));
@@ -409,6 +414,9 @@
         const fanOn = ease(ramp(p, 0.66, 0.72));
         fan.style.opacity = fanOn.toFixed(2);
         fan.style.transform = 'translate(' + ((1 - fanOn) * 10).toFixed(1) + 'px,0)';
+        // the duct runs from the fan, through the opening, along the corridor ceiling to where the smoke gathers
+        const dr = ease(ramp(p, 0.66, 0.74)), dx = 110 - dr * 52;
+        dclip.setAttribute('x', dx.toFixed(2)); dclip.setAttribute('width', dr > 0 ? (111 - dx).toFixed(2) : 0);
         outG.style.opacity = (ease(ramp(p, 0.7, 0.76)) * (1 - ramp(p, 0.95, 1))).toFixed(2);
         smokeOut.style.opacity = (fanOn * (1 - ease(ramp(p, 0.9, 0.97)))).toFixed(2);
         const cur = p < 0.22 ? 0 : p < 0.62 ? 1 : p < 0.7 ? 2 : 3;
