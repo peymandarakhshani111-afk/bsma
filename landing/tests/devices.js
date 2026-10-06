@@ -64,6 +64,13 @@ const MEASURE = () => {
     const bad = [...pl.querySelectorAll('.dev, .cab, .fan, .gauge, .lcd')].filter((e) => { const b = R(e); return b.width > 0 && getComputedStyle(e).opacity !== '0' && (b.left < r.left - 6 || b.right > r.right + 6 || b.top < r.top - 6 || b.bottom > r.bottom + 6); });
     if (bad.length) out.problems.push('scene item outside the plan: ' + bad.map((e) => e.className.toString().slice(0, 14)).join(','));
   });
+  // the "your turn" hint must not lie on a card or panel
+  const hintEl = document.getElementById('hint');
+  if (hintEl && !hintEl.hidden && hintEl.classList.contains('show')) {
+    const hr = R(hintEl);
+    cards.forEach((c) => { const a = inter(hr, R(c)); if (a > 400) out.problems.push('hint overlaps card ' + (c.querySelector('h2,h3') ? c.querySelector('h2,h3').textContent.trim().slice(0, 16) : c.className) + ' by ' + Math.round(a) + 'px²'); });
+    if (hr.left < -1 || hr.right > vw + 1) out.problems.push('hint outside viewport');
+  }
   const h1 = document.querySelector('.hero-title'); if (h1 && vis(h1) && R(h1).bottom > vh) out.problems.push('hero title cut off');
   // the things a visitor must be able to reach without hunting
   const within = (el, box, tol = 2) => { const r = R(el), b = R(box); return r.top >= b.top - tol && r.bottom <= b.bottom + tol; };
