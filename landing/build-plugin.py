@@ -33,7 +33,7 @@ open(os.path.join(DEST, 'head-extra.html'), 'w', encoding='utf-8').write(noscrip
 # local preview that mimics template.php (BASE = plugin assets folder)
 scripts = ['vendor/gsap.min.js', 'vendor/ScrollTrigger.min.js', 'vendor/howler.min.js', 'js/main.js', 'js/scene.js']
 prev = f'''<!doctype html><html lang="fa-IR" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>preview</title><link rel="preload" href="{NAME}/assets/fonts/Vazirmatn-VF.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="{NAME}/assets/css/style.css">{noscript}</head><body class="bsma-story">
+<title>preview</title><link rel="preload" href="{NAME}/assets/fonts/Vazirmatn-VF.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="{NAME}/assets/img/logo.webp" as="image" type="image/webp"><link rel="stylesheet" href="{NAME}/assets/css/style.css">{noscript}</head><body class="bsma-story">
 {body.replace('%BASE%', NAME + '/assets/')}
 <script>window.BSMA_BASE = "{NAME}/assets/";</script>
 ''' + '\n'.join(f'<script src="{NAME}/assets/{s}"' + (' async' if s == 'js/scene.js' else '') + '></script>' for s in scripts) + '\n</body></html>\n'

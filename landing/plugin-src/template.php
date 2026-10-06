@@ -58,6 +58,7 @@ $async   = array('js/scene.js');
 <meta name="theme-color" content="#05060a">
 <?php echo $keep; // phpcs:ignore WordPress.Security.EscapeOutput ?>
 <link rel="preload" href="<?php echo esc_url($base . 'fonts/Vazirmatn-VF.woff2'); ?>" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="<?php echo esc_url($base . 'img/logo.webp'); ?>" as="image" type="image/webp">
 <?php
 // The stylesheet is small (≈8 KB compressed), so it is printed inline: one round trip fewer before the first paint.
 $css_file = BSMA_STORY_DIR . 'assets/css/style.css';

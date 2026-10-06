@@ -13,13 +13,77 @@
 <meta property="og:description" content="سفری سه‌بعدی در دل یک اتاق در حال سوختن، با آخرین یافته‌های علمی ایمنی حریق.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2305060a'/%3E%3Crect x='10' y='6' width='12' height='20' rx='1.5' fill='none' stroke='%23ff6b1f' stroke-width='2.2'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/Vazirmatn-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="img/logo.webp" as="image" type="image/webp">
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"بک‌درفت چیست و چه تفاوتی با فلش‌اور دارد؟","inLanguage":"fa","datePublished":"2025-05-03","dateModified":"2026-10-05","author":{"@type":"Person","name":"پیمان درخشانی"},"publisher":{"@type":"Organization","name":"به‌سازان سرای مهرآهنگ","url":"https://bsma.ir/"}}
 </script>
-<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#gl,.hud,.dots,.progress,.where,.tip,.hint,.player,#play-hero,#help,.nextline,.step{display:none!important}.hs,.stage{display:none!important}</style></noscript>
+<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#loader,#gl,.hud,.dots,.progress,.where,.tip,.hint,.player,#play-hero,#help,.nextline,.step{display:none!important}.hs,.stage{display:none!important}</style></noscript>
 </head>
 <body>
+<!-- ───────── loading screen: logo + real percentage, so nobody clicks around while the 3D scene is still coming ───────── -->
+<div id="loader" role="status" aria-live="polite" aria-label="صفحه در حال بارگذاری است" data-nosnippet>
+  <div class="ld-box">
+    <div class="ld-ring">
+      <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ld-track" cx="60" cy="60" r="54"/><circle class="ld-arc" id="ld-arc" cx="60" cy="60" r="54"/></svg>
+      <span class="ld-plate"><img class="ld-logo" src="img/logo.webp" width="300" height="171" alt="لوگوی به‌سازان سرای مهرآهنگ" fetchpriority="high"></span>
+    </div>
+    <p class="ld-pct" id="ld-pct">۰٪</p>
+    <p class="ld-msg" id="ld-msg">در حال آماده‌سازی صفحه…</p>
+    <div class="ld-bar" aria-hidden="true"><i id="ld-bar"></i></div>
+    <p class="ld-tip">چند لحظه صبر کنید؛ صفحه در حال بارگذاری است. تا آماده شدن، روی چیزی نزنید.</p>
+  </div>
+</div>
+<script data-no-optimize="1" data-no-defer="1">
+/* Loading controller. Self-contained on purpose: it works even if every other script fails (it gives up after 10 s and shows the page). */
+(function () {
+  var root = document.documentElement, el = document.getElementById('loader');
+  if (!el) return;
+  root.classList.add('loading');
+  var arc = document.getElementById('ld-arc'), pct = document.getElementById('ld-pct'), msg = document.getElementById('ld-msg'), bar = document.getElementById('ld-bar');
+  var CIRC = 2 * Math.PI * 54, MS = [0, 8, 20, 38, 50, 70, 75, 82, 92, 100];
+  var L = window.BSMA_LOAD = { t: 0, cur: 0, shown: 0, done: false, cbs: [], t0: performance.now(), last: performance.now() };
+  var fa = function (n) { return Math.round(n).toLocaleString('fa-IR', { useGrouping: false }); };
+  L.set = function (n) { if (n > L.t) L.t = n; };
+  L.whenDone = function (f) { L.done ? f() : L.cbs.push(f); };
+  var say = function (p) { return p >= 99 ? 'آماده است!' : p >= 90 ? 'تقریباً آماده است…' : p >= 70 ? 'ساختن صحنه‌ی سه‌بعدی…' : p >= 40 ? 'بارگذاری صحنه‌ی سه‌بعدی…' : p >= 20 ? 'بارگذاری فونت و ظاهر صفحه…' : 'در حال آماده‌سازی صفحه…'; };
+  function finish() {
+    if (L.done) return;
+    L.done = true;
+    el.classList.add('done');
+    root.classList.remove('loading');
+    setTimeout(function () { el.hidden = true; el.setAttribute('aria-hidden', 'true'); }, 900);
+    L.cbs.splice(0).forEach(function (f) { try { f(); } catch (e) { /* a failing callback must not keep the loader up */ } });
+  }
+  function frame(now) {
+    if (L.done) return;
+    var dt = Math.min(0.1, (now - L.last) / 1000); L.last = now;
+    var elapsed = now - L.t0;
+    if (elapsed > 10000) L.t = 100; // never hold the visitor longer than this
+    var next = 100; for (var i = 0; i < MS.length; i++) if (MS[i] > L.t) { next = MS[i]; break; }
+    // between real milestones the number keeps creeping forward (never past the next milestone), so a slow network still looks alive
+    L.cur = Math.max(L.cur, L.t);
+    var goal = L.t >= 100 ? 100 : Math.min(next - 2, L.cur + 1.6 * dt);
+    L.cur = Math.max(L.cur, goal);
+    L.shown += (goal - L.shown) * Math.min(1, dt * 5) + (goal > L.shown ? 0.02 : 0);
+    if (L.shown > goal) L.shown = goal;
+    var p = Math.min(100, L.shown);
+    pct.textContent = fa(p) + '٪';
+    msg.textContent = say(p);
+    arc.style.strokeDashoffset = (CIRC * (1 - p / 100)).toFixed(1);
+    bar.style.transform = 'scaleX(' + (p / 100).toFixed(3) + ')';
+    if (p >= 99.4 && elapsed > 800) { pct.textContent = fa(100) + '٪'; msg.textContent = say(100); setTimeout(finish, 250); return; }
+    requestAnimationFrame(frame);
+  }
+  arc.style.strokeDasharray = CIRC.toFixed(1);
+  arc.style.strokeDashoffset = CIRC.toFixed(1);
+  L.set(8);
+  document.addEventListener('DOMContentLoaded', function () { L.set(20); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { L.set(38); });
+  addEventListener('load', function () { L.set(70); });
+  requestAnimationFrame(frame);
+})();
+</script>
 <a class="skip" href="#story">پرش به محتوا</a>
 
 <canvas id="gl" aria-hidden="true"></canvas>

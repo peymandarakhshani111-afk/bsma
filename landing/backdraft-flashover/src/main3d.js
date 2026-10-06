@@ -49,8 +49,11 @@ const BSMA = (window.BSMA = Object.assign(pre, {
 }));
 const mark = (n) => (BSMA.marks[n] = Math.round(performance.now()));
 
+const LD = (n) => window.BSMA_LOAD && window.BSMA_LOAD.set(n); // progress for the loading screen
+
 async function start() {
   mark('start');
+  LD(75);
   const canvas = document.getElementById('gl');
   const flashEl = document.getElementById('flash');
   const params = new URLSearchParams(location.search);
@@ -63,6 +66,7 @@ async function start() {
   } catch (e) {
     BSMA.failed = true;
     BSMA.ready = true;
+    LD(100);
     document.documentElement.classList.add('no-webgl');
     return;
   }
@@ -77,6 +81,7 @@ async function start() {
   const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
 
   mark('renderer');
+  LD(82);
   /* image-based light only for the product models: built the first time that station is created */
   let envTex = null;
   const getEnv = () => {
@@ -293,6 +298,7 @@ async function start() {
     flashEl.style.opacity = flashSm > 0.004 ? flashSm.toFixed(3) : '0';
 
     composer.render();
+    if (!BSMA.shown) { BSMA.shown = true; LD(100); } // the first picture is on screen
     BSMA.onFrame && BSMA.onFrame(S);
 
     /* adaptive quality (skip warm-up frames; ignore when forced) */
@@ -315,6 +321,7 @@ async function start() {
     } catch (e) { /* the first frame compiles them instead */ }
   }
   mark('hero');
+  LD(92);
   BSMA.ready = true;
   requestAnimationFrame((n) => {
     last = n;

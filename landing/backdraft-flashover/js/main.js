@@ -13,6 +13,7 @@
   const BSMA0 = (window.BSMA = window.BSMA || {});
   BSMA0.ui = Object.assign({ sign: -1, node: -1, product: 0, dragging: false, dragVel: 0, dragRot: 0, photoMode: true }, BSMA0.ui);
   const BS = () => window.BSMA || {};
+  window.BSMA_LOAD && BSMA_LOAD.set(50); // the loading screen: the UI layer is in place
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const touch = matchMedia('(hover: none), (pointer: coarse)').matches;
   const phone = () => innerWidth < 820;
@@ -106,6 +107,7 @@
       .to('.stats li', { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1 }, 1.0);
   }
   if (reduced) { gsap.set('.hero-title .line', { yPercent: 0 }); gsap.set('.eyebrow, .hero-lead, .stats li', { autoAlpha: 1, y: 0 }); }
+  else if (window.BSMA_LOAD) BSMA_LOAD.whenDone(() => requestAnimationFrame(intro)); // play the hero intro once the loading screen has left
   else requestAnimationFrame(intro);
 
   // the hero copy lifts away as the camera starts to move
