@@ -17,7 +17,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Article","headline":"بک‌درفت چیست و چه تفاوتی با فلش‌اور دارد؟","inLanguage":"fa","datePublished":"2025-05-03","dateModified":"2026-10-05","author":{"@type":"Person","name":"پیمان درخشانی"},"publisher":{"@type":"Organization","name":"به‌سازان سرای مهرآهنگ","url":"https://bsma.ir/"}}
 </script>
-<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#gl,.hud,.dots,.progress,.where,.tip,.hint,#play,#play-hero,#help,.nextline,.step{display:none!important}.hs,.stage{display:none!important}</style></noscript>
+<noscript><style>.beat{position:static!important;opacity:1!important;visibility:visible!important;margin:12px auto!important;width:min(720px,92%)!important}.chapter{height:auto!important}.stick{position:static!important;height:auto!important;overflow:visible!important}#gl,.hud,.dots,.progress,.where,.tip,.hint,.player,#play-hero,#help,.nextline,.step{display:none!important}.hs,.stage{display:none!important}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#story">پرش به محتوا</a>
@@ -48,7 +48,6 @@
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
   <div class="tools">
-    <button id="play" class="icon-btn play-btn" type="button" aria-pressed="false" aria-label="پخش خودکار داستان" data-sfx><svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg><svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor"/></svg><em>پخش خودکار</em></button>
     <button id="help" class="icon-btn help-btn" type="button" aria-haspopup="dialog" aria-controls="help-dlg" aria-label="راهنمای استفاده از صفحه" data-sfx><span class="q" aria-hidden="true">؟</span><em>راهنما</em></button>
     <button id="sound" class="icon-btn" type="button" aria-pressed="false" aria-label="صدا: خاموش" data-sfx>
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path class="spk" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="mute" d="M16 9l5 6m0-6l-5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -114,7 +113,7 @@
   <div class="sheet-box">
     <div class="sheet-head"><h2 id="help-title">این صفحه یک داستان است؛ چطور تماشایش کنم؟</h2><button type="button" class="icon-btn" data-close aria-label="بستن راهنما"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
     <ul class="howto">
-      <li><i class="hi hi-play" aria-hidden="true"></i><div><b>می‌توانید فقط تماشا کنید</b>دکمه‌ی ▶ بالای صفحه (یا «تماشای داستان» در ابتدا) را بزنید تا داستان خودش جلو برود. کلمه‌ها هم‌زمان با خواندن روشن می‌شوند، تا بدانید کجا را بخوانید. هر وقت خواستید، دکمه‌ی ❚❚ را بزنید یا خودتان اسکرول کنید.</div></li>
+      <li><i class="hi hi-play" aria-hidden="true"></i><div><b>می‌توانید فقط تماشا کنید</b>دکمه‌ی ▶ در نوار پایین صفحه (یا «تماشای داستان» در ابتدا) را بزنید تا داستان خودش جلو برود؛ مثل یک ویدیو. کلمه‌ها هم‌زمان با خواندن روشن می‌شوند و با فلش‌های کنار دکمه‌ی پخش به کارت قبلی یا بعدی بروید، با نوار زمان جلو و عقب بروید و سرعت را عوض کنید. هر وقت خواستید، ❚❚ را بزنید یا خودتان اسکرول کنید.</div></li>
       <li><i class="hi hi-scroll" aria-hidden="true"></i><div><b>یا خودتان جلو ببرید</b><span class="m-touch">انگشتتان را روی صفحه به بالا بکشید.</span><span class="m-mouse">چرخ ماوس، کلیدهای ↑ ↓ یا Space را به کار ببرید.</span> دوربین وارد اتاق می‌شود و متن‌ها یکی‌یکی از راه می‌رسند.</div></li>
       <li><i class="hi hi-menu" aria-hidden="true"></i><div><b>هرجا خواستید بپرید</b><span class="m-touch">دکمه‌ی «فهرست» (☰) بالای صفحه همه‌ی بخش‌ها را نشان می‌دهد.</span><span class="m-mouse">از نوار بالای صفحه یا نقطه‌های سمت چپ استفاده کنید.</span> متن کامل مقاله هم آخر صفحه است.</div></li>
       <li><i class="hi hi-tap" aria-hidden="true"></i><div><b>جاهایی که نوبت شماست</b>در سه بخش «نشانه‌ها»، «یافته‌ها» و «نمونه کارها» داستان منتظر می‌ماند: روی دایره‌ها و کارت‌ها بزنید یا محصول را بکشید و بچرخانید. بعد دوباره ▶ را بزنید.</div></li>
@@ -126,6 +125,21 @@
 
 <!-- contextual hint for the interactive chapters -->
 <div class="hint" id="hint" role="status" aria-live="polite" hidden><span class="hint-ico" aria-hidden="true"></span><span id="hint-t"></span><button type="button" id="hint-go" class="hint-go" hidden>ادامه ▶</button><button type="button" id="hint-x" aria-label="بستن">×</button></div>
+
+<!-- video-style player bar: always in reach at the bottom -->
+<div class="player" id="player" role="group" aria-label="پخش‌کننده‌ی داستان">
+  <button id="play" class="pl-play" type="button" aria-pressed="false" aria-label="پخش خودکار داستان" data-sfx>
+    <svg class="i-play" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+    <svg class="i-pause" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor"/></svg>
+  </button>
+  <button id="pl-prev" class="pl-btn" type="button" aria-label="کارت قبلی" data-sfx><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <button id="pl-next" class="pl-btn" type="button" aria-label="کارت بعدی" data-sfx><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="pl-mid">
+    <div class="pl-text" id="pl-text" aria-live="off"></div>
+    <div class="pl-track" id="pl-track" role="slider" tabindex="0" aria-label="جای شما در داستان" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="pl-fill"></i><b id="pl-knob"></b></div>
+  </div>
+  <button id="pl-speed" class="pl-speed" type="button" aria-label="سرعت پخش: ۱ برابر" data-sfx>۱×</button>
+</div>
 
 <main>
 
@@ -150,10 +164,6 @@
         <li><b>~۶۰۰ <small>°C</small></b><span>دمایی که اتاق را یک‌باره شعله‌ور می‌کند</span><em>NFPA 921</em></li>
       </ul>
     </div>
-    <a class="scroll-cue" href="#story" data-go="1" aria-label="شروع داستان؛ اسکرول کنید">
-      <span class="cue-ico" aria-hidden="true"><i></i></span>
-      <span class="cue-t"><b class="m-touch">برای شروع، انگشتتان را به بالا بکشید</b><b class="m-mouse">برای شروع، اسکرول کنید</b><small>داستان همراه با اسکرول جلو می‌رود</small></span>
-    </a>
   </div>
 </section>
 
@@ -296,7 +306,7 @@
       </ul>
       <div class="sign-detail" id="sign-detail" aria-live="polite">
         <h3 id="sign-title">یکی از نشانه‌ها را انتخاب کنید</h3>
-        <p id="sign-text">روی دایره‌های شماره‌دار در تصویر بزنید، یا از فهرست بالا انتخاب کنید.</p>
+        <p id="sign-text">روی یکی از شماره‌ها بزنید؛ هم در تصویر، هم همین‌جا.</p>
       </div>
       <p class="note">این نشانه‌ها فقط برای آگاهی و آموزش‌اند و هیچ‌کدام به‌تنهایی قطعی نیستند؛ تشخیص نهایی با آتش‌نشانان آموزش‌دیده است. اگر یکی از این‌ها را دیدید: در را باز نکنید، دور شوید و با <b>۱۲۵</b> تماس بگیرید.</p>
     </div>

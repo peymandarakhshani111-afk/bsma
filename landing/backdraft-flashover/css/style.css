@@ -440,13 +440,6 @@ html.sheet-open { overflow: hidden; }
 /* ───────── story mode + guidance details ───────── */
 .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .hero-actions .btn { min-height: 48px; justify-content: center; }
-.play-btn { width: auto; min-width: 42px; padding: 0 14px; gap: 8px; display: inline-flex; font-weight: 800; }
-.play-btn em { font-style: normal; font-size: 0.82em; color: var(--soft); }
-.play-btn .i-pause { display: none; }
-.play-btn[aria-pressed="true"] .i-play { display: none; }
-.play-btn[aria-pressed="true"] .i-pause { display: block; }
-.play-btn[aria-pressed="true"] { border-color: #ff6b1f99; box-shadow: 0 0 18px #ff6b1f44; }
-.play-btn .i-play, .play-btn .i-pause { color: var(--fire); }
 .tag .step { margin-inline-start: 0.4em; padding: 0 0.7em; border: 1px solid var(--line); border-radius: 999px; font-size: 0.85em; font-weight: 600; color: var(--soft); white-space: nowrap; }
 .nextline { margin-top: 0.9em; font-size: 0.78em; font-weight: 700; color: var(--cyan); opacity: 0.9; animation: nextNudge 2.2s ease-in-out infinite; }
 @keyframes nextNudge { 0%, 100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(4px); opacity: 1; } }
@@ -455,8 +448,6 @@ html.sheet-open { overflow: hidden; }
 .sub { font-size: 0.86em; color: var(--muted); margin: -0.2em 0 0.8em; }
 .hi-play::before { left: 50%; top: 50%; margin: -10px 0 0 -7px; border: 10px solid transparent; border-right: 0; border-left: 17px solid var(--fire); }
 @media (max-width: 820px) {
-  .play-btn { padding: 0; }
-  .play-btn em { display: none; }
   .hero-actions { width: 100%; flex-wrap: nowrap; }
   .hero-actions .btn { flex: 1 1 0; padding-inline: 0.9em; white-space: nowrap; font-size: 0.92em; }
 }
@@ -472,9 +463,8 @@ html.sheet-open { overflow: hidden; }
 .beat.reading .step { border-color: var(--fire); color: #fff; animation: livePulse 1.6s ease-in-out infinite; }
 .beat.reading .step::before { content: "▶ "; color: var(--fire); font-size: 0.8em; }
 @keyframes livePulse { 0%, 100% { box-shadow: 0 0 0 0 #ff6b1f00; } 50% { box-shadow: 0 0 0 5px #ff6b1f33; } }
-.playing .play-btn { animation: playGlow 2.4s ease-in-out infinite; }
 @keyframes playGlow { 0%, 100% { box-shadow: 0 0 0 0 #ff6b1f00; } 50% { box-shadow: 0 0 0 7px #ff6b1f2e, 0 0 22px #ff6b1f66; } }
-@media (prefers-reduced-motion: reduce) { .beat.reading .step, .playing .play-btn { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .beat.reading .step, .playing .pl-play { animation: none; } }
 
 /* ───────── frames: where to read right now, and where it is the visitor's turn ───────── */
 .read-frame { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 2; pointer-events: none; border: 1.5px solid #ffb454d9; border-radius: 9px; background: #ffb4541a; box-shadow: 0 0 18px #ffb45466; opacity: 0; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.4s ease, height 0.4s ease, opacity 0.3s ease; }
@@ -483,3 +473,168 @@ html.sheet-open { overflow: hidden; }
 .focus-frame { outline: 2px solid #27e6ffd9; outline-offset: 8px; border-radius: 16px; animation: framePulse 1.8s ease-in-out infinite; }
 @keyframes framePulse { 0%, 100% { outline-color: #27e6ff55; box-shadow: 0 0 0 0 #27e6ff00; } 50% { outline-color: #27e6ffee; box-shadow: 0 0 26px #27e6ff55; } }
 @media (prefers-reduced-motion: reduce) { .focus-frame { animation: none; } .read-frame { transition: none; } }
+
+/* ───────── player bar (like a video player): always at the bottom, in reach of the thumb ───────── */
+html { --pl: 0px; }
+html.has-player { --pl: 76px; }
+.player { position: fixed; z-index: 45; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom)); width: min(660px, calc(100% - 20px)); height: 56px; transform: translate(-50%, 14px); display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 999px; background: rgba(8, 10, 18, 0.92); border: 1px solid var(--line); box-shadow: 0 12px 44px #000c, 0 0 0 1px #27e6ff10; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s; }
+html.has-player .player { opacity: 1; visibility: visible; transform: translate(-50%, 0); pointer-events: auto; }
+.pl-play { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(135deg, #ff8a3d, #ff4b14); color: #1a0700; box-shadow: 0 6px 22px #ff4b1455; transition: transform 0.2s, box-shadow 0.3s; }
+.pl-play:hover { transform: scale(1.06); }
+.pl-play .i-pause { display: none; }
+.pl-play[aria-pressed="true"] .i-play { display: none; }
+.pl-play[aria-pressed="true"] .i-pause { display: block; }
+.playing .pl-play { animation: playGlow 2.4s ease-in-out infinite; }
+.pl-btn { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: var(--soft); background: #ffffff0d; transition: background 0.2s, color 0.2s; }
+.pl-btn:hover { background: #ffffff1c; color: #fff; }
+.pl-mid { flex: 1; min-width: 0; display: grid; gap: 5px; padding-inline: 6px; }
+.pl-text { font-size: 0.78em; line-height: 1.4; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-text b { color: var(--amber); }
+.pl-text .bob { display: inline-block; color: var(--cyan); animation: nextNudge 1.8s ease-in-out infinite; }
+.pl-track { position: relative; height: 22px; margin-block: -6px; cursor: pointer; touch-action: none; display: flex; align-items: center; -webkit-tap-highlight-color: transparent; }
+.pl-track::before { content: ""; position: absolute; inset-inline: 0; height: 4px; border-radius: 4px; background: #ffffff1f; }
+.pl-track i { position: absolute; inset-inline-start: 0; height: 4px; width: 100%; border-radius: 4px; background: linear-gradient(270deg, var(--amber), var(--fire)); transform-origin: right center; transform: scaleX(0); }
+.pl-track b { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px -7px 0 0; right: 0; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px #ff6b1f66, 0 2px 8px #000a; transform: translateX(0); }
+.pl-track:focus-visible { outline-offset: 2px; }
+.pl-speed { flex: none; min-width: 44px; height: 36px; padding: 0 10px; border-radius: 999px; background: #ffffff0d; color: var(--soft); font-weight: 800; font-size: 0.85em; font-variant-numeric: tabular-nums; }
+.pl-speed:hover { background: #ffffff1c; color: #fff; }
+/* leave room for the bar */
+.beat, .panel { bottom: var(--pl); }
+.hud { bottom: calc(clamp(16px, 5vh, 56px) + var(--pl)); }
+.hud-steps { bottom: calc(clamp(14px, 4vh, 40px) + var(--pl)); }
+@media (max-width: 820px) {
+  html.has-player { --pl: 70px; }
+  .player { height: 54px; width: calc(100% - 16px); gap: 4px; }
+  .beat, .panel, .beat-wide, .research-panel { bottom: calc(var(--pl) + 4px + env(safe-area-inset-bottom)); max-height: calc(58dvh - 52px); }
+  .hud, .hud-steps { bottom: auto; }
+}
+@media (max-width: 380px) { .pl-btn { width: 34px; height: 34px; } .pl-speed { min-width: 38px; padding: 0 6px; } .pl-play { width: 42px; height: 42px; } }
+@media (prefers-reduced-motion: reduce) { .player { transition: none; } .pl-text .bob { animation: none; } }
+.contact-panel { bottom: auto; }
+/* before the visitor does anything the bar is one big hint */
+.pl-idle .pl-track, .pl-idle .pl-btn { display: none; }
+.pl-idle .pl-text { white-space: normal; font-size: 0.8em; line-height: 1.5; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+/* ───────── fit on every screen: cards never run under the top bar or the player ───────── */
+.beat, .panel { top: 72px; bottom: calc(var(--pl) + 12px); max-height: calc(100dvh - 84px - var(--pl)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.beat::before, .panel::before { top: 0; }
+/* portrait phones and tablets: the card is a sheet at the bottom, above the player bar */
+@media (max-width: 820px) and (max-aspect-ratio: 23/20) {
+  .beat, .panel, .beat-wide, .research-panel { top: auto; bottom: calc(var(--pl) + 4px + env(safe-area-inset-bottom)); max-height: calc(58dvh - 52px); margin-block: 0; }
+}
+.contact-panel { top: auto; max-height: none; overflow: visible; }
+.p-dots button { position: relative; }
+.p-dots button::after { content: ""; position: absolute; inset: -14px -5px; } /* a finger-sized hit area around the tiny dots */
+/* the backdraft step list becomes a short vertical list at the left on wide screens, out of the way of tall cards */
+@media (min-width: 821px) {
+  .hud-steps { left: clamp(16px, 4vw, 70px); transform: translate(0, 14px); padding: 8px 10px; }
+  .hud-steps.on { transform: none; }
+  .hud-steps ol { flex-direction: column; gap: 2px; }
+  .hud-steps li { padding: 1px 0.9em; }
+}
+/* short desktop / laptop windows */
+@media (min-width: 821px) and (max-height: 780px) {
+  .beat, .panel { padding: 16px 22px; }
+  .beat h2, .panel h2 { font-size: clamp(1.45rem, 3.2vh, 2rem); }
+  .beat h3, .panel h3 { font-size: 1.15rem; }
+  .beat p, .panel p { line-height: 1.8; }
+  .nextline { margin-top: 0.5em; }
+}
+/* small phones in portrait */
+@media (max-width: 820px) and (orientation: portrait) and (max-height: 700px) {
+  .hero-stick { padding-top: 64px; padding-bottom: 76px; }
+  .hero-title { font-size: clamp(1.5rem, 7.2vw, 2rem); }
+  .hero-top { gap: 2px; }
+  .eyebrow { font-size: 0.68em; padding: 0.05em 0.8em; }
+  .lead { font-size: 0.82em; line-height: 1.7; }
+  .stats { display: none; }
+  .beat, .panel { padding: 12px 14px; }
+  .beat h2, .panel h2 { font-size: 1.3rem; margin: 0.05em 0 0.2em; }
+  .beat h3 { font-size: 1.08rem; }
+  .beat p, .panel p { line-height: 1.7; font-size: 0.93em; }
+  .portfolio-panel .badges { display: none; }
+  .sign-list button { padding-block: 0.3em; }
+  .sign-detail { padding: 8px 12px; }
+  .nextline { margin-top: 0.4em; }
+}
+@media (max-width: 360px) { .hero-title { font-size: 1.5rem; } .tag { font-size: 0.74em; } }
+
+/* phones on their side (and any window that is very short): the card moves to the side and the scene stays visible next to it */
+@media (max-height: 520px) {
+  html.has-player { --pl: 62px; }
+  .topbar { padding: 6px 12px; gap: 8px; }
+  .nav, .dots, .brand-name { display: none; }
+  .where { display: inline-flex; min-height: 36px; padding: 0 12px; }
+  .icon-btn { width: 36px; height: 36px; }
+  .help-btn { min-width: 36px; width: auto; padding: 0 6px; }
+  .hero-actions { width: auto; max-width: 520px; margin-inline: auto; }
+  .hint { top: 50px; }
+  .player { height: 50px; bottom: calc(5px + env(safe-area-inset-bottom)); padding: 4px 6px; width: min(540px, calc(100% - 16px)); }
+  .pl-play { width: 40px; height: 40px; } .pl-btn { width: 36px; height: 36px; } .pl-speed { height: 36px; }
+  .beat, .panel, .beat-wide, .research-panel { top: 52px; bottom: calc(var(--pl) + 6px); inset-inline-start: 12px; inset-inline-end: auto; width: min(52%, 440px); max-height: calc(100dvh - 58px - var(--pl)); height: fit-content; margin-block: auto; padding: 10px 14px; border-radius: 14px; }
+  .beat h2, .panel h2 { font-size: 1.25rem; margin: 0.05em 0 0.2em; }
+  .beat h3 { font-size: 1.02rem; margin: 0; }
+  .beat p, .panel p, .beat li, .panel li { font-size: 0.86rem; line-height: 1.65; }
+  .tag { font-size: 0.7em; }
+  .nextline { display: none; }
+  .hero-stick { padding: 52px 16px 62px; justify-content: center; gap: 8px; }
+  .lead, .stats, .eyebrow { display: none; }
+  .hero-title { font-size: clamp(1.3rem, 9vh, 2.1rem); line-height: 1.3; }
+  .hero-actions .btn { min-height: 40px; padding-block: 0.2em; }
+  .hud { top: 52px; bottom: auto; left: 10px; width: 150px; padding: 5px 9px; font-size: 0.64em; line-height: 1.5; }
+  .hud-steps { top: 52px; bottom: auto; left: 10px; width: auto; transform: none; padding: 5px 8px; }
+  .hud-steps li { font-size: 0.66em; padding: 0 0.7em; }
+  .hud-steps ol { flex-direction: column; gap: 1px; }
+  .hud-steps.on { transform: none; }
+  .portfolio-panel h2, #p-text { display: none; }
+  .p-controls { margin-top: 4px; }
+  .product-info h3 { margin-bottom: 0.3em; }
+  .product-stage { inset: 52px 54% calc(var(--pl) + 6px) 0; width: auto; }
+  .photo-card { width: min(230px, 32vw, 50vh); }
+  .portfolio-panel .badges { display: none; }
+  .sheet-box { max-height: calc(100dvh - 16px); padding: 12px 16px; }
+  .howto { gap: 8px; } .howto li { font-size: 0.84em; line-height: 1.6; }
+  .toc a { min-height: 40px; padding-block: 4px; }
+}
+
+/* ───────── phones (portrait or on their side): the three "your turn" panels are made compact so every control is on screen without scrolling ───────── */
+@media (max-width: 820px) and (max-aspect-ratio: 23/20), (max-height: 520px) {
+  /* signs: five numbered buttons in a row (the title of the chosen one appears in the box below) */
+  .sign-list { display: flex; gap: 8px; margin: 8px 0 10px; }
+  .sign-list li { flex: 1; }
+  .sign-list button { font-size: 0; justify-content: center; padding: 0.35em 0; min-height: 46px; }
+  .sign-list button b { font-size: 1.1rem; width: 1.9em; height: 1.9em; }
+  .sign-detail { min-height: 0; padding: 10px 14px; }
+  .sign-detail h3 { font-size: 1.05rem; }
+  .feature-panel .note { font-size: 0.74em; margin-top: 0.6em; padding-top: 0.5em; }
+  /* research: the four cards become a row you swipe sideways */
+  .cards { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 8px; margin-inline: -4px; padding-inline: 4px; scrollbar-width: none; }
+  .cards::-webkit-scrollbar { display: none; }
+  .card { flex: 0 0 86%; scroll-snap-align: center; }
+  .card p { font-size: 0.82em; }
+  .research-panel h2 { font-size: 1.3rem; }
+  /* portfolio */
+  .badges { flex-wrap: nowrap; overflow-x: auto; margin: 4px 0 8px; scrollbar-width: none; }
+  .badges::-webkit-scrollbar { display: none; }
+  .badges li { white-space: nowrap; flex: none; }
+  .portfolio-panel h2 { font-size: 1.25rem; }
+  .product-info { min-height: 0; }
+  .product-info p { margin-bottom: 0.6em; }
+  .p-actions { flex-wrap: nowrap; gap: 8px; }
+  .p-actions .btn { flex: 1 1 0; padding: 0.35em 0.6em; font-size: 0.86em; justify-content: center; min-height: 42px; text-align: center; line-height: 1.4; }
+}
+
+.tag { flex-wrap: wrap; row-gap: 0; }
+.tag b { white-space: nowrap; }
+@media (max-width: 820px) and (max-height: 600px) { #p-text { display: none; } }
+
+/* ───────── tablets in portrait (and narrow windows taller than wide): same bottom-sheet layout as phones, but the sheet stays a readable width ───────── */
+.nav a { white-space: nowrap; }
+@media (max-width: 1000px) { .nav { gap: 0; padding: 4px 4px; font-size: 0.84em; } .nav a { padding: 0.15em 0.6em; } }
+@media (min-width: 821px) and (max-width: 1100px) and (max-aspect-ratio: 1/1) {
+  .beat, .panel, .beat-wide, .research-panel { top: auto; bottom: calc(var(--pl) + 6px); inset-inline: 0; margin-inline: auto; margin-block: 0; width: min(680px, calc(100% - 24px)); max-height: calc(54dvh - 40px); }
+  .hud { top: 84px; bottom: auto; left: 16px; }
+  .hud-steps { top: 84px; bottom: auto; }
+  .product-stage { width: 100%; inset: 8vh 0 56vh; }
+  .photo-card { width: min(380px, 52vw, 30vh); }
+}

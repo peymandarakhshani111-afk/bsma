@@ -111,8 +111,7 @@
   // the hero copy lifts away as the camera starts to move
   gsap.timeline({ scrollTrigger: { trigger: '#hero', start: 'top top', end: '+=70%', scrub: 0.4 } })
     .to('.hero-top', { autoAlpha: 0, y: -70, ease: 'none' }, 0)
-    .to('.hero-bottom', { autoAlpha: 0, y: 50, ease: 'none' }, 0)
-    .to('.scroll-cue', { autoAlpha: 0, ease: 'none' }, 0);
+    .to('.hero-bottom', { autoAlpha: 0, y: 50, ease: 'none' }, 0);
 
   /* beats: each text card fades in/out over a fraction of the chapter's scroll */
   const STORY = []; // every scrolled chapter, in page order: used by story mode (the self-playing film)
@@ -210,11 +209,14 @@
     ticking = false;
     const y = scrollY;
     progress.style.transform = 'scaleX(' + clamp(y / Math.max(1, artTop - innerHeight)).toFixed(4) + ')';
+    paintPlayer();
     if (!galleryOn && tops[6] && y + innerHeight * 3 > tops[6]) enableGallery();
     const ch = currentChapter();
     if (ch === lastCh) return;
     if (lastCh !== -1) play('section');
     lastCh = ch;
+    root.classList.toggle('has-player', ch <= 6);
+    paintPlayer();
     whereN.textContent = fa(ch + 1);
     whereT.textContent = CHAPTERS[ch] || '';
     dots.forEach((a) => a.classList.toggle('on', +a.dataset.go === ch));
@@ -284,7 +286,7 @@
   /* a short hint the first time each interactive chapter comes on screen; it stops for good once the visitor has used it */
   const HINTS = {
     4: { key: 'signs', t: 'روی دایره‌های شماره‌دار روی پنجره بزنید' },
-    5: { key: 'cards', t: touch ? 'روی هر کارت بزنید تا نقطه‌ی هم‌رنگش در صحنه روشن شود' : 'نشانگر را روی هر کارت ببرید تا نقطه‌ی هم‌رنگش روشن شود' },
+    5: { key: 'cards', t: touch ? 'روی کارت بزنید تا نقطه‌اش در صحنه روشن شود؛ کارت‌ها را به چپ بکشید' : 'نشانگر را روی هر کارت ببرید تا نقطه‌ی هم‌رنگش روشن شود' },
     6: { key: 'products', t: touch ? 'محصول را با انگشت بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' : 'محصول را بکشید تا بچرخد؛ با فلش‌ها محصول بعدی را ببینید' },
   };
   const used = (() => { try { return JSON.parse(recall('bsma-used') || '{}'); } catch (e) { return {}; } })();
@@ -343,10 +345,12 @@
      and that the film is running; when the card is done it moves on. A swipe, the wheel or a scroll key hands control back.
      At the three interactive chapters it stops and asks the visitor to try things, then continues when they press "continue". */
   const playBtn = $('#play');
-  const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, from: 0, until: 0, raf: 0, ver: 0, cur: null };
+  const AP = { on: false, wp: [], i: 0, phase: 'idle', t0: 0, y0: 0, y1: 0, dur: 0, from: 0, until: 0, raf: 0, ver: 0, cur: null, speed: 1 };
+  const SPEEDS = [0.75, 1, 1.5, 2];
+  { const sv = parseFloat(recall('bsma-speed')); if (SPEEDS.includes(sv)) AP.speed = sv; }
   const STOPS = [
     ['#features', 'نوبت شماست: روی دایره‌های شماره‌دار بزنید و نشانه‌ها را بخوانید. بعد «ادامه» را بزنید.', 4, ['#signs .sign-list']],
-    ['#research', 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', 5, ['.research-panel .cards']],
+    ['#research', touch ? 'نوبت شماست: کارت‌ها را به چپ بکشید و روی هر کدام بزنید تا نقطه‌اش در صحنه روشن شود. بعد «ادامه» را بزنید.' : 'نوبت شماست: روی کارت‌ها بزنید تا نقطه‌ی هم‌رنگشان در صحنه روشن شود. بعد «ادامه» را بزنید.', 5, ['.research-panel .cards']],
     ['#portfolio', 'نوبت شماست: محصولات را ببینید و بچرخانید. بعد «ادامه» را بزنید.', 6, ['#photo-card', '.p-controls']],
   ];
   const words = (el) => (el.textContent.match(/\S+/g) || []).length;
@@ -356,7 +360,7 @@
     STORY.forEach(({ el, ranges, list, focus }) => list.forEach((b, i) => {
       const [s0, e0] = ranges[i];
       const f = focus[i] != null ? focus[i] : (s0 + e0) / 2;
-      wp.push({ at: at(el, f), beat: b, dwell: clamp(1800 + words(b) * 270, 4000, 12000) });
+      wp.push({ at: at(el, f), beat: b, dwell: clamp(2500 + words(b) * 540, 6000, 30000) }); // ≈ 110 words a minute: a relaxed screen-reading pace
     }));
     STOPS.forEach(([sel, msg, ch, frame]) => wp.push({ at: at($(sel), 0.5), stop: true, msg, ch, frame, go: 'ادامه ▶' }));
     wp.push({ at: at($('#contact'), 0, 40), stop: true, end: true, ch: 7, msg: 'پایان داستان. هر سؤالی دارید، از همین‌جا با ما تماس بگیرید.', go: 'از اول ▶' });
@@ -452,6 +456,8 @@
     playBtn.setAttribute('aria-pressed', String(on));
     playBtn.setAttribute('aria-label', on ? 'توقف پخش خودکار' : 'پخش خودکار داستان');
     root.classList.toggle('playing', on);
+    if (on) moved = true;
+    paintPlayer();
   };
   function apPause() {
     if (!AP.on) return;
@@ -465,7 +471,7 @@
     const w = AP.wp[i];
     AP.y0 = scrollY; AP.y1 = yOf(w);
     const dist = Math.abs(AP.y1 - AP.y0);
-    AP.dur = clamp((dist / 430) * 1000, 1600, 7000);
+    AP.dur = clamp((dist / (340 * AP.speed)) * 1000, 1400, 9000);
     AP.t0 = now;
     apUnfocus();
     if (dist < 6) apArrive(now, w, 600);
@@ -474,7 +480,7 @@
   function apArrive(now, w, dwell) {
     AP.phase = 'dwell';
     AP.from = now;
-    AP.until = now + (dwell != null ? dwell : w.dwell);
+    AP.until = now + (dwell != null ? dwell : w.dwell / AP.speed);
     if (w.beat) apFocus(w.beat);
   }
   function apFrame(now) {
@@ -498,9 +504,10 @@
       apRead((now - AP.from) / (AP.until - AP.from));
     }
   }
+  const ensureWp = () => (AP.wp.length ? AP.wp : (AP.wp = buildWaypoints()));
   function apPlay() {
     if (AP.on) return;
-    AP.wp = buildWaypoints();
+    ensureWp();
     AP.ver++;
     hideHint();
     let i = AP.wp.findIndex((w) => yOf(w) > scrollY + 30);
@@ -521,14 +528,102 @@
   const onTouchStart = (e) => { touchY = e.touches && e.touches[0] ? e.touches[0].clientY : 0; };
   const onTouchMove = (e) => {
     if (!AP.on || !e.touches || !e.touches[0]) return;
+    if (e.target.closest && e.target.closest('.player')) return;
     if (Math.abs(e.touches[0].clientY - touchY) > 14) apPause();
   };
   addEventListener('touchstart', onTouchStart, { passive: true });
-  addEventListener('touchmove', onTouchMove, { passive: true });
-  addEventListener('wheel', () => AP.on && apPause(), { passive: true });
-  addEventListener('keydown', (e) => { if (AP.on && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) apPause(); });
+  addEventListener('touchmove', (e) => { if (!(e.target.closest && e.target.closest('.player'))) stopTween(); onTouchMove(e); }, { passive: true });
+  addEventListener('wheel', () => { stopTween(); AP.on && apPause(); }, { passive: true });
+  addEventListener('keydown', (e) => {
+    if (!AP.on || !['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) return;
+    if (e.target.closest && e.target.closest('button, a, input, textarea, select, [role="slider"]')) return; // those keys belong to the control
+    apPause();
+  });
   addEventListener('mousedown', (e) => { if (AP.on && e.target === document.documentElement) apPause(); }); // the scrollbar itself
   document.addEventListener('click', (e) => { if (AP.on && e.target.closest && e.target.closest('a[href^="#"]:not(#play-hero)')) apPause(); });
+
+
+  /* ───────────────────────── the player bar ─────────────────────────
+     Play / pause, previous / next card, a timeline that can be dragged, and a speed button, like a video player. */
+  const player = $('#player'), plText = $('#pl-text'), plTrack = $('#pl-track'), plFill = $('#pl-fill'), plKnob = $('#pl-knob'), plSpeed = $('#pl-speed');
+  let moved = false, tw = 0;
+  const fullY = () => Math.max(1, artTop - innerHeight);
+  const fnum = (n) => n.toLocaleString('fa-IR');
+  function stopTween() { cancelAnimationFrame(tw); }
+  function tweenScroll(y1, ms, done) {
+    stopTween();
+    const y0 = scrollY, t0 = performance.now();
+    const step = (now) => {
+      const k = clamp((now - t0) / ms);
+      scrollTo(0, y0 + (y1 - y0) * (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2));
+      if (k < 1) tw = requestAnimationFrame(step); else done && done();
+    };
+    tw = requestAnimationFrame(step);
+  }
+  function paintPlayer() {
+    const f = clamp(scrollY / fullY());
+    if (scrollY > 30) moved = true;
+    plFill.style.transform = 'scaleX(' + f.toFixed(4) + ')';
+    plKnob.style.right = (f * 100).toFixed(2) + '%';
+    plTrack.setAttribute('aria-valuenow', String(Math.round(f * 100)));
+    const idle = !moved && !AP.on;
+    player.classList.toggle('pl-idle', idle);
+    if (idle) { plText.textContent = touch ? '▶ را بزنید، یا انگشتتان را به بالا بکشید' : '▶ را بزنید تا داستان خودش پخش شود، یا اسکرول کنید'; return; }
+    const ch = Math.max(0, lastCh);
+    const wp = ensureWp(), narrative = wp.filter((w) => w.beat).length;
+    let k = -1;
+    wp.forEach((w, i) => { if (yOf(w) <= scrollY + 40) k = i; });
+    plText.textContent = CHAPTERS[ch] + (k >= 0 && wp[k].beat && ch >= 1 && ch <= 3 ? ' · کارت ' + fnum(k + 1) + ' از ' + fnum(narrative) : '');
+  }
+  function arrived(w) { if (w && w.stop) showHint(w.msg, { ch: w.ch, sticky: true, go: w.go, frame: w.frame }); }
+  function seekCard(dir) {
+    const wp = ensureWp(), y = scrollY;
+    let target;
+    if (dir > 0) { target = wp.findIndex((w) => yOf(w) > y + 40); if (target < 0) target = wp.length - 1; }
+    else { target = -1; wp.forEach((w, i) => { if (yOf(w) < y - 40) target = i; }); if (target < 0) target = 0; }
+    hideHint();
+    if (AP.on) { apUnfocus(); apMoveTo(target, performance.now()); return; }
+    tweenScroll(yOf(wp[target]), clamp(Math.abs(yOf(wp[target]) - y) / 1.6, 500, 1400), () => arrived(wp[target]));
+  }
+  $('#pl-prev').addEventListener('click', () => seekCard(-1));
+  $('#pl-next').addEventListener('click', () => seekCard(1));
+
+  // dragging the timeline
+  let scrubbing = false, wasPlaying = false;
+  const fracAt = (e) => { const r = plTrack.getBoundingClientRect(); return clamp((r.right - e.clientX) / Math.max(1, r.width)); }; // the page is right-to-left
+  plTrack.addEventListener('pointerdown', (e) => {
+    scrubbing = true; wasPlaying = AP.on;
+    apPause(); stopTween(); hideHint();
+    try { plTrack.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ }
+    scrollTo(0, fracAt(e) * fullY());
+    e.preventDefault();
+  });
+  plTrack.addEventListener('pointermove', (e) => { if (scrubbing) scrollTo(0, fracAt(e) * fullY()); });
+  const endScrub = () => { if (!scrubbing) return; scrubbing = false; if (wasPlaying) apPlay(); };
+  plTrack.addEventListener('pointerup', endScrub);
+  plTrack.addEventListener('pointercancel', endScrub);
+  plTrack.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === 'ArrowLeft' || k === 'ArrowUp') { e.preventDefault(); seekCard(1); }
+    else if (k === 'ArrowRight' || k === 'ArrowDown') { e.preventDefault(); seekCard(-1); }
+    else if (k === 'Home') { e.preventDefault(); apPause(); tweenScroll(0, 900); }
+    else if (k === 'End') { e.preventDefault(); apPause(); tweenScroll(fullY(), 1400); }
+  });
+
+  // speed: 0.75× / 1× / 1.5× / 2× (1× is a relaxed reading pace)
+  const paintSpeed = () => { plSpeed.textContent = fnum(AP.speed) + '×'; plSpeed.setAttribute('aria-label', 'سرعت پخش: ' + fnum(AP.speed) + ' برابر. برای تغییر بزنید'); };
+  plSpeed.addEventListener('click', () => {
+    const old = AP.speed;
+    AP.speed = SPEEDS[(SPEEDS.indexOf(old) + 1) % SPEEDS.length];
+    store('bsma-speed', String(AP.speed));
+    if (AP.on && AP.phase === 'dwell') { // keep the same share of the card already read
+      const now = performance.now(), w = AP.wp[AP.i], total = w.dwell / AP.speed;
+      const done = clamp((now - AP.from) / Math.max(1, AP.until - AP.from));
+      AP.from = now - total * done; AP.until = AP.from + total;
+    }
+    paintSpeed();
+  });
+  paintSpeed();
 
   /* ───────────────────────── anchors → cinematic scroll ───────────────────────── */
   const targetFor = (hash) => { const el = $(hash); return el ? el.getBoundingClientRect().top + scrollY : 0; };
@@ -559,7 +654,7 @@
     hsBtns.forEach((b) => b.classList.toggle('on', +b.dataset.hs === next));
     const s = SIGNS[next];
     $('#sign-title').textContent = s ? s.t : 'یکی از نشانه‌ها را انتخاب کنید';
-    $('#sign-text').textContent = s ? s.d : 'روی دایره‌های شماره‌دار در تصویر بزنید، یا از فهرست بالا انتخاب کنید.';
+    $('#sign-text').textContent = s ? s.d : 'روی یکی از شماره‌ها بزنید؛ هم در تصویر، هم همین‌جا.';
     signBox.classList.remove('swap'); void signBox.offsetWidth; signBox.classList.add('swap');
   }
   signBtns.forEach((b) => b.addEventListener('click', () => selectSign(+b.dataset.sign)));

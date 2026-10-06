@@ -279,9 +279,11 @@ async function start() {
     camera.position.add(fx.cam);
     if (fx.shake > 0) camera.position.add(new THREE.Vector3((Math.random() - 0.5) * fx.shake, (Math.random() - 0.5) * fx.shake, (Math.random() - 0.5) * fx.shake));
     camera.lookAt(look.x + fx.look.x, look.y + fx.look.y, look.z);
-    camera.fov = fov + fx.fov + (innerWidth < 820 ? 8 : 0);
+    camera.fov = fov + fx.fov + ((innerWidth < 820 && innerWidth / innerHeight < 1.15) || (innerWidth < 1100 && innerWidth / innerHeight < 1) ? 8 : 0);
     const W = innerWidth, H = innerHeight;
-    if (W < 820) camera.setViewOffset(W, H, 0, H * my * (S.ch === 0 ? 0.4 : 1), W, H);
+    // portrait phones: the text sheet sits at the bottom, so lift the picture; wide windows and phones on their side: the card sits at the side, so shift it sideways
+    const sheet = (W < 820 && W / H < 1.15) || (W < 1100 && W / H < 1); // phones, and tablets standing up
+    if (sheet) camera.setViewOffset(W, H, 0, H * my * (S.ch === 0 ? 0.4 : 1), W, H);
     else if (shift > 0.001) camera.setViewOffset(W, H, W * shift, 0, W, H);
     else camera.clearViewOffset();
     camera.updateProjectionMatrix();
