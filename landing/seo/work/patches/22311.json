@@ -1,0 +1,1 @@
+{"id": 22311, "fixes": [{"old": "کلاس D: آتش سوزی با عامل سوزاندن فلزات آتش سوزی‌های الکتریکی", "new": "کلاس D: آتش سوزی با عامل سوزاندن فلزات", "kind": "grammar"}], "callouts": [{"para_starts": "دقت کنید که هیچ گاه از کپسول", "type": "warn"}], "ad": {"existing": "keep", "new": null}, "flags": ["Missing Class E (electrical fires) in fire classification list"]}
