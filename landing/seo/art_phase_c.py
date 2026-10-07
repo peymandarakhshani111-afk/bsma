@@ -34,10 +34,10 @@ def fix_images(s, pid, rep):
 def main():
     sp = sys.argv[1]; ids = [int(x) for x in sys.argv[2:]]
     cat = {c['id']: c for c in json.load(open(os.path.join(sp, 'catalog.json')))}
-    os.makedirs(os.path.join(sp, 'out2'), exist_ok=True); os.makedirs(os.path.join(sp, 'reports'), exist_ok=True)
+    os.makedirs(os.path.join(sp, 'out2'), exist_ok=True); os.makedirs(os.path.join(sp, os.environ.get('REPORT_DIR', 'reports')), exist_ok=True)
     for pid in ids:
         src = open(os.path.join(sp, 'posts', f'{pid}.html'), encoding='utf-8').read()
-        pf = os.path.join(sp, 'patches', f'{pid}.json')
+        pf = os.path.join(sp, os.environ.get('PATCH_DIR', 'patches'), f'{pid}.json')
         patch = json.load(open(pf, encoding='utf-8')) if os.path.exists(pf) else {'id': pid}
         rep = []
         try:
@@ -55,7 +55,7 @@ def main():
         open(os.path.join(sp, 'out2', f'{pid}.html'), 'w', encoding='utf-8').write(s)
         flags = patch.get('flags', [])
         lines = [f'# {pid}'] + [f'[{lv}] {msg}' for lv, msg in rep] + [f'[flag] {f}' for f in flags]
-        open(os.path.join(sp, 'reports', f'{pid}.txt'), 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
+        open(os.path.join(sp, os.environ.get('REPORT_DIR', 'reports'), f'{pid}.txt'), 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
         kinds = {}
         for lv, _ in rep: kinds[lv] = kinds.get(lv, 0) + 1
         print(pid, 'ok', kinds, 'changed' if s != src else 'same')
