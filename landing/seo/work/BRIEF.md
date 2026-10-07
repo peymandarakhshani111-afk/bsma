@@ -2,7 +2,7 @@
 
 Work ONLY with files in this folder (`landing/seo/work/`). Do not touch the website, do not edit any other repo file.
 
-* `todo.txt` — article ids still to do (one per line). Skip an id if `patches/<id>.json` already exists.
+* `todo-N.txt` — the article ids assigned to YOU (N is given in your task; one id per line). Skip an id if `patches/<id>.json` already exists.
 * `view/<id>.txt` — compact view of the article (text between tags is byte-exact; `<a>` = link; `[[IMG …]]` = image; `[[EXISTING-AD …]]` = product ad already in the article).
 * `catalog.txt` — `id | product | category` (only products you may advertise).
 * Output: `patches/<id>.json` (UTF-8 JSON). Full rules for the schema are in `../ARTICLE_EDITOR_PROMPT.md` — read it once.
@@ -28,6 +28,6 @@ Keep digits unchanged in fixes (except kind=fact). Never alter brand names, mode
 
 ## Saving progress (important — usage limits can interrupt you)
 After every 4 articles run:
-`git add landing/seo/work/patches && git commit -m "editor patches" && git push origin HEAD:claude/article-editor-patches`
+`git add landing/seo/work/patches && git commit -m "editor patches" && git push origin HEAD:claude/article-editor-patches-N   (N = your number)`
 If a push fails, retry once; if you hit a usage/rate limit, stop immediately (everything already pushed is kept).
 When `todo.txt` is exhausted, push a last time and reply with the single word `DONE`.
