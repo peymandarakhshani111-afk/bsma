@@ -35,6 +35,14 @@ def apply_fixes(s, fixes, rep):
             rep.append(('skip', f'digits changed (kind={kind}) {old[:40]!r}')); continue
         hits = [(i, parts[i].count(old)) for i in range(0, len(parts), 2) if old in parts[i]]
         total = sum(c for _, c in hits)
+        if total == 0:   # tolerate space / no-break space / half-space differences between the view and the post
+            rx = re.compile(''.join('[ \u00a0]+' if ch in ' \u00a0' else ('\u200c?' if ch == '\u200c' else re.escape(ch)) for ch in old))
+            fuzzy = [(i, m) for i in range(0, len(parts), 2) for m in rx.finditer(parts[i])]
+            if len(fuzzy) == 1:
+                i, m = fuzzy[0]
+                parts[i] = parts[i][:m.start()] + new + parts[i][m.end():]
+                rep.append(('fix', f'(fuzzy) {old[:50]!r} -> {new[:50]!r}'))
+                continue
         if total != 1:
             rep.append(('skip', f'{"not found" if total == 0 else "ambiguous x" + str(total)}: {old[:50]!r}')); continue
         i = hits[0][0]
