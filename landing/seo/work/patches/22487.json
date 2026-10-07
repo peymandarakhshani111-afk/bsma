@@ -1,0 +1,1 @@
+{"id": 22487, "fixes": [{"old": "قبل از تولید دود توسط حریق، حرارت بالا رود. در این سنسور فعال می‌شود", "new": "قبل از تولید دود توسط حریق، حرارت بالا برود و سنسور حرارتی فعال می‌شود", "kind": "grammar"}], "callouts": [], "ad": {"existing": "keep", "new": null}, "flags": ["Ad includes burglar alarm system product which seems off-topic for fire sensor article"]}

@@ -1,0 +1,1 @@
+{"id": 22569, "fixes": [{"old": "سیستم‌های اعلام حریق بی‌سیممناسب برای", "new": "سیستم‌های اعلام حریق بی‌سیم مناسب برای", "kind": "punct"}], "callouts": [], "ad": {"existing": "keep", "new": null}, "flags": ["Article has multiple empty <h2> tags (formatting issues)", "Line 105 has text cut-off: 'بهترین س<a>سیستم' should be 'بهترین سیستم'"]}
