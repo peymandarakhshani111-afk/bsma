@@ -1,0 +1,1008 @@
+# ARTICLE id=23458
+# TITLE: UL Listed چیست؟ راهنمای کامل و ساده تجهیزات آتش‌نشانی UL
+# WORDS: 2416
+# ---
+<h2> UL Listed چیست؟</h2>
+<h2>راهنمای کامل و ساده برای تجهیزات آتش‌نشانی، اعلام حریق، اطفای خودکار، کپسول و نجات</h2>
+
+<hr />
+
+<h3>🔹 UL Listed یعنی چه؟</h3>
+<p>یعنی:</p>
+
+<blockquote>
+<p>«این محصول به‌صورت کامل در آزمایشگاه‌های UL تست شده، ایمن است و با استانداردهای ایمنی آمریکا مطابقت دارد.»</p>
+</blockquote>
+<p>🔸 <strong>UL</strong> مخفف <a><strong>Underwriters Laboratories</strong> است – یک مؤسسه‌ی مستقل آمریکایی</a> که از سال ۱۸۹۴ فقط روی <strong>ایمنی محصولات</strong> کار می‌کند.<br/>🔸 <strong>Listed</strong> یعنی کل دستگاه (نه فقط یک قطعه) آزمایش و تأیید شده است.</p>
+<p>وقتی روی محصولی نوشته شده <strong>UL Listed</strong> یعنی:</p>
+
+<ul>
+ <li>
+<p>آتش نمی‌گیرد 🔥</p>
+</li>
+ <li>
+<p>برق‌گرفتگی ایجاد نمی‌کند ⚡</p>
+</li>
+ <li>
+<p>در شرایط اضطراری درست کار می‌کند ✅</p>
+</li>
+ <li>
+<p>با قوانین <a><strong>NEC</strong> </a>و <a><strong>NFPA</strong> </a>سازگار است</p>
+</li>
+</ul>
+
+<hr />
+
+<h3>🔸 تفاوت UL Listed و UL Recognized</h3>
+
+<table>
+<thead>
+<tr>
+<th>نوع گواهی</th>
+<th>برای چی؟</th>
+<th>مثال</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UL Listed</strong></td>
+<td>کل دستگاه</td>
+<td>سیستم اعلام حریق، کپسول آتش‌نشانی، اسپرینکلر کامل</td>
+</tr>
+<tr>
+<td><strong>UL Recognized</strong></td>
+<td>قطعه داخلی</td>
+<td>سنسور دود، شیر، یا برد الکترونیکی</td>
+</tr>
+</tbody>
+</table>
+
+<p>👉 <strong>در تجهیزات آتش‌نشانی فقط UL Listed معتبر است!</strong></p>
+
+<hr />
+
+<h2>🔥 چرا UL  در آتش‌نشانی حیاتی است؟</h2>
+<p>چون <strong>جان انسان‌ها</strong> وابسته به عملکرد درست تجهیزات است.</p>
+<p>مثال‌ها:</p>
+
+<ul>
+ <li>
+<p><a>دتکتور دود</a> <strong>UL Listed</strong> در کمتر از ۲۰ ثانیه هشدار می‌دهد.</p>
+</li>
+ <li>
+<p><a>اسپرینکلر</a> <strong>UL Listed</strong> در ۴۵ ثانیه فعال می‌شود.</p>
+</li>
+ <li>
+<p><a>کپسول</a> <strong>UL Listed</strong> آتش را در ۱۲ ثانیه خاموش می‌کند.</p>
+</li>
+</ul>
+<p>بدون UL؟<br/>ممکن است دستگاه در مانور کار کند، ولی در آتش واقعی <strong>از کار بیفتد یا خطرناک باشد.</strong></p>
+
+<hr />
+
+<h2>🧯 تجهیزات آتش‌نشانی UL Listed – بررسی کامل</h2>
+
+<hr />
+
+<h3><a>۱. سیستم اعلام حریق (Fire Alarm)</a></h3>
+<p><strong>استانداردهای UL:</strong> UL 217, UL 268, UL 864</p>
+<p><strong>اجزا:</strong><br/><a>دتکتور دود، دتکتور حرارت</a>، <a>آژیر</a>، <a>فلاشر نور،</a> <a>پنل مرکزی</a></p>
+<p><strong>تست‌های UL:</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>نوع تست</th>
+<th>روش انجام</th>
+<th>نتیجه مورد انتظار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a>تست دود</a></td>
+<td>دود مصنوعی (مانند دود سیگار)</td>
+<td>فعال در &lt; ۳۰ ثانیه</td>
+</tr>
+<tr>
+<td>تست خطا</td>
+<td>گرد و غبار یا بخار</td>
+<td>نباید هشدار دهد</td>
+</tr>
+<tr>
+<td><a>تست حرارت</a></td>
+<td>افزایش دما تا ۵۷°C</td>
+<td>فعال در ≤ ۶۰ ثانیه</td>
+</tr>
+<tr>
+<td>تست عملکرد</td>
+<td>۱۰۰۰ بار روشن/خاموش</td>
+<td>بدون خرابی</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>مانور واقعی:</strong><br/>دتکتور دود فعال → پنل مرکزی هشدار می‌دهد → آژیر و فلاشرها روشن → درهای ضدحریق بسته → آسانسورها متوقف → همه در &lt; ۲ دقیقه ایمن می‌شوند.</p>
+
+<hr />
+
+<h3>۲. سیستم اطفای خودکار (اسپرینکلر و گاز)</h3>
+<p><strong>استانداردهای UL:</strong> UL 199, UL 2166</p>
+<p><strong>انواع:</strong></p>
+
+<ul>
+ <li>
+<p><a>اسپرینکلر آب</a></p>
+</li>
+ <li>
+<p><a>سیستم گاز FM-200</a> یا <a>Novec 1230</a></p>
+</li>
+ <li>
+<p><a>سیستم فوم</a></p>
+</li>
+</ul>
+<p><strong>تست‌های UL:</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>تست</th>
+<th>روش</th>
+<th>نتیجه مورد انتظار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>فعال‌سازی</td>
+<td>دما تا ۶۸°C</td>
+<td>پاشش در ≤ ۴۵ ثانیه</td>
+</tr>
+<tr>
+<td>فشار</td>
+<td>فشار ۱۲ بار</td>
+<td>بدون نشتی</td>
+</tr>
+<tr>
+<td>گاز</td>
+<td>اتاق ۱۰۰ متری</td>
+<td>خاموشی کامل در ≤ ۳۰ ثانیه</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>مانور واقعی:</strong><br/>در آتش سرور روم → دتکتور حرارت فعال → گاز Novec 1230 در ۱۰ ثانیه پخش → آتش خاموش → سرورها سالم.</p>
+
+<hr />
+
+<h3>۳. <a>کپسول آتش‌نشانی</a></h3>
+<p><strong>استاندارد UL 711</strong></p>
+<p><strong>انواع UL Listed:</strong> پودر (ABC)، CO₂، آب و گاز، مه آب</p>
+<p><strong>تست‌های UL:</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>تست</th>
+<th>روش</th>
+<th>نتیجه مورد انتظار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>تخلیه</td>
+<td>کپسول را کامل خالی می‌کنند</td>
+<td>حداقل ۱۰ ثانیه پاشش</td>
+</tr>
+<tr>
+<td>برد</td>
+<td>از فاصله ۳ متری به آتش</td>
+<td>برد ≥ ۳ متر</td>
+</tr>
+<tr>
+<td>فشار</td>
+<td>دو برابر فشار پر</td>
+<td>بدون ترک</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>روش استفاده (PASS):</strong></p>
+
+<ol>
+ <li>
+<p><strong>P – Pull:</strong> پین را بکشید</p>
+</li>
+ <li>
+<p><strong>A – Aim:</strong> به پایه آتش بگیرید</p>
+</li>
+ <li>
+<p><strong>S – Squeeze:</strong> دسته را فشار دهید</p>
+</li>
+ <li>
+<p><strong>S – Sweep:</strong> چپ و راست جابجا کنید</p>
+</li>
+</ol>
+<p>⏱ یک کپسول UL Listed می‌تواند آتش ۶ متری را در ۱۵ ثانیه خاموش کند.</p>
+
+<hr />
+
+<h3>۴.<a> تجهیزات امداد و نجات</a></h3>
+<p><strong>استانداردهای UL:</strong> UL 913, UL 1523, UL 924</p>
+<p><strong>انواع:</strong> طناب نجات، دستگاه فرود، ماسک SCBA، چراغ اضطراری، تابلو خروج</p>
+
+<table>
+<thead>
+<tr>
+<th>تجهیزات</th>
+<th>تست</th>
+<th>نتیجه مورد انتظار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a>طناب نجات</a></td>
+<td>تحمل ۵۰۰ کیلوگرم</td>
+<td>نباید پاره شود</td>
+</tr>
+<tr>
+<td><a>دستگاه فرود</a></td>
+<td>۳۰۰ کیلو از ۵۰ متر</td>
+<td>سرعت کنترل‌شده (۱–۲ m/s)</td>
+</tr>
+<tr>
+<td><a>ماسک SCBA</a></td>
+<td>۳۰ دقیقه در دود</td>
+<td>اکسیژن پایدار</td>
+</tr>
+<tr>
+<td><a>چراغ خروج</a></td>
+<td>باتری ۹۰ دقیقه</td>
+<td>روشن بماند</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>مانور نجات از طبقه ۲۰:</strong><br/>آتش‌نشان طناب UL را می‌بندد → دستگاه فرود را وصل می‌کند → فرد در ۳ دقیقه نجات پیدا می‌کند → ماسک SCBA اکسیژن تأمین می‌کند.</p>
+
+<hr />
+
+<h3>۵. مانور ترکیبی واقعی (پاساژ بزرگ)</h3>
+
+<table>
+<thead>
+<tr>
+<th>مرحله</th>
+<th>اتفاق</th>
+<th>تجهیزات UL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>۱</td>
+<td>دود → دتکتور فعال</td>
+<td><a>اعلام حریق</a></td>
+</tr>
+<tr>
+<td>۲</td>
+<td>آژیر + فلاشر + پیام صوتی</td>
+<td>پنل مرکزی</td>
+</tr>
+<tr>
+<td>۳</td>
+<td>اسپرینکلر فعال</td>
+<td><a>اطفای خودکار</a></td>
+</tr>
+<tr>
+<td>۴</td>
+<td>آتش‌نشان وارد می‌شود</td>
+<td><a>کپسول ABC</a></td>
+</tr>
+<tr>
+<td>۵</td>
+<td>تیم نجات عمل می‌کند</td>
+<td>طناب و SCBA</td>
+</tr>
+<tr>
+<td>۶</td>
+<td>تخلیه کامل ساختمان</td>
+<td>تابلو خروج</td>
+</tr>
+</tbody>
+</table>
+
+<p>🕒 کل عملیات: <strong>۵ دقیقه</strong><br/>✅ چون همه تجهیزات <strong>UL Listed</strong> هستند.</p>
+
+<hr />
+
+<h2>📊 جدول خلاصه تجهیزات UL Listed</h2>
+
+<table>
+<thead>
+<tr>
+<th>تجهیزات</th>
+<th>استاندارد UL</th>
+<th>تست کلیدی</th>
+<th>زمان فعال‌سازی</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>دتکتور دود</td>
+<td>UL 217</td>
+<td>دود مصنوعی</td>
+<td>&lt; ۳۰ ثانیه</td>
+</tr>
+<tr>
+<td>اسپرینکلر</td>
+<td>UL 199</td>
+<td>حرارت ۶۸°</td>
+<td>&lt; ۴۵ ثانیه</td>
+</tr>
+<tr>
+<td><a>کپسول پودر</a></td>
+<td>UL 711</td>
+<td>تخلیه کامل</td>
+<td>&gt; ۱۰ ثانیه</td>
+</tr>
+<tr>
+<td>گاز Novec</td>
+<td>UL 2166</td>
+<td>پخش اتاق</td>
+<td>۱۰ ثانیه</td>
+</tr>
+<tr>
+<td>طناب نجات</td>
+<td>UL 1523</td>
+<td>تحمل ۵۰۰ کیلو</td>
+<td>—</td>
+</tr>
+<tr>
+<td>ماسک SCBA</td>
+<td>UL 913</td>
+<td>۳۰ دقیقه دود</td>
+<td>اکسیژن پایدار</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2>✅ نتیجه‌گیری</h2>
+<p><strong>UL Listed = تضمین ۱۰۰٪ ایمنی در برابر آتش‌سوزی</strong></p>
+
+<ul>
+ <li>
+<p>اگر <strong>مدیر ساختمان</strong> هستید → فقط تجهیزات <strong>UL Listed</strong> بخرید.</p>
+</li>
+ <li>
+<p>اگر <strong>آتش‌نشان</strong> هستید → فقط به UL  اعتماد کنید.</p>
+</li>
+ <li>
+<p>اگر <strong>تولیدکننده</strong> هستید → بدون UL، محصولتان تأیید نمی‌شود.</p>
+</li>
+</ul>
+
+<hr />
+
+<h3>همیشه به دنبال این نشان باشید:</h3>
+
+<code class="whitespace-pre!">       UL
+LISTED
+[Control No.]
+</code>
+
+<p>🔒 یعنی: <em>من تست شدم، من ایمنم، من جانت را نجات می‌دهم.</em></p>
+
+<hr />
+
+<h2>🌍 الترجمة بالعربیة: ما هو UL Listed؟</h2>
+<h3>دلیل کامل، بسیط، وواضح ۱۰۰٪ للجمیع – مع الترکیز علی معدات الإطفاء، الإنذار، الإطفاء الآلی، المطفآت، الإنقاذ والمناورات الحقیقیة</h3>
+<p><strong>UL Listed</strong> یعنی:</p>
+
+<blockquote>
+<p>"المنتج ده آمن ۱۰۰٪ وأنا (UL) بضمنه!"</p>
+</blockquote>
+<p>🔸 <strong>UL</strong> = Underwriters Laboratories<br/>شرکة أمریکیة مستقلة من سنة ۱۸۹۴، شغل‌ها الوحید اختبار السلامة.<br/>🔸 <strong>Listed</strong> = المنتج کامل (مش قطعة بس) تم اختباره فی معامل UL ونجح.</p>
+<p>لو مکتوب علی الجهاز <strong>UL Listed</strong>، یعنی:</p>
+
+<ul>
+ <li>
+<p>مش هیولّع 🔥</p>
+</li>
+ <li>
+<p>مش هیضرب کهربا ⚡</p>
+</li>
+ <li>
+<p>مش هیعطل لما تحتاجه 🚨</p>
+</li>
+ <li>
+<p>مطابق لقوانین أمریکا (NEC + NFPA)</p>
+</li>
+</ul>
+
+<hr />
+
+<h3>🔹 الفرق ببساطة:</h3>
+
+<table>
+<thead>
+<tr>
+<th>نوع الشهادة</th>
+<th>لإیه؟</th>
+<th>مثال</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UL Listed</strong></td>
+<td>الجهاز کامل</td>
+<td>نظام إنذار حریق، مطفأة، رذاذ کامل</td>
+</tr>
+<tr>
+<td><strong>UL Recognized</strong></td>
+<td>قطعة واحدة</td>
+<td>حساس دخان، صمام</td>
+</tr>
+</tbody>
+</table>
+
+<p>➡️ <strong>فی معدات الإطفاء: لازم تکون UL Listed فقط!</strong></p>
+
+<hr />
+
+<h3>🔸 لیه UL Listed مهم فی الإطفاء؟</h3>
+<p>لأن حیاة الناس فی إید المعدات دی.</p>
+
+<ul>
+ <li>
+<p>کاشف دخان <strong>UL Listed</strong> = یصرخ فی ۲۰ ثانیة.</p>
+</li>
+ <li>
+<p>رذاذ <strong>UL Listed</strong> = یرش فی ۴۵ ثانیة.</p>
+</li>
+ <li>
+<p>مطفأة <strong>UL Listed</strong> = تطفی فی ۱۲ ثانیة.</p>
+</li>
+</ul>
+<p>بدون UL؟ ممکن تشتغل فی التمرین، لکن فی الحریق الحقیقی تفشل أو تسبب کارثة.</p>
+
+<hr />
+
+<h3>🧯 المعدات UL Listed (واحدة واحدة)</h3>
+<h4>۱. نظام الإنذار بالحریق (UL 217, UL 268, UL 864)</h4>
+<p><strong>یتکوّن من:</strong> کاشف دخان – کاشف حرارة – صفارة – ضوء ومیض – لوحة تحکم</p>
+
+<table>
+<thead>
+<tr>
+<th>الاختبار</th>
+<th>کیف؟</th>
+<th>النتیجة المطلوبة</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>الدخان</td>
+<td>دخان صناعی</td>
+<td>یشتغل &lt; ۳۰ ثانیة</td>
+</tr>
+<tr>
+<td>الکاذب</td>
+<td>غبار، بخار</td>
+<td>ما یصرخش</td>
+</tr>
+<tr>
+<td>الحرارة</td>
+<td>۵۷°</td>
+<td>یفعّل &lt; ۶۰ ثانیة</td>
+</tr>
+<tr>
+<td>التحمل</td>
+<td>تشغیل ۱۰۰۰ مرة</td>
+<td>ما یتعطلش</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>مناورة حقیقیة:</strong> إنذار یشتغل، صفارات وأنوار تشتغل، أبواب الحریق تقفل، الأسانسیر یتوقف — کل ده &lt; دقیقتین.</p>
+
+<hr />
+
+<h4>۲. نظام الإطفاء الآلی (UL 199, UL 2166)</h4>
+<p><strong>أنواعه:</strong> رذاذ میاه، غاز نظیف (FM-200 / Novec 1230)، رغوة</p>
+
+<table>
+<thead>
+<tr>
+<th>الاختبار</th>
+<th>کیف؟</th>
+<th>النتیجة</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>التفعیل</td>
+<td>حرارة ۶۸°</td>
+<td>یرش &lt; ۴۵ ثانیة</td>
+</tr>
+<tr>
+<td>الضغط</td>
+<td>۱۲ بار</td>
+<td>بدون تسریب</td>
+</tr>
+<tr>
+<td>الغاز</td>
+<td>غرفة ۱۰۰ م³</td>
+<td>یملأ الغرفة فی ۱۰ ثوانی ویطفی النار فی ۳۰</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>سیناریو حقیقی:</strong> حریق فی السیرفر روم → النظام UL یشتغل → النار تنطفئ بالکامل.</p>
+
+<hr />
+
+<h4>۳. مطفأة الحریق (UL 711)</h4>
+<p><strong>الأنواع:</strong> بودرة، CO₂، میاه + غاز، رذاذ ماء</p>
+
+<table>
+<thead>
+<tr>
+<th>الاختبار</th>
+<th>الطریقة</th>
+<th>النتیجة</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>التفریغ</td>
+<td>کاملة</td>
+<td>≥ ۱۰ ثوانی</td>
+</tr>
+<tr>
+<td>المدی</td>
+<td>۳ م</td>
+<td>≥ ۳ م</td>
+</tr>
+<tr>
+<td>الضغط</td>
+<td>ضعف الضغط</td>
+<td>ما تنفجرش</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>طریقة PASS:</strong>
+P = Pull (اسحب)<br/>A = Aim (صوّب)<br/>S = Squeeze (اضغط)<br/>S = Sweep (حرّک یمین ویسار)</p>
+
+<hr />
+
+<h4>۴. معدات الإنقاذ (UL 913, UL 1523, UL 924)</h4>
+
+<table>
+<thead>
+<tr>
+<th>المعدة</th>
+<th>الاختبار</th>
+<th>النتیجة</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>حبل إنقاذ</td>
+<td>۵۰۰ کجم</td>
+<td>ما یتقطعش</td>
+</tr>
+<tr>
+<td>جهاز هبوط</td>
+<td>۳۰۰ کجم، ۵۰ م</td>
+<td>۱–۲ م/ث</td>
+</tr>
+<tr>
+<td>SCBA</td>
+<td>۳۰ دقیقة دخان</td>
+<td>الأکسجین مستمر</td>
+</tr>
+<tr>
+<td>لافتة خروج</td>
+<td>بطاریة ۹۰ دقیقة</td>
+<td>تظل مضیئة</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>مناورة:</strong> إنقاذ من الدور ۲۰ → الحبل UL یثبت → الشخص ینزل بأمان خلال ۳ دقایق.</p>
+
+<hr />
+
+<h4>۵. مناورة شاملة</h4>
+
+<table>
+<thead>
+<tr>
+<th>المرحلة</th>
+<th>الحدث</th>
+<th>المعدات UL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>۱</td>
+<td>دخان → إنذار</td>
+<td>کاشف دخان</td>
+</tr>
+<tr>
+<td>۲</td>
+<td>صفارات + أضواء</td>
+<td>لوحة تحکم</td>
+</tr>
+<tr>
+<td>۳</td>
+<td>رذاذ میاه</td>
+<td>نظام إطفاء</td>
+</tr>
+<tr>
+<td>۴</td>
+<td>مطفأة یدویة</td>
+<td>مطفأة ABC</td>
+</tr>
+<tr>
+<td>۵</td>
+<td>فریق إنقاذ</td>
+<td>حبل + SCBA</td>
+</tr>
+<tr>
+<td>۶</td>
+<td>خروج آمن</td>
+<td>لافتة خروج</td>
+</tr>
+</tbody>
+</table>
+
+<p>⏱ کل المناورة = ۵ دقایق، لأن کل المعدات UL Listed.</p>
+
+<hr />
+
+<h3>✅ الخلاصة:</h3>
+<p>UL Listed = أمان حقیقی بنسبة ۱۰۰٪ فی الحرائق.</p>
+
+<ul>
+ <li>
+<p>مدیر مبنی؟ → اشتری UL Listed فقط.</p>
+</li>
+ <li>
+<p>رجل إطفاء؟ → ثق فی UL Listed فقط.</p>
+</li>
+ <li>
+<p>مصنّع؟ → بدون UL، منتجک مرفوض.</p>
+</li>
+</ul>
+<p>ابحث دایمًا عن العلامة دی:</p>
+
+<code class="whitespace-pre!">       UL
+LISTED
+[Control No.]
+</code>
+
+<p>🔒 معناها: <em>تم اختباری، أنا آمن، وسأنقذ حیاتک.</em></p>
+
+<hr />
+
+<h2>🇬🇧 What Is UL Listed?</h2>
+<h3>The Complete, Simple, 100% Clear Guide for Everyone – Focused on Firefighting Gear, Alarms, Sprinklers, Extinguishers, Rescue &amp; Drills</h3>
+<p><strong>UL Listed</strong> means:</p>
+
+<blockquote>
+<p>“This product is 100% safe – and UL guarantees it.”</p>
+</blockquote>
+<p><strong>UL (Underwriters Laboratories)</strong> is an independent U.S. safety testing organization founded in 1894.<br/><strong>Listed</strong> = The full product (not just one part) passed UL lab testing.</p>
+<p>If you see <strong>UL Listed</strong>, it means:</p>
+
+<ul>
+ <li>
+<p>It won’t catch fire 🔥</p>
+</li>
+ <li>
+<p>It won’t cause electric shock ⚡</p>
+</li>
+ <li>
+<p>It won’t fail when needed 🚨</p>
+</li>
+ <li>
+<p>It fully meets U.S. safety codes (NEC + NFPA)</p>
+</li>
+</ul>
+
+<hr />
+
+<h3>🔹 Simple Difference:</h3>
+
+<table>
+<thead>
+<tr>
+<th>Certificate</th>
+<th>For What?</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UL Listed</strong></td>
+<td>Full product</td>
+<td>Fire alarm system, extinguisher, full sprinkler</td>
+</tr>
+<tr>
+<td><strong>UL Recognized</strong></td>
+<td>Single component</td>
+<td>Smoke sensor, valve</td>
+</tr>
+</tbody>
+</table>
+
+<p>👉 For fire safety equipment: <strong>Accept UL Listed only!</strong></p>
+
+<hr />
+
+<h3>🔸 Why It’s Vital</h3>
+<p>Lives depend on it.</p>
+
+<ul>
+ <li>
+<p>UL Listed smoke detector → alerts in 20 sec</p>
+</li>
+ <li>
+<p>UL Listed sprinkler → activates in 45 sec</p>
+</li>
+ <li>
+<p>UL Listed extinguisher → puts fire out in 12 sec</p>
+</li>
+</ul>
+<p>No UL? Works in drills, fails in real fires.</p>
+
+<hr />
+
+<h3>🧯 UL Listed Equipment (Step by Step)</h3>
+<h4>1. Fire Alarm System (UL 217, UL 268, UL 864)</h4>
+<p><strong>Includes:</strong> smoke detectors, heat detectors, sirens, strobes, control panel</p>
+
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>How</th>
+<th>Must Happen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Smoke</td>
+<td>Fake smoke</td>
+<td>Triggers &lt; 30 sec</td>
+</tr>
+<tr>
+<td>False alarm</td>
+<td>Dust/steam</td>
+<td>No alarm</td>
+</tr>
+<tr>
+<td>Heat</td>
+<td>135°F (57°C)</td>
+<td>Triggers &lt; 60 sec</td>
+</tr>
+<tr>
+<td>Durability</td>
+<td>1,000 cycles</td>
+<td>No failure</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Drill:</strong> Smoke → Alarm → Lights + Sirens → Fire doors close → Elevators stop — all &lt; 2 min.</p>
+
+<hr />
+
+<h4>2. Automatic Suppression (UL 199, UL 2166)</h4>
+<p><strong>Includes:</strong> sprinklers, FM-200, Novec 1230, foam</p>
+
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>How</th>
+<th>Must Happen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Activation</td>
+<td>155°F</td>
+<td>Sprays &lt; 45 sec</td>
+</tr>
+<tr>
+<td>Pressure</td>
+<td>175 psi</td>
+<td>No leaks</td>
+</tr>
+<tr>
+<td>Gas</td>
+<td>3,500 ft³ room</td>
+<td>Fills &lt; 10 sec, out in 30</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h4>3. Fire Extinguisher (UL 711)</h4>
+<p><strong>Types:</strong> ABC dry powder, CO₂, water, mist</p>
+
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>How</th>
+<th>Must Happen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discharge</td>
+<td>Full</td>
+<td>≥ 10 sec spray</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>10 ft</td>
+<td>≥ 10 ft reach</td>
+</tr>
+<tr>
+<td>Pressure</td>
+<td>Double</td>
+<td>No burst</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>PASS:</strong> Pull → Aim → Squeeze → Sweep</p>
+
+<hr />
+
+<h4>4. Rescue Gear (UL 913, UL 1523, UL 924)</h4>
+
+<table>
+<thead>
+<tr>
+<th>Gear</th>
+<th>Test</th>
+<th>Must Happen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rope</td>
+<td>1,100 lbs</td>
+<td>Doesn’t break</td>
+</tr>
+<tr>
+<td>Descent device</td>
+<td>300 kg, 50 m</td>
+<td>1–2 m/s</td>
+</tr>
+<tr>
+<td>SCBA</td>
+<td>30 min smoke</td>
+<td>Oxygen steady</td>
+</tr>
+<tr>
+<td>Exit sign</td>
+<td>90 min battery</td>
+<td>Stays lit</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h4>5. Full Drill</h4>
+
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What Happens</th>
+<th>UL Gear</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Smoke triggers detector</td>
+<td>Alarm</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sirens + strobes</td>
+<td>Control panel</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sprinklers activate</td>
+<td>Suppression</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Firefighter uses extinguisher</td>
+<td>ABC</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Rescue team descends</td>
+<td>Rope + SCBA</td>
+</tr>
+<tr>
+<td>6</td>
+<td>People exit</td>
+<td>Exit signs</td>
+</tr>
+</tbody>
+</table>
+
+<p>Total time: 5 minutes — all <strong>UL Listed</strong> gear.</p>
+
+<hr />
+
+<h3>✅ Final Word:</h3>
+<p><strong>UL Listed = 100% Life-Saving Safety Guarantee</strong></p>
+
+<ul>
+ <li>
+<p>Building manager → buy UL Listed only.</p>
+</li>
+ <li>
+<p>Firefighter → trust UL Listed only.</p>
+</li>
+ <li>
+<p>Manufacturer → no UL, no approval.</p>
+</li>
+</ul>
+<p>Always look for:</p>
+
+<code class="whitespace-pre!">       UL
+LISTED
+[Control No.]
+</code>
+
+<p>It means: <em>I’m tested. I’m safe. I’ll save your life.</em></p>
+
+<hr />
+
+<h2>راه‌های ارتباط و دریافت مشاوره</h2>
+<h2>🔰 شرکت بهسازان سرای مهرآهنگ</h2>
+<p><strong>شرکت بهسازان سرای مهرآهنگ</strong> به عنوان تولیدکننده و عرضه‌کننده مستقیم تجهیزات ایمنی آتش‌نشانی از جمله:</p>
+
+<ul>
+ <li>
+<p><a>فایرباکس‌ها</a></p>
+</li>
+ <li>
+<p>سیستم‌های <a>اعلام</a> و <a>اطفاء</a> حریق</p>
+</li>
+</ul>
+<p>در سه حوزه <strong>تولید، فروش و نصب</strong> فعالیت دارد. برای دریافت مشاوره و خرید تجهیزات ایمنی می‌توانید از طریق <strong>فروشگاه آنلاین این مجموعه</strong> اقدام کنید یا<a> با کارشناسان شرکت تماس بگیرید.</a></p>
+
+<ul>
+ <li>
+<p><strong>وب‌سایت:</strong> <a>www.bsma.ir</a></p>
+</li>
+ <li><a>صفحه تماس با ما</a></li>
+ <li>
+<p><strong>تلفن تماس:</strong> 09130204955</p>
+</li>
+ <li>
+<p><strong>آدرس دفتر مرکزی:</strong> اصفهان – خیابان وحید، مجتمع عزیزخانی، واحد ۳۳</p>
+</li>
+</ul>
+<p><strong>BSMA – بیش از ۳۰ سال تجربه در خدمت ایمنی شما</strong><br/><strong>ایمنی، انتخاب هوشمندانه است</strong></p>
+
+<hr />
+<p><strong>کلیدواژه‌های مرتبط LSI </strong></p>
+<p>تجهیزات آتش‌نشانی UL Listed،<br/>استاندارد UL چیست،<br/>گواهی UL Listed،<br/>تفاوت UL Listed و UL Recognized،<br/>دتکتور دود UL Listed،<br/>سیستم اعلام حریق UL،<br/>پنل اعلام حریق UL 864،<br/>اسپرینکلر UL 199،<br/>سیستم اطفای خودکار UL Listed،<br/>گاز Novec 1230 UL 2166،<br/>کپسول آتش‌نشانی UL 711،<br/>تست UL تجهیزات آتش‌نشانی،<br/>روش PASS استفاده از کپسول،<br/>ماسک تنفسی SCBA UL 913،<br/>طناب نجات UL 1523،<br/>چراغ خروج اضطراری UL 924،<br/>تجهیزات نجات آتش‌نشانی UL،<br/>علامت UL روی محصولات،<br/>گواهینامه UL در ایران،<br/>اهمیت UL در آتش‌نشانی،<br/>ایمنی ساختمان با تجهیزات UL،<br/>مانور آتش‌نشانی با تجهیزات UL،<br/>تجهیزات ایمنی UL Listed،<br/>استانداردهای UL آتش‌نشانی،<br/>آزمایشگاه UL آمریکا</p>
